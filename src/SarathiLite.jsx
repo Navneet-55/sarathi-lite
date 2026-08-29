@@ -226,15 +226,32 @@ export default function SarathiLite() {
         </div>
 
         {/* Official Header Banner */}
-        <header className="bg-[#0f2a4a] text-white px-4 py-3.5 border-b border-amber-500 shadow-xs">
+        <header className="bg-[#0b2545] text-white px-4 py-3.5 border-b-2 border-amber-500 shadow-sm">
           <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
-                Government of India • Ministry of Road Transport & Highways
-              </p>
-              <h1 className="text-base sm:text-lg font-bold tracking-tight">
-                Sarathi Parivahan - Learner's License Portal (Lite)
-              </h1>
+            <div className="flex items-center gap-3">
+              {/* National Emblem Seal */}
+              <div className="w-9 h-9 rounded-full bg-white/10 border border-amber-400/40 flex items-center justify-center text-amber-300 font-bold shrink-0">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                  <path d="M12,2 L12,22 M2,12 L22,12 M5,5 L19,19 M5,19 L19,5" stroke="currentColor" strokeWidth="1" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                  <span>सड़क परिवहन और राजमार्ग मंत्रालय</span>
+                  <span className="text-white/40">•</span>
+                  <span>Ministry of Road Transport & Highways</span>
+                </p>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-base sm:text-lg font-bold tracking-tight">
+                    Sarathi Parivahan
+                  </h1>
+                  <span className="text-[10px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.5 rounded border border-amber-400/30">
+                    v1.2
+                  </span>
+                </div>
+              </div>
             </div>
             <AccessibilityBar
               textSize={textSize}
@@ -329,15 +346,29 @@ export default function SarathiLite() {
       </div>
 
       {/* Official Top Navigation Bar */}
-      <header className="bg-[#0f2a4a] text-white px-4 py-3 border-b border-amber-500/80 shadow-xs sticky top-0 z-20 no-print">
+      <header className="bg-[#0b2545] text-white px-4 py-3 border-b-2 border-amber-500 shadow-sm sticky top-0 z-20 no-print">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider hidden sm:block">
-              Ministry of Road Transport & Highways
-            </p>
-            <h1 className="text-sm sm:text-base font-bold tracking-tight">
-              Sarathi Parivahan - Learner's License Portal (Lite)
-            </h1>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-white/10 border border-amber-400/40 flex items-center justify-center text-amber-300 font-bold shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <circle cx="12" cy="12" r="3" fill="currentColor" />
+                <path d="M12,2 L12,22 M2,12 L22,12 M5,5 L19,19 M5,19 L19,5" stroke="currentColor" strokeWidth="1" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-[9px] text-amber-400 font-bold uppercase tracking-widest hidden sm:block">
+                Ministry of Road Transport & Highways
+              </p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xs sm:text-sm font-bold tracking-tight">
+                  Sarathi Parivahan
+                </h1>
+                <span className="text-[9px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.2 rounded border border-amber-400/30">
+                  v1.2
+                </span>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {profile?.name && (
