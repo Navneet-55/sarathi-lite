@@ -194,21 +194,30 @@ export default function SarathiLite() {
 
   if (screen === 'landing') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white via-orange-50 to-green-50">
-        <header className="px-5 pt-8 pb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🇮🇳</span>
-            <span className="text-xs font-semibold tracking-widest text-slate-500 uppercase">Ministry of Road Transport</span>
+      <div className="min-h-screen bg-[#f8fafc]">
+        <header className="flex justify-between items-center px-5 py-4 bg-[#0f2a4a] text-white">
+          <h1 className="text-xl font-bold">Sarathi Parivahan - Learner's License Portal (Lite)</h1>
+          <div className="flex gap-2 text-sm">
+            <button className="underline" aria-label="Decrease text size">A-</button>
+            <button className="underline" aria-label="Normal text size">A</button>
+            <button className="underline" aria-label="Increase text size">A+</button>
           </div>
         </header>
 
         <main className="px-5 pb-10 max-w-md mx-auto">
-          <h1 className="text-3xl font-bold text-slate-900 leading-tight">
-            Sarathi<span className="text-saffron">-Lite</span>
-          </h1>
-          <p className="mt-2 text-slate-600 text-lg">
-            Learner's license in minutes, not hours.
+          <h1 className="text-3xl font-bold text-[#0f2a4a] leading-tight">Sarathi Parivahan</h1>
+          <p className="mt-2 text-gray-600 text-lg">Learner's License Portal (Lite)</p>
+          <button
+            onClick={handleDemoLogin}
+            className="mt-8 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-2xl"
+          >
+            ⚡ 1-Click Demo Login
+          </button>
+          <p className="mt-3 text-center text-xs text-gray-400">
+            Mock profile · No real Aadhaar or OTP needed
           </p>
+        </main>
+      </div>
 
           <div className="mt-8 space-y-3">
             {[
@@ -259,15 +268,8 @@ export default function SarathiLite() {
         </div>
 
         {/* progress */}
-        <div className="mt-3 flex gap-1">
-          {STEPS.map((s, i) => (
-            <div
-              key={s.id}
-              className={`h-1 flex-1 rounded-full transition-colors ${
-                i <= stepIndex ? 'bg-india' : 'bg-slate-200'
-              }`}
-            />
-          ))}
+        <div className="mt-3 text-sm text-[#0f2a4a]">
+          Step 1: Application & OCR → Step 2: Traffic Rules Practice → Step 3: Fee Payment → Step 4: Slot Booking
         </div>
         <p className="mt-1.5 text-xs text-slate-500">
           Step {stepIndex + 1}/{STEPS.length} — {STEPS[stepIndex].label}
