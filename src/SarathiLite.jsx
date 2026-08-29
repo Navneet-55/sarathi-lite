@@ -8,6 +8,7 @@ import StepFeePayment from './components/StepFeePayment';
 import StepSlotBooking from './components/StepSlotBooking';
 import MyProfileModal from './components/MyProfileModal';
 import { fetchOcrData } from './services/apiService';
+import { TRANSLATIONS } from './data/translations';
 
 // Initial Fresh Blank Profile
 const BLANK_PROFILE = {
@@ -27,7 +28,10 @@ export default function SarathiLite() {
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
   const [darkMode, setDarkMode] = useState(false);
+  const [lang, setLang] = useState('en'); // 'en' | 'hi'
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
   // Application Form & OCR State (Separate Front and Back)
   const [profile, setProfile] = useState(BLANK_PROFILE);
@@ -229,14 +233,12 @@ export default function SarathiLite() {
         <header className="bg-[#0b2545] text-white px-4 py-3.5 border-b-2 border-amber-500 shadow-sm">
           <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                <span>सड़क परिवहन और राजमार्ग मंत्रालय</span>
-                <span className="text-white/40">•</span>
-                <span>Ministry of Road Transport & Highways</span>
+              <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
+                {t.ministryName}
               </p>
               <div className="flex items-center gap-2.5 mt-0.5">
                 <h1 className="text-base sm:text-lg font-bold tracking-tight">
-                  Sarathi Parivahan
+                  {t.portalTitle}
                 </h1>
                 <span className="text-[10px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.5 rounded border border-amber-400/30">
                   v1.2
@@ -250,6 +252,8 @@ export default function SarathiLite() {
               setContrast={setContrast}
               darkMode={darkMode}
               setDarkMode={setDarkMode}
+              lang={lang}
+              setLang={setLang}
             />
           </div>
         </header>
@@ -259,13 +263,13 @@ export default function SarathiLite() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-8 sm:p-10 shadow-sm space-y-8">
             <div className="text-center space-y-3">
               <span className="text-[11px] font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3.5 py-1 rounded-full uppercase tracking-wider">
-                Online Driving License Services
+                {t.onlineServices}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight">
-                Learner's License Application Portal
+                {t.landingHeadline}
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-                Streamlined public portal simulating the official end-to-end Learner's License process: Aadhaar OCR verification, traffic regulations training, 5-question test, fee settlement, and RTO slot allotment.
+                {t.landingDesc}
               </p>
             </div>
 
@@ -276,25 +280,25 @@ export default function SarathiLite() {
                   <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     1
                   </span>
-                  <span>Application & OCR</span>
+                  <span>{t.step1Short}</span>
                 </div>
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
                   <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     2
                   </span>
-                  <span>Rules Guide & Test</span>
+                  <span>{t.step2Short}</span>
                 </div>
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
                   <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     3
                   </span>
-                  <span>Fee Payment (₹150)</span>
+                  <span>{t.step3Short}</span>
                 </div>
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
                   <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     4
                   </span>
-                  <span>Slot Reservation</span>
+                  <span>{t.step4Short}</span>
                 </div>
               </div>
             </div>
@@ -306,10 +310,10 @@ export default function SarathiLite() {
                 onClick={handleStartApplication}
                 className="w-full py-4 bg-blue-800 hover:bg-blue-900 text-white font-bold text-sm sm:text-base rounded-full shadow-xs transition-colors"
               >
-                Start Fresh Application Form →
+                {t.startApplication}
               </button>
               <p className="text-[11px] text-slate-400">
-                Fresh form • Step-by-step entry or automated document scan
+                {t.startFreshHint}
               </p>
             </div>
           </div>
@@ -318,7 +322,7 @@ export default function SarathiLite() {
         {/* Official Footer */}
         <footer className="py-4 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
           <p className="font-medium">
-            Sarathi Parivahan • Ministry of Road Transport and Highways • Government of India
+            {t.allRightsReserved}
           </p>
         </footer>
       </div>
@@ -340,11 +344,11 @@ export default function SarathiLite() {
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div>
             <p className="text-[9px] text-amber-400 font-bold uppercase tracking-widest hidden sm:block">
-              Ministry of Road Transport & Highways
+              {t.ministryName}
             </p>
             <div className="flex items-center gap-2">
               <h1 className="text-xs sm:text-sm font-bold tracking-tight">
-                Sarathi Parivahan
+                {t.portalTitle}
               </h1>
               <span className="text-[9px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.2 rounded border border-amber-400/30">
                 v1.2
@@ -357,9 +361,9 @@ export default function SarathiLite() {
                 type="button"
                 onClick={() => setProfileModalOpen(true)}
                 className="px-3.5 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full border border-white/20 transition-colors"
-                title="View your citizen profile record"
+                title={t.myProfile}
               >
-                My Profile
+                {t.myProfile}
               </button>
             )}
 
@@ -370,13 +374,15 @@ export default function SarathiLite() {
               setContrast={setContrast}
               darkMode={darkMode}
               setDarkMode={setDarkMode}
+              lang={lang}
+              setLang={setLang}
             />
             <button
               type="button"
               onClick={handleReset}
               className="text-xs text-blue-200 hover:text-white underline font-semibold px-1"
             >
-              Exit / Reset
+              {t.exitReset}
             </button>
           </div>
         </div>
@@ -386,18 +392,18 @@ export default function SarathiLite() {
       <section className="bg-slate-100/70 dark:bg-slate-800/70 border-b border-slate-200/80 dark:border-slate-700 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 no-print">
         <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-slate-500 font-medium">Application ID:</span>
+            <span className="text-slate-500 font-medium">{t.applicationIdLabel}</span>
             <strong className="text-[#0f2a4a] dark:text-blue-300 font-mono font-bold">
-              {profile?.applicationId || 'New Draft'}
+              {profile?.applicationId || t.newDraft}
             </strong>
             <span className="text-slate-300 dark:text-slate-600">|</span>
-            <span className="text-slate-500 font-medium">Applicant:</span>
+            <span className="text-slate-500 font-medium">{t.applicantLabel}</span>
             <strong className="text-slate-900 dark:text-slate-100 font-semibold">
-              {profile?.name || 'Pending Registration'}
+              {profile?.name || t.pendingRegistration}
             </strong>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 font-medium">Jurisdiction:</span>
+            <span className="text-slate-500 font-medium">{t.jurisdictionLabel}</span>
             <span className="font-semibold text-blue-900 dark:text-blue-300">
               {profile?.rto}
             </span>
@@ -409,6 +415,7 @@ export default function SarathiLite() {
       <div className="no-print">
         <ProgressBar
           currentStep={currentStep}
+          lang={lang}
           onStepClick={(stepNum) => {
             if (stepNum <= currentStep) {
               setCurrentStep(stepNum);
@@ -433,6 +440,7 @@ export default function SarathiLite() {
             handleBackUpload={handleBackUpload}
             triggerSampleFront={triggerSampleFront}
             triggerSampleBack={triggerSampleBack}
+            lang={lang}
           />
         )}
 
@@ -440,13 +448,17 @@ export default function SarathiLite() {
         {currentStep === 2 && (
           <div>
             {trafficPhase === 'guide' ? (
-              <TrafficRulesGuide onStartTest={() => setTrafficPhase('test')} />
+              <TrafficRulesGuide
+                onStartTest={() => setTrafficPhase('test')}
+                lang={lang}
+              />
             ) : (
               <StepTrafficPractice
                 onPassed={() => setPracticePassed(true)}
                 practicePassed={practicePassed}
                 onProceedToPayment={() => setCurrentStep(3)}
                 onBackToGuide={() => setTrafficPhase('guide')}
+                lang={lang}
               />
             )}
           </div>
@@ -462,6 +474,7 @@ export default function SarathiLite() {
             setPaymentRef={setPaymentRef}
             paying={paying}
             setPaying={setPaying}
+            lang={lang}
           />
         )}
 
@@ -475,6 +488,7 @@ export default function SarathiLite() {
             setSelectedSlot={setSelectedSlot}
             booked={booked}
             setBooked={setBooked}
+            lang={lang}
           />
         )}
       </main>
@@ -488,6 +502,7 @@ export default function SarathiLite() {
         paid={paid}
         paymentRef={paymentRef}
         selectedSlot={selectedSlot}
+        lang={lang}
       />
 
       {/* Bottom Step Navigation Bar */}
@@ -505,18 +520,18 @@ export default function SarathiLite() {
             disabled={currentStep === 1}
             className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 dark:text-slate-200 font-semibold text-xs sm:text-sm rounded-full transition-colors"
           >
-            ← Previous Step
+            {t.prevStep}
           </button>
 
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 hidden sm:inline">
-            Step {currentStep} of 4 — {
+            {t.stepOf(currentStep, 4)} — {
               currentStep === 1
-                ? 'Application & OCR'
+                ? t.step1Short
                 : currentStep === 2
-                ? (trafficPhase === 'guide' ? 'Traffic Rules Guide' : '5-Question Test')
+                ? (trafficPhase === 'guide' ? t.academyTitle : t.examTitle)
                 : currentStep === 3
-                ? 'Fee Payment'
-                : 'Slot Booking'
+                ? t.step3Short
+                : t.step4Short
             }
           </span>
 
@@ -538,12 +553,12 @@ export default function SarathiLite() {
             className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm rounded-full shadow-xs transition-colors"
           >
             {currentStep === 1
-              ? (profile?.name ? 'Proceed to Traffic Rules →' : 'Enter Name or Scan Aadhaar')
+              ? (profile?.name ? t.proceedToTrafficRules : t.enterNameToProceed)
               : currentStep === 2 && trafficPhase === 'guide'
-              ? 'Start 5-Q Test →'
+              ? (lang === 'hi' ? '5-प्रश्नों की परीक्षा शुरू करें →' : 'Start 5-Q Test →')
               : currentStep === 4
-              ? (booked ? 'Process Completed ✓' : 'Select Slot to Finish')
-              : 'Proceed to Next Step →'}
+              ? (booked ? t.processCompleted : (lang === 'hi' ? 'स्लॉट चुनें' : 'Select Slot to Finish'))
+              : t.nextStep}
           </button>
         </div>
       </footer>

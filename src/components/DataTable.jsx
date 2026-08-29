@@ -1,10 +1,12 @@
 import React from 'react';
+import { TRANSLATIONS } from '../data/translations';
 
 /**
- * Clean Document Key-Value Ledger
- * Elegant hairline dividers and official typography without nested boxy borders.
+ * Clean Document Key-Value Ledger (Bilingual Support)
  */
-export default function DataTable({ title, rows, badge, subtitle }) {
+export default function DataTable({ title, rows, badge, subtitle, lang = 'en' }) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
   return (
     <div className="bg-slate-50/70 dark:bg-slate-900 rounded-xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-750 space-y-3">
       {title && (
@@ -38,7 +40,7 @@ export default function DataTable({ title, rows, badge, subtitle }) {
               {value !== undefined && value !== null && value !== '' ? (
                 value
               ) : (
-                <span className="text-slate-400 italic font-normal">Not Provided</span>
+                <span className="text-slate-400 italic font-normal">{t.notProvided}</span>
               )}
             </span>
           </div>

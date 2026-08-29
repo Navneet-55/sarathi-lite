@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import TrafficSignImage from './TrafficSignImage';
 import { QUESTION_BANK } from '../data/questionBank';
+import { TRANSLATIONS } from '../data/translations';
 
 const TOTAL_TEST_QUESTIONS = 5;
 const REQUIRED_PASS_SCORE = 3;
 
 /**
- * Step 2: 5-Question Traffic Practice Test (Clean Non-Boxy Design with High Contrast Dark Mode)
+ * Step 2: 5-Question Traffic Practice Test (Pure Bilingual Support & Hindi Voice Speech)
  */
-export default function StepTrafficPractice({ onPassed, practicePassed: _practicePassed, onProceedToPayment, onBackToGuide }) {
+export default function StepTrafficPractice({
+  onPassed,
+  practicePassed: _practicePassed,
+  onProceedToPayment,
+  onBackToGuide,
+  lang = 'en',
+}) {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [audioState, setAudioState] = useState('idle');
   const [testFinished, setTestFinished] = useState(false);
+
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  const isHi = lang === 'hi';
 
   const initTest = () => {
     const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
@@ -39,8 +49,8 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.lang = 'en-IN';
-    utterance.rate = 0.95;
+    utterance.lang = isHi ? 'hi-IN' : 'en-IN';
+    utterance.rate = 0.92;
 
     utterance.onend = () => {
       setAudioState('idle');
@@ -77,6 +87,10 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
   };
 
   const currentQ = questions[currentIndex];
+  const activeQuestionText = isHi && currentQ?.questionHi ? currentQ.questionHi : currentQ?.question;
+  const activeOptions = isHi && currentQ?.optionsHi ? currentQ.optionsHi : currentQ?.options || [];
+  const activeCategory = isHi && currentQ?.categoryHi ? currentQ.categoryHi : currentQ?.category || 'Road Safety';
+  const activeExplanation = isHi && currentQ?.explanationHi ? currentQ.explanationHi : currentQ?.explanation;
 
   const handleSelectOption = (idx) => {
     if (selectedOption !== null || !currentQ) return;
@@ -118,10 +132,10 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-              Examination Module • 5 Questions
+              {t.examModuleBadge}
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-200 tracking-tight mt-0.5">
-              Learner's License Knowledge Test
+              {t.examTitle}
             </h2>
           </div>
 
@@ -135,7 +149,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 }}
                 className="text-xs text-blue-700 dark:text-blue-300 hover:underline font-semibold"
               >
-                ← Back to Study Guide
+                {t.backToStudyGuide}
               </button>
             )}
           </div>
@@ -146,11 +160,11 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
       <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-slate-100 dark:border-slate-700 text-xs">
         <div className="flex items-center gap-2">
           <span className="font-bold text-slate-900 dark:text-slate-100">
-            Question {Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS)} of {TOTAL_TEST_QUESTIONS}
+            {t.questionOf(Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS), TOTAL_TEST_QUESTIONS)}
           </span>
           <span className="text-slate-400 dark:text-slate-500">|</span>
           <span className="text-slate-600 dark:text-slate-300">
-            Score: <strong className="text-slate-900 dark:text-white">{currentScore}</strong> of {answers.length}
+            {t.scoreOf(currentScore, answers.length)}
           </span>
         </div>
 
@@ -193,7 +207,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
             <div className="space-y-3 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
-                  {currentQ.category || 'Road Safety'}
+                  {activeCategory}
                 </span>
 
                 {/* Audio Controls */}
@@ -201,14 +215,14 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                   {audioState === 'idle' && (
                     <button
                       type="button"
-                      onClick={() =>
-                        playAudio(
-                          `${currentQ.question}. Option A: ${currentQ.options[0]}. Option B: ${currentQ.options[1]}. Option C: ${currentQ.options[2]}. Option D: ${currentQ.options[3]}.`
-                        )
-                      }
+                      onClick={() => {
+                        const optPrefixes = isHi ? ['विकल्प क:', 'विकल्प ख:', 'विकल्प ग:', 'विकल्प घ:'] : ['Option A:', 'Option B:', 'Option C:', 'Option D:'];
+                        const spokenText = `${activeQuestionText}. ${optPrefixes[0]} ${activeOptions[0]}. ${optPrefixes[1]} ${activeOptions[1]}. ${optPrefixes[2]} ${activeOptions[2]}. ${optPrefixes[3]} ${activeOptions[3]}.`;
+                        playAudio(spokenText);
+                      }}
                       className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-800 dark:hover:text-blue-300"
                     >
-                      ▶ Read Question
+                      {t.readQuestionAudio}
                     </button>
                   )}
                   {audioState === 'playing' && (
@@ -217,7 +231,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                       onClick={pauseAudio}
                       className="text-[11px] font-bold text-amber-600 dark:text-amber-300 hover:underline"
                     >
-                      ⏸ Pause
+                      {t.pauseAudio}
                     </button>
                   )}
                   {audioState === 'paused' && (
@@ -226,7 +240,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                       onClick={resumeAudio}
                       className="text-[11px] font-bold text-blue-600 dark:text-blue-300 hover:underline"
                     >
-                      ▶ Resume
+                      {t.resumeAudio}
                     </button>
                   )}
                   {audioState !== 'idle' && (
@@ -235,21 +249,21 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                       onClick={stopAudio}
                       className="text-[11px] text-slate-400 hover:text-slate-200 ml-1"
                     >
-                      ✕
+                      {t.stopAudio}
                     </button>
                   )}
                 </div>
               </div>
 
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50 leading-snug">
-                {currentQ.question}
+                {activeQuestionText}
               </h3>
             </div>
           </div>
 
           {/* Options Stream */}
           <div className="space-y-2.5">
-            {currentQ.options.map((opt, idx) => {
+            {activeOptions.map((opt, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrectOption = idx === currentQ.correctIndex;
               const hasAnswered = selectedOption !== null;
@@ -269,6 +283,10 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 }
               }
 
+              const letterLabel = isHi
+                ? ['क', 'ख', 'ग', 'घ'][idx] || String.fromCharCode(65 + idx)
+                : String.fromCharCode(65 + idx);
+
               return (
                 <button
                   key={idx}
@@ -286,7 +304,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                         : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
                     }`}
                   >
-                    {String.fromCharCode(65 + idx)}
+                    {letterLabel}
                   </span>
                   <span className="leading-relaxed flex-1">{opt}</span>
                 </button>
@@ -299,10 +317,10 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
             <div className="pt-2 space-y-4">
               <div className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700 rounded-xl text-xs space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Statutory Rule Explanation
+                  {t.statutoryRuleExplanation}
                 </span>
                 <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
-                  {currentQ.explanation}
+                  {activeExplanation}
                 </p>
               </div>
 
@@ -312,7 +330,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                   onClick={handleNextQuestion}
                   className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
                 >
-                  {currentIndex + 1 < TOTAL_TEST_QUESTIONS ? 'Next Question →' : 'View Test Results →'}
+                  {currentIndex + 1 < TOTAL_TEST_QUESTIONS ? t.nextQuestionBtn : t.viewResultsBtn}
                 </button>
               </div>
             </div>
@@ -334,14 +352,14 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
           <div className="space-y-1">
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
               {currentScore >= REQUIRED_PASS_SCORE
-                ? 'Test Qualified Successfully'
-                : 'Test Attempt Incomplete'}
+                ? t.testQualifiedTitle
+                : t.testIncompleteTitle}
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-              You scored <strong>{currentScore}</strong> out of {TOTAL_TEST_QUESTIONS} questions.
+              {t.scoredSummary(currentScore, TOTAL_TEST_QUESTIONS)}
               {currentScore >= REQUIRED_PASS_SCORE
-                ? ' You are eligible to proceed to Step 3 (Statutory Fee Payment).'
-                : ' You need at least 3 correct answers to qualify.'}
+                ? t.eligibleForPayment
+                : t.needMinScore(REQUIRED_PASS_SCORE)}
             </p>
           </div>
 
@@ -351,7 +369,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
               onClick={initTest}
               className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 text-xs font-semibold rounded-full transition-colors"
             >
-              Retry 5-Question Test
+              {t.retryTestBtn}
             </button>
 
             {currentScore >= REQUIRED_PASS_SCORE && (
@@ -360,7 +378,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 onClick={onProceedToPayment}
                 className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
               >
-                Proceed to Fee Payment (Step 3) →
+                {t.proceedToPaymentBtn}
               </button>
             )}
           </div>

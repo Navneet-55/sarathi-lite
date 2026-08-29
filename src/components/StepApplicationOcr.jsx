@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import DataTable from './DataTable';
 import { RTO_OFFICES } from '../data/rtoSlots';
+import { TRANSLATIONS } from '../data/translations';
 
 /**
  * Step 1: Citizen Application Form & Dual Front/Back Aadhaar OCR
- * Clean Document Sheet Design (Non-Boxy)
+ * Pure Bilingual Support (English & Hindi)
  */
 export default function StepApplicationOcr({
   profile,
@@ -18,11 +19,14 @@ export default function StepApplicationOcr({
   handleBackUpload,
   triggerSampleFront,
   triggerSampleBack,
+  lang = 'en',
 }) {
   const frontInputRef = useRef(null);
   const backInputRef = useRef(null);
   const [isFrontDragOver, setIsFrontDragOver] = useState(false);
   const [isBackDragOver, setIsBackDragOver] = useState(false);
+
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
   const handleInputChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
@@ -51,18 +55,18 @@ export default function StepApplicationOcr({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-              Form 2 • Central Motor Vehicles Rules
+              {t.form2Badge}
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight mt-0.5">
-              Learner's License Application
+              {t.step1Title}
             </h2>
           </div>
           <span className="text-xs bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-full font-semibold border border-emerald-200 dark:border-emerald-800">
-            eKYC Verification Enabled
+            {t.ekycBadge}
           </span>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-          Provide your legal particulars below, or upload your Aadhaar document for automatic character extraction.
+          {t.step1Desc}
         </p>
       </div>
 
@@ -72,78 +76,78 @@ export default function StepApplicationOcr({
           <span className="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px]">
             1
           </span>
-          <span>Applicant Demographics & Address</span>
+          <span>{t.section1Demographics}</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
           <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Full Legal Name <span className="text-rose-600">*</span>
+              {t.fullNameLabel} <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               value={profile?.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="e.g. Enter your full name"
+              placeholder={t.fullNamePlaceholder}
               className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Mobile Number (SMS Alerts) <span className="text-rose-600">*</span>
+              {t.mobileLabel} <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               value={profile?.mobile || ''}
               onChange={(e) => handleInputChange('mobile', e.target.value)}
-              placeholder="e.g. +91 98765 43210"
+              placeholder={t.mobilePlaceholder}
               className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Date of Birth (DD/MM/YYYY) <span className="text-rose-600">*</span>
+              {t.dobLabel} <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               value={profile?.dob || ''}
               onChange={(e) => handleInputChange('dob', e.target.value)}
-              placeholder="DD/MM/YYYY"
+              placeholder={t.dobPlaceholder}
               className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Aadhaar UID / VID Reference
+              {t.aadhaarLabel}
             </label>
             <input
               type="text"
               value={profile?.aadhaar || ''}
               onChange={(e) => handleInputChange('aadhaar', e.target.value)}
-              placeholder="XXXX XXXX 1234"
+              placeholder={t.aadhaarPlaceholder}
               className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-mono focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
             />
           </div>
 
           <div className="md:col-span-2">
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Permanent Residential Address <span className="text-rose-600">*</span>
+              {t.addressLabel} <span className="text-rose-600">*</span>
             </label>
             <textarea
               rows={2}
               value={profile?.address || ''}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              placeholder="Enter complete residential address with pin code"
+              placeholder={t.addressPlaceholder}
               className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
             />
           </div>
 
           <div className="md:col-span-2">
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              Regional Transport Authority (RTO Jurisdiction) <span className="text-rose-600">*</span>
+              {t.rtoLabel} <span className="text-rose-600">*</span>
             </label>
             <select
               value={profile?.rto || ''}
@@ -167,10 +171,10 @@ export default function StepApplicationOcr({
             <span className="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px]">
               2
             </span>
-            <span>Document OCR Scanners (Front & Back)</span>
+            <span>{t.section2Ocr}</span>
           </div>
           <span className="text-[11px] text-blue-700 dark:text-blue-300 font-semibold">
-            Automated Character Extraction
+            {t.autoExtractBadge}
           </span>
         </div>
 
@@ -179,11 +183,11 @@ export default function StepApplicationOcr({
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-800 dark:text-slate-200">
-                Front Side (Photo, Name, DOB, UID)
+                {t.frontSideTitle}
               </span>
               {profile?.name && (
                 <span className="text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
-                  ✓ Front Read
+                  {t.frontReadSuccess}
                 </span>
               )}
             </div>
@@ -223,10 +227,10 @@ export default function StepApplicationOcr({
               ) : (
                 <div className="py-2 space-y-1">
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                    Upload Front Page
+                    {t.uploadFrontPrompt}
                   </p>
                   <p className="text-[11px] text-slate-400">
-                    Drag & drop or browse image (JPG, PNG)
+                    {t.dropOrBrowse}
                   </p>
                 </div>
               )}
@@ -237,7 +241,7 @@ export default function StepApplicationOcr({
                   onClick={() => frontInputRef.current?.click()}
                   className="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-full shadow-xs transition-colors"
                 >
-                  {frontPreview ? 'Change Front Image' : 'Browse Front Page'}
+                  {frontPreview ? t.changeFront : t.browseFront}
                 </button>
                 {triggerSampleFront && (
                   <button
@@ -245,7 +249,7 @@ export default function StepApplicationOcr({
                     onClick={triggerSampleFront}
                     className="px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
                   >
-                    Sample Front
+                    {t.sampleFrontBtn}
                   </button>
                 )}
               </div>
@@ -254,7 +258,7 @@ export default function StepApplicationOcr({
             {frontLoading && (
               <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg flex items-center justify-center gap-2 text-xs text-blue-900 dark:text-blue-300 font-semibold">
                 <div className="w-3.5 h-3.5 border-2 border-blue-800 dark:border-blue-400 border-t-transparent rounded-full animate-spin" />
-                <span>Reading Front Page...</span>
+                <span>{t.readingFront}</span>
               </div>
             )}
           </div>
@@ -263,11 +267,11 @@ export default function StepApplicationOcr({
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-800 dark:text-slate-200">
-                Back Side (Residential Address)
+                {t.backSideTitle}
               </span>
               {profile?.address && (
                 <span className="text-emerald-700 dark:text-emerald-400 font-bold text-[11px]">
-                  ✓ Back Read
+                  {t.backReadSuccess}
                 </span>
               )}
             </div>
@@ -307,10 +311,10 @@ export default function StepApplicationOcr({
               ) : (
                 <div className="py-2 space-y-1">
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                    Upload Back Page
+                    {t.uploadBackPrompt}
                   </p>
                   <p className="text-[11px] text-slate-400">
-                    Drag & drop or browse image (JPG, PNG)
+                    {t.dropOrBrowse}
                   </p>
                 </div>
               )}
@@ -321,7 +325,7 @@ export default function StepApplicationOcr({
                   onClick={() => backInputRef.current?.click()}
                   className="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-full shadow-xs transition-colors"
                 >
-                  {backPreview ? 'Change Back Image' : 'Browse Back Page'}
+                  {backPreview ? t.changeBack : t.browseBack}
                 </button>
                 {triggerSampleBack && (
                   <button
@@ -329,7 +333,7 @@ export default function StepApplicationOcr({
                     onClick={triggerSampleBack}
                     className="px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
                   >
-                    Sample Back
+                    {t.sampleBackBtn}
                   </button>
                 )}
               </div>
@@ -338,7 +342,7 @@ export default function StepApplicationOcr({
             {backLoading && (
               <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg flex items-center justify-center gap-2 text-xs text-blue-900 dark:text-blue-300 font-semibold">
                 <div className="w-3.5 h-3.5 border-2 border-blue-800 dark:border-blue-400 border-t-transparent rounded-full animate-spin" />
-                <span>Reading Back Page...</span>
+                <span>{t.readingBack}</span>
               </div>
             )}
           </div>
@@ -348,19 +352,20 @@ export default function StepApplicationOcr({
         {(ocrResult || profile?.name || profile?.address) && (
           <div className="pt-4">
             <DataTable
-              title="Verified eKYC Extracted Fields"
-              badge="Synchronized"
-              subtitle="Particulars mapped automatically from your documents to your application record."
+              title={t.verifiedOcrTitle}
+              badge={t.syncBadge}
+              subtitle={t.syncSubtitle}
+              lang={lang}
               rows={[
-                ['Parsed Full Name', profile?.name || <span className="text-slate-400 italic">Upload Front Page</span>],
-                ['Parsed Date of Birth', profile?.dob || <span className="text-slate-400 italic">Upload Front Page</span>],
-                ['Mobile Number', profile?.mobile || <span className="text-slate-400 italic">Upload Front Page</span>],
-                ['Aadhaar Number', profile?.aadhaar || <span className="text-slate-400 italic">Upload Front / Back Page</span>],
-                ['Residential Address', profile?.address || <span className="text-slate-400 italic">Upload Back Page</span>],
+                [t.fullNameLabel, profile?.name || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
+                [t.dobLabel, profile?.dob || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
+                [t.mobileLabel, profile?.mobile || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
+                [t.aadhaarLabel, profile?.aadhaar || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
+                [t.addressLabel, profile?.address || <span className="text-slate-400 italic">{t.uploadBackHint}</span>],
                 [
-                  'Verification Status',
+                  t.ekycStatusField,
                   <span key="status" className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold">
-                    <span>✓</span> eKYC Verification Synchronized
+                    <span>✓</span> {t.syncVerified}
                   </span>,
                 ],
               ]}

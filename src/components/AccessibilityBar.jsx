@@ -1,8 +1,9 @@
 import React from 'react';
+import { TRANSLATIONS } from '../data/translations';
 
 /**
  * Enhanced Accessibility Utility Bar (GIGW Compliant)
- * Controls: Text sizing (A- | A | A+) + Contrast Mode + Dark Mode toggle
+ * Controls: Language Toggle (EN / हिन्दी) + Text sizing (A- | A | A+) + Contrast Mode + Dark Mode toggle
  */
 export default function AccessibilityBar({
   textSize,
@@ -11,12 +12,50 @@ export default function AccessibilityBar({
   setContrast,
   darkMode,
   setDarkMode,
+  lang = 'en',
+  setLang,
 }) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
   return (
-    <div className="flex items-center gap-2 text-xs font-semibold" aria-label="Accessibility tools">
+    <div className="flex flex-wrap items-center gap-2 text-xs font-semibold" aria-label="Accessibility & Language tools">
+      {/* Language Toggle Switch */}
+      {setLang && (
+        <div className="flex items-center bg-white/10 rounded-full p-0.5 border border-white/20">
+          <button
+            type="button"
+            onClick={() => setLang('en')}
+            className={`px-2.5 py-0.5 rounded-full text-xs font-bold transition-all ${
+              lang === 'en'
+                ? 'bg-white text-[#0b2545] shadow-xs'
+                : 'text-white/80 hover:text-white hover:bg-white/10'
+            }`}
+            title="Switch to English"
+            aria-pressed={lang === 'en'}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            onClick={() => setLang('hi')}
+            className={`px-2.5 py-0.5 rounded-full text-xs font-bold transition-all ${
+              lang === 'hi'
+                ? 'bg-amber-400 text-slate-950 shadow-xs'
+                : 'text-white/80 hover:text-white hover:bg-white/10'
+            }`}
+            title="हिन्दी में बदलें"
+            aria-pressed={lang === 'hi'}
+          >
+            हिन्दी
+          </button>
+        </div>
+      )}
+
       {/* Font Size Group */}
       <div className="flex items-center gap-1 bg-white/10 p-0.5 rounded border border-white/20">
-        <span className="text-blue-100 text-[10px] uppercase tracking-wider px-1 hidden sm:inline">Size:</span>
+        <span className="text-blue-100 text-[10px] uppercase tracking-wider px-1 hidden sm:inline">
+          {t.sizeLabel}
+        </span>
         <button
           type="button"
           onClick={() => setTextSize('small')}
@@ -72,7 +111,9 @@ export default function AccessibilityBar({
           aria-pressed={contrast === 'high'}
         >
           <span aria-hidden="true">◐</span>
-          <span className="hidden sm:inline">{contrast === 'high' ? 'High Contrast' : 'Contrast'}</span>
+          <span className="hidden sm:inline">
+            {contrast === 'high' ? t.highContrast : t.contrast}
+          </span>
         </button>
       )}
 
@@ -90,7 +131,9 @@ export default function AccessibilityBar({
           aria-pressed={darkMode}
         >
           <span aria-hidden="true">{darkMode ? '☀️' : '🌙'}</span>
-          <span className="hidden sm:inline">{darkMode ? 'Light Theme' : 'Dark Mode'}</span>
+          <span className="hidden sm:inline">
+            {darkMode ? t.lightTheme : t.darkMode}
+          </span>
         </button>
       )}
     </div>

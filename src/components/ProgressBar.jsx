@@ -1,14 +1,17 @@
 import React from 'react';
+import { TRANSLATIONS } from '../data/translations';
 
 /**
- * Natural Continuous Progress Tracker (Non-Boxy Public Service Flow)
+ * Natural Continuous Progress Tracker (Bilingual Support)
  */
-export default function ProgressBar({ currentStep, onStepClick }) {
+export default function ProgressBar({ currentStep, onStepClick, lang = 'en' }) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
   const steps = [
-    { num: 1, title: 'Application & OCR' },
-    { num: 2, title: 'Traffic Rules & Test' },
-    { num: 3, title: 'Fee Payment' },
-    { num: 4, title: 'Slot Booking' },
+    { num: 1, title: t.step1Short },
+    { num: 2, title: t.step2Short },
+    { num: 3, title: t.step3Short },
+    { num: 4, title: t.step4Short },
   ];
 
   return (
@@ -69,7 +72,7 @@ export default function ProgressBar({ currentStep, onStepClick }) {
             </span>
           </div>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-            Step {currentStep} of 4
+            {t.stepOf(currentStep, 4)}
           </span>
         </div>
       </div>

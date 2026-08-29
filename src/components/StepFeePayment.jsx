@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import DataTable from './DataTable';
+import { TRANSLATIONS } from '../data/translations';
 
 /**
  * Step 3: Statutory RTO Fee Challan Settlement
- * Clean Document Sheet (Non-Boxy)
+ * Pure Bilingual Support (English & Hindi)
  */
 export default function StepFeePayment({
   profile,
@@ -13,8 +14,12 @@ export default function StepFeePayment({
   setPaymentRef,
   paying,
   setPaying,
+  lang = 'en',
 }) {
   const [payMethod, setPayMethod] = useState('upi');
+
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  const isHi = lang === 'hi';
 
   const handlePayment = () => {
     if (paying || paid) return;
@@ -31,61 +36,67 @@ export default function StepFeePayment({
     window.print();
   };
 
+  const paymentModes = [
+    { id: 'upi', label: t.payUpi },
+    { id: 'card', label: t.payCard },
+    { id: 'netbanking', label: t.payNetBanking },
+  ];
+
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6 text-slate-900 dark:text-slate-100">
       {/* Header */}
-      <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+      <div className="border-b border-slate-100 dark:border-slate-700 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-              Challan Head: 0041-00-102 • Rule 32 CMVR
+              {t.step3Badge}
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight mt-0.5">
-              Statutory Fee Settlement
+              {t.step3Title}
             </h2>
           </div>
-          <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1 rounded-full font-medium">
-            Tariff Fixed Rate: ₹150.00
+          <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1 rounded-full font-medium">
+            {t.tariffFixedRate}
           </span>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-          Settlement of statutory government fees for Form 2 processing, computerized test administration, and smart card allotment.
+          {t.step3Desc}
         </p>
       </div>
 
       {/* Itemized Challan Table */}
-      <div className="bg-slate-50/70 dark:bg-slate-900/50 rounded-xl p-4 sm:p-5 border border-slate-200/70 dark:border-slate-800 space-y-3">
+      <div className="bg-slate-50/70 dark:bg-slate-900/50 rounded-xl p-4 sm:p-5 border border-slate-200/70 dark:border-slate-700 space-y-3">
         <div className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider pb-1">
-          Ministry Challan Fee Schedule
+          {t.challanScheduleTitle}
         </div>
 
-        <div className="divide-y divide-slate-200/70 dark:divide-slate-800 text-xs sm:text-sm">
+        <div className="divide-y divide-slate-200/70 dark:divide-slate-700 text-xs sm:text-sm">
           <div className="py-2.5 flex items-center justify-between">
             <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">Issue of Learner's License (Form 2)</p>
-              <p className="text-[11px] text-slate-400">Rule 32, Central Motor Vehicles Rules</p>
+              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service1Title}</p>
+              <p className="text-[11px] text-slate-400">{t.service1Rule}</p>
             </div>
             <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
           </div>
 
           <div className="py-2.5 flex items-center justify-between">
             <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">Computerized LL Knowledge Test Fee</p>
-              <p className="text-[11px] text-slate-400">Parivahan testing workstation fee</p>
+              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service2Title}</p>
+              <p className="text-[11px] text-slate-400">{t.service2Rule}</p>
             </div>
             <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
           </div>
 
           <div className="py-2.5 flex items-center justify-between">
             <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">Online Service & Slot Reservation Fee</p>
-              <p className="text-[11px] text-slate-400">Administrative processing tariff</p>
+              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service3Title}</p>
+              <p className="text-[11px] text-slate-400">{t.service3Rule}</p>
             </div>
             <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
           </div>
 
           <div className="pt-3 pb-1 flex items-center justify-between font-bold text-sm sm:text-base text-blue-950 dark:text-blue-200">
-            <span>Total Payable Amount</span>
+            <span>{t.totalPayable}</span>
             <span className="font-mono text-lg text-blue-900 dark:text-blue-300">₹150.00</span>
           </div>
         </div>
@@ -95,15 +106,11 @@ export default function StepFeePayment({
       {!paid ? (
         <div className="space-y-4 pt-2">
           <div className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-            Select Payment Method
+            {t.selectPaymentMode}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { id: 'upi', label: 'UPI (BHIM / GPay / PhonePe)' },
-              { id: 'card', label: 'Debit / Credit Card' },
-              { id: 'netbanking', label: 'Internet Banking' },
-            ].map((m) => (
+            {paymentModes.map((m) => (
               <button
                 key={m.id}
                 type="button"
@@ -111,7 +118,7 @@ export default function StepFeePayment({
                 className={`p-3.5 rounded-xl border text-left text-xs font-semibold transition-all ${
                   payMethod === m.id
                     ? 'border-blue-700 bg-blue-50/70 dark:bg-blue-950/60 text-blue-950 dark:text-blue-200 ring-1 ring-blue-700'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-50'
+                    : 'border-slate-200 dark:border-slate-700 bg-slate-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750'
                 }`}
               >
                 {m.label}
@@ -128,10 +135,10 @@ export default function StepFeePayment({
             {paying ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Authorizing Treasury Settlement...</span>
+                <span>{t.authorizingTreasury}</span>
               </>
             ) : (
-              <span>Authorize Settlement of ₹150.00 via {payMethod.toUpperCase()}</span>
+              <span>{t.authorizePaymentBtn('₹150.00', payMethod.toUpperCase())}</span>
             )}
           </button>
         </div>
@@ -144,9 +151,9 @@ export default function StepFeePayment({
                 ✓
               </div>
               <div>
-                <h4 className="font-bold text-sm">Payment Authorized & Settled</h4>
+                <h4 className="font-bold text-sm">{t.paymentSuccessTitle}</h4>
                 <p className="text-xs text-emerald-800 dark:text-emerald-300">
-                  Treasury Reference ID: <strong>{paymentRef}</strong>
+                  {t.treasuryRefPrefix} <strong>{paymentRef}</strong>
                 </p>
               </div>
             </div>
@@ -156,22 +163,23 @@ export default function StepFeePayment({
               onClick={handlePrint}
               className="px-4 py-1.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 shadow-xs no-print"
             >
-              Print Receipt
+              {t.printReceiptBtn}
             </button>
           </div>
 
           <DataTable
-            title="Official RTO Treasury Payment Receipt"
-            badge="PAID & ACCEPTED"
-            subtitle="Retain this official payment confirmation for test day reporting."
+            title={t.officialReceiptTitle}
+            badge={t.paidAcceptedBadge}
+            subtitle={t.receiptSubtitle}
+            lang={lang}
             rows={[
-              ['Application Number', profile?.applicationId],
-              ['Applicant Full Name', profile?.name],
-              ['Transaction Reference ID', <span key="ref" className="font-mono font-bold text-blue-900 dark:text-blue-300">{paymentRef}</span>],
-              ['Payment Settlement Date', new Date().toLocaleString('en-IN')],
-              ['Accounting Head', '0041-00-102 RTO Motor Vehicle Taxes & Fees'],
-              ['Total Amount Settled', '₹150.00 (One Hundred and Fifty Rupees Only)'],
-              ['Receipt Status', <span key="status" className="font-bold text-emerald-700 dark:text-emerald-400">SUCCESS • Treasury Accepted</span>],
+              [t.appNumberField, profile?.applicationId],
+              [t.applicantNameField, profile?.name],
+              [t.transactionRefField, <span key="ref" className="font-mono font-bold text-blue-900 dark:text-blue-300">{paymentRef}</span>],
+              [t.paymentDateField, new Date().toLocaleString(isHi ? 'hi-IN' : 'en-IN')],
+              [t.accountingHeadField, isHi ? '0041-00-102 आरटीओ मोटर वाहन कर एवं शुल्क' : '0041-00-102 RTO Motor Vehicle Taxes & Fees'],
+              [t.totalSettledField, isHi ? '₹150.00 (एक सौ पचास रुपये मात्र)' : '₹150.00 (One Hundred and Fifty Rupees Only)'],
+              [t.receiptStatusField, <span key="status" className="font-bold text-emerald-700 dark:text-emerald-400">{t.treasurySuccessStatus}</span>],
             ]}
           />
         </div>
