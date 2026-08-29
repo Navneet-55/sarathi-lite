@@ -3,227 +3,456 @@ import TrafficSignImage from './TrafficSignImage';
 
 /**
  * Driver Road Safety & Traffic Sign Training Academy
- * Comprehensive stacked driver training module covering every official road sign and statutory rule.
+ * Complete Indian Traffic Sign Curriculum in Official IRC:67 / MoRTH Order
  */
 
-const TRAINING_SIGNS = [
-  // 1. Mandatory / Regulatory Signs
+export const COMPLETE_TRAFFIC_SIGNS = [
+  // =========================================================================
+  // 1. MANDATORY / REGULATORY SIGNS (Schedule I - Part A, Section 119 MV Act)
+  // =========================================================================
   {
     id: 1,
     signId: 1,
+    group: 'Mandatory',
+    orderNum: 'M-01',
     name: 'STOP Sign',
-    category: 'Mandatory',
     shape: 'Octagonal (Red with White Border)',
-    action: 'Bring vehicle to a complete dead halt behind the white stop line before proceeding.',
-    rule: 'Section 119 Motor Vehicles Act. You must yield right-of-way to all crossing traffic and pedestrians.',
-    penalty: '₹1,000 to ₹5,000 for jumping a stop signal / reckless entry.',
-    examTip: 'STOP is the ONLY octagonal sign on Indian roads. Even if no vehicles are visible, complete halt is mandatory.',
-  },
-  {
-    id: 6,
-    signId: 6,
-    name: 'GIVE WAY Sign',
-    category: 'Mandatory',
-    shape: 'Inverted Triangle (Apex Pointing Down)',
-    action: 'Slow down significantly and yield right-of-way to traffic on the main intersecting road.',
-    rule: 'Section 119 MV Act & Rule 9 CMVR. Yield without necessarily stopping if the road is clear.',
-    penalty: '₹1,000 for failure to give way.',
-    examTip: 'GIVE WAY is the ONLY inverted triangular sign on Indian roads.',
-  },
-  {
-    id: 9,
-    signId: 9,
-    name: 'NO ENTRY Sign',
-    category: 'Mandatory',
-    shape: 'Red Disc with Horizontal White Bar',
-    action: 'Strictly prohibited from entering this street or carriageway in any vehicle.',
-    rule: 'Section 115 MV Act. Enforces one-way flow or restricted security corridors.',
-    penalty: '₹1,000 fine + possible vehicle impoundment for driving against traffic flow.',
-    examTip: 'Driving past a No Entry sign is classified as dangerous driving under Section 184.',
+    action: 'Bring the vehicle to a complete and full stop behind the stop line before entering intersection.',
+    rule: 'Section 119 Motor Vehicles Act. Mandatory yield to all cross-traffic and pedestrians.',
+    penalty: '₹1,000 to ₹5,000 for failure to halt at stop line.',
+    examTip: 'STOP is the ONLY 8-sided octagonal sign in the entire Indian road system.',
   },
   {
     id: 2,
-    signId: 2,
-    name: 'Speed Limit (50 km/h)',
-    category: 'Mandatory',
-    shape: 'Circular with Red Outer Border',
-    action: 'Vehicle speed must not exceed 50 kilometers per hour under any circumstance.',
-    rule: 'Section 112 Motor Vehicles Act (Speed Regulations).',
-    penalty: '₹1,000 to ₹2,000 (Light Motor Vehicles) / ₹4,000 (Commercial).',
-    examTip: 'Speed limits shown in circular red borders are maximum legal limits, not recommended speeds.',
+    signId: 6,
+    group: 'Mandatory',
+    orderNum: 'M-02',
+    name: 'GIVE WAY Sign',
+    shape: 'Inverted Equilateral Triangle (Apex Pointing Down)',
+    action: 'Slow down and yield right-of-way to vehicles on the main major road.',
+    rule: 'Rule 9 CMVR. Drivers must yield without stopping if the road is completely clear.',
+    penalty: '₹1,000 for failure to give way to oncoming traffic.',
+    examTip: 'GIVE WAY is the ONLY inverted triangle in the Indian traffic code.',
+  },
+  {
+    id: 3,
+    signId: 9,
+    group: 'Mandatory',
+    orderNum: 'M-03',
+    name: 'NO ENTRY Sign',
+    shape: 'Circular (Solid Red with White Horizontal Bar)',
+    action: 'Entry of all motor vehicles and transport into this street is strictly barred.',
+    rule: 'Section 115 MV Act. Enforces one-way security or pedestrianized corridors.',
+    penalty: '₹1,000 to ₹5,000 fine for driving against flow of traffic.',
+    examTip: 'Violating No Entry is prosecuted as reckless/dangerous driving under Section 184.',
   },
   {
     id: 4,
-    signId: 4,
-    name: 'Compulsory Ahead Only',
-    category: 'Mandatory',
-    shape: 'Blue Disc with White Straight Arrow',
-    action: 'You must continue straight forward; left and right turns are strictly barred.',
-    rule: 'Directional mandate under CMVR Schedule 1.',
-    penalty: '₹500 to ₹1,000 for unauthorized deviation.',
-    examTip: 'Blue circular signs signify positive commands (what you MUST do).',
+    signId: 34,
+    group: 'Mandatory',
+    orderNum: 'M-04',
+    name: 'ONE WAY Traffic Sign',
+    shape: 'Circular with Permitted Arrow & Slashed Arrow',
+    action: 'Vehicular movement permitted only in indicated direction; opposing travel prohibited.',
+    rule: 'Rule 10 Road Regulations. Reversing or counter-flow driving strictly banned.',
+    penalty: '₹1,000 fine and license endorsement.',
+    examTip: 'On a one-way road, overtaking is permitted on both sides if space permits.',
+  },
+  {
+    id: 5,
+    signId: 2,
+    group: 'Mandatory',
+    orderNum: 'M-05',
+    name: 'Speed Limit (50 km/h)',
+    shape: 'Circular with Red Outer Border',
+    action: 'Vehicle speed must not exceed 50 km/h under any traffic circumstance.',
+    rule: 'Section 112 Motor Vehicles Act.',
+    penalty: '₹1,000 to ₹2,000 for LMVs / ₹4,000 for transport vehicles.',
+    examTip: 'Numbers enclosed within red circles indicate MAXIMUM permissible speed.',
+  },
+  {
+    id: 6,
+    signId: 35,
+    group: 'Mandatory',
+    orderNum: 'M-06',
+    name: 'Height Limit (3.5 Meters)',
+    shape: 'Circular with Top & Bottom Opposing Triangles',
+    action: 'Vehicles with laden height exceeding 3.5 meters must not proceed.',
+    rule: 'Protects overhead railway bridges, low-hanging utility lines, and underpasses.',
+    penalty: '₹2,000 to ₹5,000 for height barrier violation.',
+    examTip: 'Check vehicle height before attempting low-clearance subways and underpasses.',
   },
   {
     id: 7,
     signId: 7,
+    group: 'Mandatory',
+    orderNum: 'M-07',
     name: 'U-Turn Prohibited',
-    category: 'Mandatory',
-    shape: 'Circular with Red Slash over U-Turn',
-    action: 'Do not make a 180-degree turn at this intersection or road median opening.',
-    rule: 'Rule 12 Road Regulations. U-turns prohibited on busy corridors, bridges, and curves.',
+    shape: 'Circular with Red Slash over U-Turn Arrow',
+    action: 'Making a 180-degree turnaround at this intersection or median opening is barred.',
+    rule: 'Rule 12 Road Regulations.',
     penalty: '₹1,000 for illegal median turnaround.',
-    examTip: 'Look for designated U-turn underpasses or dedicated signal phases.',
+    examTip: 'U-turns are automatically prohibited on all bridges, flyovers, and sharp blind curves.',
   },
   {
-    id: 5,
+    id: 8,
+    signId: 10,
+    group: 'Mandatory',
+    orderNum: 'M-08',
+    name: 'Overtaking Prohibited',
+    shape: 'Circular with Red Slash over Passing Vehicle',
+    action: 'Maintain lane position; do not attempt to pass or overtake any moving vehicle.',
+    rule: 'Rule 14 CMVR. Erected on narrow roads, blind corners, bridges, and tunnels.',
+    penalty: '₹1,000 to ₹5,000 for dangerous overtaking.',
+    examTip: 'Always stay behind leading vehicles until the restriction ends.',
+  },
+  {
+    id: 9,
     signId: 5,
+    group: 'Mandatory',
+    orderNum: 'M-09',
     name: 'Horn Prohibited (Silence Zone)',
-    category: 'Mandatory',
-    shape: 'Circular with Red Slash over Horn',
-    action: 'Do not sound vehicle horn within 100 meters of hospitals, courts, or schools.',
-    rule: 'Noise Pollution Rules & Section 194F MV Act.',
-    penalty: '₹1,000 first offense, ₹2,000 subsequent offense.',
-    examTip: 'Silence zones are active 24/7 around designated healthcare and judicial zones.',
+    shape: 'Circular with Red Slash over Horn Symbol',
+    action: 'Refrain completely from sounding the vehicle horn within 100 meters.',
+    rule: 'Section 194F Motor Vehicles Act. Active 24/7 around hospitals, courts, and schools.',
+    penalty: '₹1,000 for 1st offense, ₹2,000 for repeat offense.',
+    examTip: 'Use optical headlight flashing instead of horn in silence zones at night.',
   },
   {
     id: 10,
-    signId: 10,
-    name: 'Overtaking Prohibited',
-    category: 'Mandatory',
-    shape: 'Circular with Black & Red Vehicles with Slash',
-    action: 'Do not overtake any moving vehicle until the restriction ends.',
-    rule: 'Rule 14 CMVR. Erected on narrow roads, blind corners, bridges, and tunnels.',
-    penalty: '₹1,000 to ₹5,000 for dangerous overtaking.',
-    examTip: 'Always stay within your lane when overtaking prohibited sign is present.',
+    signId: 21,
+    group: 'Mandatory',
+    orderNum: 'M-10',
+    name: 'No Parking Sign',
+    shape: 'Blue Circular Disc with Red Border & Single Diagonal Slash',
+    action: 'Vehicles may stop momentarily to pick up or set down passengers, but cannot park.',
+    rule: 'Section 122 MV Act.',
+    penalty: '₹500 to ₹1,500 + vehicle towing charges.',
+    examTip: 'Single slash means No Parking (brief drop-off allowed). Cross slash means No Stopping.',
+  },
+  {
+    id: 11,
+    signId: 22,
+    group: 'Mandatory',
+    orderNum: 'M-11',
+    name: 'No Stopping / No Standing',
+    shape: 'Blue Circular Disc with Red Border & Red Cross (X)',
+    action: 'Vehicle must not halt or stand even for a single second for any purpose.',
+    rule: 'Section 122 MV Act (Clearway / Express Corridor).',
+    penalty: '₹1,000 + immediate towing on high-speed expressways and arterial bridges.',
+    examTip: 'Double cross slash means absolute clearway (zero stopping permitted).',
   },
   {
     id: 12,
-    signId: 12,
-    name: 'Compulsory Cycle Track',
-    category: 'Mandatory',
-    shape: 'Blue Disc with White Bicycle',
-    action: 'Designated exclusively for non-motorized pedal cycles. Motor vehicles strictly prohibited.',
-    rule: 'Dedicated non-motorized transport lane.',
-    penalty: '₹1,000 for driving motorized vehicle in cycle lane.',
-    examTip: 'Protects vulnerable road users on arterial city roads.',
+    signId: 4,
+    group: 'Mandatory',
+    orderNum: 'M-12',
+    name: 'Compulsory Ahead Only',
+    shape: 'Blue Circular Disc with White Upward Arrow',
+    action: 'Vehicle MUST travel straight ahead. Left and right turns are barred.',
+    rule: 'Positive command sign under IRC:67.',
+    penalty: '₹1,000 for illegal turn.',
+    examTip: 'Blue circular signs always indicate COMPULSORY positive instructions.',
   },
   {
     id: 13,
     signId: 13,
-    name: 'Compulsory Turn Left Ahead',
-    category: 'Mandatory',
-    shape: 'Blue Disc with Left Arrow',
-    action: 'Vehicle must execute a left turn immediately ahead. Straight and right paths closed.',
-    rule: 'Positive command sign under IRC:67.',
+    group: 'Mandatory',
+    orderNum: 'M-13',
+    name: 'Compulsory Turn Left',
+    shape: 'Blue Circular Disc with Leftward Arrow',
+    action: 'Vehicle MUST turn left at the upcoming intersection.',
+    rule: 'Mandatory lane routing.',
+    penalty: '₹1,000 for directional non-compliance.',
+    examTip: 'Engage left turn indicator at least 30 meters in advance.',
+  },
+  {
+    id: 14,
+    signId: 14,
+    group: 'Mandatory',
+    orderNum: 'M-14',
+    name: 'Compulsory Turn Right',
+    shape: 'Blue Circular Disc with Rightward Arrow',
+    action: 'Vehicle MUST turn right at the upcoming junction.',
+    rule: 'Mandatory right turn routing.',
     penalty: '₹1,000 for lane disobedience.',
-    examTip: 'Indicate left indicator at least 30 meters prior to executing turn.',
-  },
-
-  // 2. Cautionary / Warning Signs
-  {
-    id: 3,
-    signId: 3,
-    name: 'Pedestrian Zebra Crossing Ahead',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border, Apex Up)',
-    action: 'Reduce speed immediately and stop before the crossing line to allow pedestrians to cross.',
-    rule: 'Section 119 MV Act & Rule 11 Road Regulations. Pedestrians have absolute legal right of way on zebra crossings.',
-    penalty: '₹1,000 fine and license endorsement for blocking pedestrian crossing.',
-    examTip: 'Never overtake a vehicle that has slowed down or stopped at a zebra crossing.',
-  },
-  {
-    id: 11,
-    signId: 11,
-    name: 'School Zone Ahead',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Reduce speed to 25 km/h or below. Watch out for children stepping onto the carriageway.',
-    rule: 'Special speed limit near educational institutions.',
-    penalty: '₹1,000 to ₹2,000 for overspeeding in school zones.',
-    examTip: 'Exercise maximum vigilance during morning opening and afternoon closing hours.',
-  },
-  {
-    id: 8,
-    signId: 8,
-    name: 'Speed Breaker / Hump Road Ahead',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Slow down smoothly to avoid vehicle underbody impact and passenger injury.',
-    rule: 'Traffic calming measure before intersections and residential roads.',
-    penalty: 'Risk of vehicle suspension damage and loss of vehicle control.',
-    examTip: 'Brake before reaching the bump, release brake slightly while wheels roll over.',
-  },
-  {
-    id: 16,
-    signId: 16,
-    name: 'Narrow Bridge Ahead',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Prepare for road width reduction. Check oncoming vehicles before entering bridge.',
-    rule: 'Rule 15 CMVR. Vehicle already on bridge has right of way over approaching vehicles.',
-    penalty: '₹1,000 for overtaking on narrow bridges.',
-    examTip: 'Never overtake or stop on a narrow bridge.',
-  },
-  {
-    id: 17,
-    signId: 17,
-    name: 'Right Hairpin Bend',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Gear down to lower gear (2nd/1st), slow down, and stay in left lane around blind corner.',
-    rule: 'Mountain / Ghat road driving rules.',
-    penalty: 'Severe hazard warning for hillside road safety.',
-    examTip: 'Vehicles traveling uphill have right of way over vehicles descending downhill.',
+    examTip: 'Position vehicle in rightmost lane before executing turn.',
   },
   {
     id: 15,
-    signId: 15,
-    name: 'Roundabout Ahead (Rotary)',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Yield to traffic already circulating inside the roundabout coming from your right side.',
-    rule: 'Rule 17 Road Regulations. Clockwise circulatory movement.',
-    penalty: '₹1,000 for failing to yield at rotary.',
-    examTip: 'Always give way to vehicles on your right inside the roundabout.',
+    signId: 33,
+    group: 'Mandatory',
+    orderNum: 'M-15',
+    name: 'Compulsory Keep Left',
+    shape: 'Blue Circular Disc with Downward-Left Diagonal Arrow',
+    action: 'Drive strictly on the left side of the traffic island, divider, or bollard.',
+    rule: 'Traffic channelization under IRC:67.',
+    penalty: '₹1,000 for passing on wrong side of divider.',
+    examTip: 'Commonly placed at the beginning of dual carriageways and central medians.',
   },
   {
-    id: 18,
-    signId: 18,
-    name: 'Unguarded Railway Level Crossing',
-    category: 'Cautionary',
-    shape: 'Equilateral Triangle (Red Border)',
-    action: 'Stop vehicle, look both directions, listen for train whistle, and cross only when clear.',
-    rule: 'Section 131 MV Act. Mandatory stop and look duty for all drivers.',
-    penalty: 'Severe offense with license cancellation and criminal prosecution for reckless train track crossing.',
-    examTip: 'Never stop or shift gears while wheels are on railway tracks.',
+    id: 16,
+    signId: 32,
+    group: 'Mandatory',
+    orderNum: 'M-16',
+    name: 'Compulsory Sound Horn',
+    shape: 'Blue Circular Disc with White Horn Symbol',
+    action: 'Sound your vehicle horn to alert oncoming traffic before proceeding around blind curve.',
+    rule: 'Mandatory on hairpin bends, mountain ghat roads, and blind hill crests.',
+    penalty: 'Risk of head-on collision on narrow single-lane mountain passes.',
+    examTip: 'Sounding horn is mandatory on blind curves to warn opposing traffic.',
+  },
+  {
+    id: 17,
+    signId: 12,
+    group: 'Mandatory',
+    orderNum: 'M-17',
+    name: 'Compulsory Cycle Track',
+    shape: 'Blue Circular Disc with White Bicycle',
+    action: 'Dedicated exclusively for non-motorized pedal cycles. Motor vehicles barred.',
+    rule: 'Dedicated cycle track regulation.',
+    penalty: '₹1,000 for driving motorized vehicle in bicycle corridor.',
+    examTip: 'Protects pedal cyclists and non-motorized commuters.',
   },
 
-  // 3. Informatory Signs
+  // =========================================================================
+  // 2. CAUTIONARY / WARNING SIGNS (Schedule I - Part B, Hazard Warnings)
+  // =========================================================================
+  {
+    id: 18,
+    signId: 3,
+    group: 'Cautionary',
+    orderNum: 'C-01',
+    name: 'Pedestrian Zebra Crossing Ahead',
+    shape: 'Equilateral Triangle (Red Border, Apex Up)',
+    action: 'Reduce speed smoothly and be prepared to stop. Pedestrians have absolute right-of-way.',
+    rule: 'Section 119 MV Act & Rule 11 Road Regulations.',
+    penalty: '₹1,000 fine for failure to yield to pedestrians on zebra crossing.',
+    examTip: 'Never overtake a vehicle that has stopped at a pedestrian crossing.',
+  },
   {
     id: 19,
-    signId: 19,
-    name: 'First Aid Post',
-    category: 'Informatory',
-    shape: 'Blue Rectangle with Red Cross in White Box',
-    action: 'Informs travelers of emergency medical first aid availability along highway.',
-    rule: 'Highway amenity under IRC:67.',
-    penalty: 'N/A (Informatory aid).',
-    examTip: 'Essential stop for emergency road accidents.',
+    signId: 11,
+    group: 'Cautionary',
+    orderNum: 'C-02',
+    name: 'School Zone Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Reduce speed to 25 km/h or below. Watch for children crossing.',
+    rule: 'Special speed enforcement near educational institutions.',
+    penalty: '₹1,000 to ₹2,000 for overspeeding in school zones.',
+    examTip: 'Highest vigilance required between 7:30-9:00 AM and 1:30-3:30 PM.',
   },
   {
     id: 20,
+    signId: 8,
+    group: 'Cautionary',
+    orderNum: 'C-03',
+    name: 'Speed Breaker / Road Hump Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Decelerate in advance to cross the hump safely without passenger discomfort.',
+    rule: 'Traffic calming measure before intersections and accident-prone zones.',
+    penalty: 'Risk of vehicle undercarriage damage and loss of vehicle stability.',
+    examTip: 'Brake before reaching the hump, release brake gently as front wheels climb.',
+  },
+  {
+    id: 21,
+    signId: 23,
+    group: 'Cautionary',
+    orderNum: 'C-04',
+    name: 'Right Hand Curve Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Reduce speed, downshift if necessary, and hug the center-left of your lane.',
+    rule: 'Warning of upcoming rightward curvature in roadway.',
+    penalty: 'Risk of skidding or lane departure due to centrifugal force.',
+    examTip: 'Complete all braking before entering the curve, not while turning the steering wheel.',
+  },
+  {
+    id: 22,
+    signId: 24,
+    group: 'Cautionary',
+    orderNum: 'C-05',
+    name: 'Left Hand Curve Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Slow down and stay firmly on the left side of the carriageway.',
+    rule: 'Warning of upcoming leftward curvature.',
+    penalty: 'Risk of drifting into opposing traffic lane.',
+    examTip: 'Never cross the center dividing line when negotiating a curve.',
+  },
+  {
+    id: 23,
+    signId: 17,
+    group: 'Cautionary',
+    orderNum: 'C-06',
+    name: 'Right Hairpin Bend',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Shift to 1st or 2nd gear, reduce speed below 20 km/h, and stay alert.',
+    rule: 'Extreme curve on mountain / ghat sections.',
+    penalty: 'Severe hazard warning on steep slopes.',
+    examTip: 'Uphill vehicles have statutory right of way over downhill vehicles.',
+  },
+  {
+    id: 24,
+    signId: 25,
+    group: 'Cautionary',
+    orderNum: 'C-07',
+    name: 'Steep Ascent (Uphill Climb)',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Select lower gear before beginning climb to avoid engine stall.',
+    rule: 'Gradient warning under IRC:67.',
+    penalty: 'Risk of vehicle rolling backwards.',
+    examTip: 'Use handbrake technique for stationary hill starts.',
+  },
+  {
+    id: 25,
+    signId: 26,
+    group: 'Cautionary',
+    orderNum: 'C-08',
+    name: 'Steep Descent (Downhill Slope)',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Use engine braking (lower gear); do not coast in neutral or rely solely on footbrakes.',
+    rule: 'Gradient warning under IRC:67.',
+    penalty: 'Risk of brake fade / complete brake failure from overheating.',
+    examTip: 'Never depress the clutch or drive in neutral on downhill gradients.',
+  },
+  {
+    id: 26,
+    signId: 27,
+    group: 'Cautionary',
+    orderNum: 'C-09',
+    name: 'Narrow Road Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Carriageway width reduces ahead. Be prepared to yield to oncoming heavy vehicles.',
+    rule: 'Lane constriction warning.',
+    penalty: 'Risk of sideswipe collisions.',
+    examTip: 'Do not overtake when approaching narrow road bottlenecks.',
+  },
+  {
+    id: 27,
+    signId: 16,
+    group: 'Cautionary',
+    orderNum: 'C-10',
+    name: 'Narrow Bridge Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Check opposing traffic before entering. Vehicle already on bridge has right-of-way.',
+    rule: 'Rule 15 CMVR.',
+    penalty: '₹1,000 for overtaking on narrow bridges.',
+    examTip: 'Never overtake, reverse, or stop on a narrow bridge.',
+  },
+  {
+    id: 28,
+    signId: 28,
+    group: 'Cautionary',
+    orderNum: 'C-11',
+    name: 'Slippery Road Ahead',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Drive gently, avoid sudden braking or aggressive steering on wet/slippery surface.',
+    rule: 'Reduced tire traction hazard.',
+    penalty: 'Severe skid / aquaplaning hazard.',
+    examTip: 'Increase following distance from leading vehicle by double.',
+  },
+  {
+    id: 29,
+    signId: 15,
+    group: 'Cautionary',
+    orderNum: 'C-12',
+    name: 'Roundabout Ahead (Rotary)',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Yield right-of-way to vehicles already circulating inside the rotary on your right.',
+    rule: 'Rule 17 Road Regulations.',
+    penalty: '₹1,000 for failing to yield at roundabout.',
+    examTip: 'Traffic moves clockwise in India; always give way to vehicles from your right.',
+  },
+  {
+    id: 30,
+    signId: 29,
+    group: 'Cautionary',
+    orderNum: 'C-13',
+    name: 'Gap in Median (Opening Ahead)',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Watch out for turning vehicles and crossing pedestrians emerging from divider gap.',
+    rule: 'Median opening warning on multi-lane highways.',
+    penalty: 'Risk of T-bone intersection collision.',
+    examTip: 'Do not overtake in the immediate vicinity of a median opening.',
+  },
+  {
+    id: 31,
+    signId: 30,
+    group: 'Cautionary',
+    orderNum: 'C-14',
+    name: 'Men at Work / Road Construction',
+    shape: 'Equilateral Triangle (Red Border)',
+    action: 'Reduce speed, watch for road workers, machinery, and gravel on carriageway.',
+    rule: 'Work zone safety under MoRTH guidelines.',
+    penalty: '₹1,000 to ₹5,000 for reckless speeding in active work zones.',
+    examTip: 'Follow instructions of site flagmen and temporary directional arrows.',
+  },
+  {
+    id: 32,
+    signId: 36,
+    group: 'Cautionary',
+    orderNum: 'C-15',
+    name: 'Guarded Railway Level Crossing',
+    shape: 'Equilateral Triangle with Railway Gate Symbol',
+    action: 'Railway crossing protected by physical barrier gates ahead. Stop when red lights flash.',
+    rule: 'Section 130 Motor Vehicles Act.',
+    penalty: 'Severe criminal offense for trying to cross under closing railway barrier.',
+    examTip: 'Red flashes indicate barrier closure; complete stop is mandatory.',
+  },
+  {
+    id: 33,
+    signId: 18,
+    group: 'Cautionary',
+    orderNum: 'C-16',
+    name: 'Unguarded Railway Level Crossing',
+    shape: 'Equilateral Triangle with Steam Train Engine',
+    action: 'No barrier or watchman. Driver MUST halt, look both directions, and listen for train.',
+    rule: 'Section 131 MV Act (Duty of driver at unguarded railway crossing).',
+    penalty: 'Driver license cancellation and criminal prosecution for reckless track crossing.',
+    examTip: 'Never shift gears or stop while vehicle is situated across the tracks.',
+  },
+
+  // =========================================================================
+  // 3. INFORMATORY & FACILITY SIGNS (Schedule I - Part C, Amenities)
+  // =========================================================================
+  {
+    id: 34,
+    signId: 19,
+    group: 'Informatory',
+    orderNum: 'I-01',
+    name: 'First Aid Post',
+    shape: 'Blue Rectangle with Red Cross in White Square',
+    action: 'Informs travelers of emergency medical first aid availability along the highway.',
+    rule: 'Highway emergency amenity under IRC:67.',
+    penalty: 'N/A (Informatory aid).',
+    examTip: 'Indicates basic emergency trauma kit availability.',
+  },
+  {
+    id: 35,
     signId: 20,
+    group: 'Informatory',
+    orderNum: 'I-02',
     name: 'Hospital Facility',
-    category: 'Informatory',
     shape: 'Blue Rectangle with Letter H',
-    action: 'Indicates inpatient hospital facility. Driver must maintain silence and refrain from honking.',
-    rule: 'Combines medical guidance with mandatory silence zone.',
-    penalty: '₹1,000 for sounding horn near hospital.',
-    examTip: 'Observe strict silence zone in vicinity of this sign.',
+    action: 'Inpatient hospital facility nearby. Maintain strict silence and do not sound horn.',
+    rule: 'Combines health guidance with mandatory silence zone.',
+    penalty: '₹1,000 for sounding horn in vicinity.',
+    examTip: 'Observe strict silence zone within 100m of this facility.',
+  },
+  {
+    id: 36,
+    signId: 31,
+    group: 'Informatory',
+    orderNum: 'I-03',
+    name: 'Petrol Pump / Fuel Station',
+    shape: 'Blue Rectangle with Fuel Dispenser',
+    action: 'Indicates motor vehicle refueling facility ahead.',
+    rule: 'Highway facility under IRC:67.',
+    penalty: 'N/A (Informatory aid).',
+    examTip: 'Turn off vehicle engine and mobile phone while refueling at the dispenser.',
   },
 ];
 
-const CORE_DRIVING_RULES = [
+export const CORE_DRIVING_RULES = [
   {
     title: '1. Right-of-Way at Intersections (Uncontrolled Junctions)',
     content: 'When two vehicles approach an intersection simultaneously with no traffic lights or signs, the vehicle on the RIGHT always has the statutory right-of-way. You must give way to traffic approaching from your right.',
@@ -251,11 +480,12 @@ export default function TrafficRulesGuide({ onStartTest }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedSignId, setExpandedSignId] = useState(null);
 
-  const filteredSigns = TRAINING_SIGNS.filter((sign) => {
+  const filteredSigns = COMPLETE_TRAFFIC_SIGNS.filter((sign) => {
     const matchesCategory =
-      activeTab === 'all' || sign.category.toLowerCase() === activeTab.toLowerCase();
+      activeTab === 'all' || sign.group.toLowerCase() === activeTab.toLowerCase();
     const matchesSearch =
       sign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sign.orderNum.toLowerCase().includes(searchTerm.toLowerCase()) ||
       sign.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
       sign.rule.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -270,11 +500,11 @@ export default function TrafficRulesGuide({ onStartTest }) {
             Driver Road Safety & Traffic Sign Training Academy
           </h2>
           <span className="text-[11px] bg-blue-50 dark:bg-blue-950/60 text-blue-900 dark:text-blue-300 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800 font-mono font-bold">
-            IRC:67 & MV Act Curriculum
+            Complete IRC:67 Catalog ({COMPLETE_TRAFFIC_SIGNS.length} Signs)
           </span>
         </div>
         <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-          Review all mandatory road signs, cautionary warnings, and statutory driving rules before attempting the qualifying 5-question test.
+          Complete mandatory curriculum in official statutory order. Review all regulatory commands, cautionary warnings, and informatory markers before launching the 5-question test.
         </p>
       </div>
 
@@ -291,7 +521,7 @@ export default function TrafficRulesGuide({ onStartTest }) {
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}
             >
-              All Signs ({TRAINING_SIGNS.length})
+              All Signs ({COMPLETE_TRAFFIC_SIGNS.length})
             </button>
             <button
               type="button"
@@ -302,7 +532,7 @@ export default function TrafficRulesGuide({ onStartTest }) {
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}
             >
-              Mandatory Signs (Prohibitions & Commands)
+              1. Mandatory Signs (M-01 to M-17)
             </button>
             <button
               type="button"
@@ -313,18 +543,29 @@ export default function TrafficRulesGuide({ onStartTest }) {
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}
             >
-              Cautionary Signs (Hazards)
+              2. Cautionary Signs (C-01 to C-16)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('informatory')}
+              className={`px-3 py-1.5 rounded transition-colors ${
+                activeTab === 'informatory'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'
+              }`}
+            >
+              3. Informatory Signs (I-01 to I-03)
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('rules')}
               className={`px-3 py-1.5 rounded transition-colors ${
                 activeTab === 'rules'
-                  ? 'bg-blue-700 text-white shadow-xs'
+                  ? 'bg-emerald-700 text-white shadow-xs'
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'
               }`}
             >
-              Statutory MV Act Rules
+              4. MV Act Rules & Penalties
             </button>
           </div>
 
@@ -334,8 +575,8 @@ export default function TrafficRulesGuide({ onStartTest }) {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search sign, rule, penalty..."
-              className="w-full sm:w-56 px-3 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-700"
+              placeholder="Search sign (e.g. M-01, STOP, U-Turn)..."
+              className="w-full sm:w-60 px-3 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-700"
             />
           </div>
         </div>
@@ -343,10 +584,10 @@ export default function TrafficRulesGuide({ onStartTest }) {
         {/* Informational Training Banner */}
         <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
           <span>
-            Showing <strong>{activeTab === 'rules' ? CORE_DRIVING_RULES.length : filteredSigns.length}</strong> training topics
+            Showing <strong>{activeTab === 'rules' ? CORE_DRIVING_RULES.length : filteredSigns.length}</strong> items in statutory sequence
           </span>
-          <span className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">
-            Tip: Click any sign stack to expand full legal explanation & test tips
+          <span className="text-[11px] text-blue-800 dark:text-blue-300 font-semibold">
+            Click any sign row to expand full legal explanation, fines & examination tips
           </span>
         </div>
       </div>
@@ -370,7 +611,7 @@ export default function TrafficRulesGuide({ onStartTest }) {
           ))}
         </div>
       ) : (
-        /* Vertical Card Stack of Every Traffic Sign */
+        /* Vertical Card Stack of Every Traffic Sign in Strict Order */
         <div className="space-y-3">
           {filteredSigns.map((item) => {
             const isExpanded = expandedSignId === item.id;
@@ -392,16 +633,19 @@ export default function TrafficRulesGuide({ onStartTest }) {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded">
+                          {item.orderNum}
+                        </span>
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                            item.category === 'Mandatory'
+                            item.group === 'Mandatory'
                               ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-                              : item.category === 'Cautionary'
+                              : item.group === 'Cautionary'
                               ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
                               : 'bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
                           }`}
                         >
-                          {item.category}
+                          {item.group}
                         </span>
                         <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                           {item.shape}
@@ -468,7 +712,7 @@ export default function TrafficRulesGuide({ onStartTest }) {
             Ready for the Official Knowledge Test?
           </h3>
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Once you have reviewed the road signs and regulations above, proceed to the timed 5-question qualifying test.
+            Once you have reviewed the complete road signs and regulations catalog above, proceed to the timed 5-question qualifying test.
           </p>
         </div>
 
@@ -477,7 +721,7 @@ export default function TrafficRulesGuide({ onStartTest }) {
           onClick={onStartTest}
           className="px-6 py-3 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold text-sm rounded shadow-xs transition-colors inline-flex items-center gap-2"
         >
-          <span>I have completed driver training • Start 5-Question Test →</span>
+          <span>I have completed full driver training • Start 5-Question Test →</span>
         </button>
       </div>
     </div>
