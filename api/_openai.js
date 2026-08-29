@@ -1,13 +1,13 @@
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions'
 
 export async function gptStructured({ model, messages, schema, schemaName }) {
-  const key = process.env.OPENAI_API_KEY
+  const key = process.env.OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY
   if (!key) throw new Error('OPENAI_API_KEY not configured')
 
   const res = await fetch(OPENAI_URL, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${key}`,
+      Authorization: `Bearer ${key.trim()}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

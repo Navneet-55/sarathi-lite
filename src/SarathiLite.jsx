@@ -8,7 +8,7 @@ import StepSlotBooking from './components/StepSlotBooking';
 import { fetchOcrData } from './services/apiService';
 
 const INITIAL_PROFILE = {
-  name: 'Rahul Sharma',
+  name: 'Navneet',
   aadhaar: 'XXXX-XXXX-4521',
   mobile: '+91 98765 43210',
   dob: '15/03/1998',
@@ -86,7 +86,7 @@ export default function SarathiLite() {
       setOcrResult(null);
 
       try {
-        const data = await fetchOcrData(base64, 'aadhaar');
+        const data = await fetchOcrData(base64, 'aadhaar', profile);
         setOcrResult(data);
         if (data.name) {
           setProfile((prev) => ({
@@ -109,11 +109,11 @@ export default function SarathiLite() {
   const triggerSampleOcr = async () => {
     setOcrLoading(true);
     setOcrResult(null);
-    const sampleCanvas = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Rahul Sharma</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Male / Purush</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>XXXX XXXX 4521</text></svg>";
+    const sampleCanvas = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Navneet</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Male / Purush</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>XXXX XXXX 4521</text></svg>";
     setDocPreview(sampleCanvas);
 
     setTimeout(async () => {
-      const data = await fetchOcrData(sampleCanvas, 'aadhaar');
+      const data = await fetchOcrData(sampleCanvas, 'aadhaar', profile);
       setOcrResult(data);
       if (data.name) {
         setProfile((prev) => ({
