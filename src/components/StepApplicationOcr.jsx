@@ -248,9 +248,10 @@ export default function StepApplicationOcr({
               rows={[
                 ['Parsed Full Name', ocrResult.name || <span className="text-slate-400 italic">Not detected on document</span>],
                 ['Parsed Date of Birth', ocrResult.dob || <span className="text-slate-400 italic">Not detected on document</span>],
+                ['Mobile Number', ocrResult.mobile || <span className="text-slate-400 italic">Not detected on card</span>],
                 ['Gender', ocrResult.gender || <span className="text-slate-400 italic">Not detected</span>],
                 ['Aadhaar Number', ocrResult.docNumber || <span className="text-slate-400 italic">Not detected on document</span>],
-                ['Residential Address', ocrResult.address || <span className="text-slate-400 italic">Not detected on front side</span>],
+                ['Residential Address', ocrResult.address || <span className="text-slate-400 italic">Not detected on card</span>],
                 [
                   'Validation Result',
                   <span key="status" className="inline-flex items-center gap-1 text-emerald-800 dark:text-emerald-400 font-bold">
