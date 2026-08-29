@@ -21,9 +21,9 @@ export default async function handler(req, res) {
                 options: { type: 'array', items: { type: 'string' } },
                 correctIndex: { type: 'number' },
                 explanation: { type: 'string' },
-                signEmoji: { type: 'string' },
+                category: { type: 'string' },
               },
-              required: ['question', 'options', 'correctIndex', 'explanation', 'signEmoji'],
+              required: ['question', 'options', 'correctIndex', 'explanation', 'category'],
               additionalProperties: false,
             },
           },
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       messages: [
         {
           role: 'system',
-          content: `You are an Indian traffic sign tutor for learner's license applicants. Generate ${count} multiple-choice question(s) about Indian Road Traffic signs (as per MV Act). Each question has exactly 4 options, one correct answer (correctIndex 0-3), a brief explanation, and a relevant emoji representing the sign. Focus on common signs: Stop, No Entry, Speed Limit, Pedestrian Crossing, U-Turn, One Way, etc.`,
+          content: `You are an Indian traffic sign tutor for learner's license applicants under the Central Motor Vehicles Rules (CMVR). Generate ${count} multiple-choice question(s) about Indian Road Traffic signs (as per IRC:67 and MV Act). Each question has exactly 4 options, one correct answer (correctIndex 0-3), a category (e.g. Mandatory, Cautionary, Informatory), and a brief statutory explanation. Focus on common signs: Stop, No Entry, Speed Limit, Pedestrian Crossing, U-Turn, One Way, etc.`,
         },
         { role: 'user', content: `Generate ${count} traffic sign quiz question(s) for a learner's license test in India.` },
       ],

@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       messages: [
         {
           role: 'system',
-          content: `You are an RTO appointment advisor for Sarathi Parivahan in India. Rank the top 3 slots for a learner's license computer test. Consider: proximity to applicant RTO, seat availability, time preference (${preference || 'any'}), and avoiding peak hours. Score 0-100.`,
+          content: `You are an official RTO appointment advisor for Sarathi Parivahan in India. Rank the top 3 slots for a learner's license computerized test. Consider: proximity to applicant RTO (${profile?.rto || 'Bengaluru'}), seat availability, time preference (${preference || 'morning'}), and off-peak convenience. Score 0-100.`,
         },
         {
           role: 'user',
