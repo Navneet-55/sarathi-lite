@@ -9,7 +9,7 @@ import StepSlotBooking from './components/StepSlotBooking';
 import MyProfileModal from './components/MyProfileModal';
 import { fetchOcrData } from './services/apiService';
 
-// Initial Fresh Blank Profile (No Preloaded Names)
+// Initial Fresh Blank Profile
 const BLANK_PROFILE = {
   name: '',
   aadhaar: '',
@@ -29,11 +29,13 @@ export default function SarathiLite() {
   const [darkMode, setDarkMode] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
-  // Application Form & OCR State (Starts 100% Blank)
+  // Application Form & OCR State (Separate Front and Back)
   const [profile, setProfile] = useState(BLANK_PROFILE);
-  const [docPreview, setDocPreview] = useState(null);
+  const [frontPreview, setFrontPreview] = useState(null);
+  const [backPreview, setBackPreview] = useState(null);
+  const [frontLoading, setFrontLoading] = useState(false);
+  const [backLoading, setBackLoading] = useState(false);
   const [ocrResult, setOcrResult] = useState(null);
-  const [ocrLoading, setOcrLoading] = useState(false);
 
   // Practice Test State
   const [practicePassed, setPracticePassed] = useState(false);
@@ -86,7 +88,10 @@ export default function SarathiLite() {
     setCurrentStep(1);
     setTrafficPhase('guide');
     setProfile(BLANK_PROFILE);
-    setDocPreview(null);
+    setFrontPreview(null);
+    setBackPreview(null);
+    setFrontLoading(false);
+    setBackLoading(false);
     setOcrResult(null);
     setPracticePassed(false);
     setPaid(false);
@@ -97,62 +102,112 @@ export default function SarathiLite() {
     setProfileModalOpen(false);
   };
 
-  const handleDocUpload = (e) => {
+  // Dedicated Front-Side Upload Handler
+  const handleFrontUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = reader.result;
-      setDocPreview(base64);
-      setOcrLoading(true);
-      setOcrResult(null);
+      setFrontPreview(base64);
+      setFrontLoading(true);
 
       try {
-        const data = await fetchOcrData(base64, 'aadhaar');
-        setOcrResult(data);
+        const data = await fetchOcrData(base64, 'aadhaar', 'front');
+        setOcrResult((prev) => ({ ...prev, ...data, frontScanned: true }));
         if (data) {
           setProfile((prev) => ({
             ...prev,
             name: data.name || prev.name,
             dob: data.dob || prev.dob,
             mobile: data.mobile || prev.mobile,
+            aadhaar: data.docNumber || prev.aadhaar,
+            applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
+          }));
+        }
+      } catch (err) {
+        console.error('Front OCR error:', err);
+      } finally {
+        setFrontLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Dedicated Back-Side Upload Handler
+  const handleBackUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = reader.result;
+      setBackPreview(base64);
+      setBackLoading(true);
+
+      try {
+        const data = await fetchOcrData(base64, 'aadhaar', 'back');
+        setOcrResult((prev) => ({ ...prev, ...data, backScanned: true }));
+        if (data) {
+          setProfile((prev) => ({
+            ...prev,
             address: data.address || prev.address,
             aadhaar: data.docNumber || prev.aadhaar,
             applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
           }));
         }
       } catch (err) {
-        console.error('OCR processing error:', err);
+        console.error('Back OCR error:', err);
       } finally {
-        setOcrLoading(false);
+        setBackLoading(false);
       }
     };
     reader.readAsDataURL(file);
   };
 
-  const triggerSampleOcr = async () => {
-    setOcrLoading(true);
-    setOcrResult(null);
-    const sampleCanvas = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Navneet</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Male / Purush</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>XXXX XXXX 4521</text></svg>";
-    setDocPreview(sampleCanvas);
+  // Sample Front Page Loader
+  const triggerSampleFront = async () => {
+    setFrontLoading(true);
+    const sampleFront = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Navneet</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Mobile: 9876543210</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>8938 3111 6226</text></svg>";
+    setFrontPreview(sampleFront);
 
     setTimeout(async () => {
-      const data = await fetchOcrData(sampleCanvas, 'aadhaar');
-      setOcrResult(data);
+      const data = await fetchOcrData(sampleFront, 'aadhaar', 'front');
+      setOcrResult((prev) => ({ ...prev, ...data, frontScanned: true }));
       if (data) {
         setProfile((prev) => ({
           ...prev,
           name: data.name || prev.name,
           dob: data.dob || prev.dob,
           mobile: data.mobile || prev.mobile,
+          aadhaar: data.docNumber || prev.aadhaar,
+          applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
+        }));
+      }
+      setFrontLoading(false);
+    }, 750);
+  };
+
+  // Sample Back Page Loader
+  const triggerSampleBack = async () => {
+    setBackLoading(true);
+    const sampleBack = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='13' font-family='sans-serif' font-weight='bold' text-anchor='middle'>UNIQUE IDENTIFICATION AUTHORITY OF INDIA</text><text x='30' y='85' font-size='12' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Address:</text><text x='30' y='105' font-size='11' font-family='sans-serif' fill='%23475569'>HSR Layout, Sector 3</text><text x='30' y='125' font-size='11' font-family='sans-serif' fill='%23475569'>Bengaluru, Karnataka - 560102</text><rect x='260' y='75' width='100' height='100' fill='%23e2e8f0' stroke='%2394a3b8'/><text x='310' y='130' font-size='10' font-family='sans-serif' fill='%2364748b' text-anchor='middle'>[QR CODE]</text><text x='200' y='215' font-size='15' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>8938 3111 6226</text></svg>";
+    setBackPreview(sampleBack);
+
+    setTimeout(async () => {
+      const data = await fetchOcrData(sampleBack, 'aadhaar', 'back');
+      setOcrResult((prev) => ({ ...prev, ...data, backScanned: true }));
+      if (data) {
+        setProfile((prev) => ({
+          ...prev,
           address: data.address || prev.address,
           aadhaar: data.docNumber || prev.aadhaar,
           applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
         }));
       }
-      setOcrLoading(false);
-    }, 850);
+      setBackLoading(false);
+    }, 750);
   };
 
   const getContrastClass = () => {
@@ -288,7 +343,7 @@ export default function SarathiLite() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            {/* My Profile Button (Only accessible when profile info is created/entered) */}
+            {/* My Profile Button */}
             {profile?.name && (
               <button
                 type="button"
@@ -356,16 +411,20 @@ export default function SarathiLite() {
 
       {/* Main Form Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 pb-28">
-        {/* Step 1: Application Form & OCR */}
+        {/* Step 1: Application Form & Distinct Front/Back OCR */}
         {currentStep === 1 && (
           <StepApplicationOcr
             profile={profile}
             setProfile={setProfile}
-            docPreview={docPreview}
+            frontPreview={frontPreview}
+            backPreview={backPreview}
+            frontLoading={frontLoading}
+            backLoading={backLoading}
             ocrResult={ocrResult}
-            ocrLoading={ocrLoading}
-            handleDocUpload={handleDocUpload}
-            triggerSampleOcr={triggerSampleOcr}
+            handleFrontUpload={handleFrontUpload}
+            handleBackUpload={handleBackUpload}
+            triggerSampleFront={triggerSampleFront}
+            triggerSampleBack={triggerSampleBack}
           />
         )}
 

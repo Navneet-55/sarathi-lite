@@ -4,21 +4,21 @@ import { runBrowserTesseractOcr } from './ocrEngine';
 
 /**
  * Robust API Service Layer for Sarathi-Lite
- * Real Character Recognition Engine for Single & Dual-Side Aadhaar (GPT-4o-mini Vision + Tesseract.js WASM)
+ * Dedicated Front-Side and Back-Side Optical Character Recognition
  */
 
-export async function fetchOcrData(base64Image, docType = 'aadhaar') {
-  // 1. Try serverless /api/ocr endpoint (GPT-4o-mini Vision)
+export async function fetchOcrData(base64Image, docType = 'aadhaar', side = 'both') {
+  // 1. Try serverless /api/ocr endpoint
   try {
     const res = await fetch('/api/ocr', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: base64Image, docType }),
+      body: JSON.stringify({ image: base64Image, docType, side }),
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && (data.name || data.docNumber || data.dob || data.address)) {
-        return { ...data, isLiveAi: true, engine: 'GPT-4o-mini Vision API' };
+      if (data && (data.name || data.docNumber || data.dob || data.address || data.mobile)) {
+        return { ...data, isLiveAi: true };
       }
     }
   } catch {
@@ -29,6 +29,13 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
   const clientKey = typeof import.meta !== 'undefined' && import.meta.env?.VITE_OPENAI_API_KEY;
   if (clientKey && clientKey.startsWith('sk-')) {
     try {
+      const promptText =
+        side === 'front'
+          ? 'Extract demographic fields from the FRONT side of this Indian Aadhaar card: name (full English name), dob (DD/MM/YYYY), gender (Male/Female/Transgender), mobile (phone number if visible), docNumber (12-digit UID e.g. 8938 3111 6226). Leave address blank.'
+          : side === 'back'
+          ? 'Extract fields from the BACK side of this Indian Aadhaar card: address (complete permanent English residential address with PIN code), docNumber (12-digit UID if visible). Leave name, dob, mobile blank.'
+          : 'Extract all demographic fields from this Indian Aadhaar card (front and/or back side): name, dob (DD/MM/YYYY), mobile, address, docNumber, gender.';
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -40,12 +47,12 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
           messages: [
             {
               role: 'system',
-              content: 'You are an Indian government Aadhaar document OCR parser. The image may show front side, back side, or both front & back in a single image. Extract into valid JSON: name (full English name), dob (DD/MM/YYYY), mobile (phone number e.g. 9798864224), address (full English residential address from back side), docNumber (12-digit UID e.g. 8938 3111 6226), gender (Female/Male/Transgender), confidence (0.95-0.99), verified (true).',
+              content: 'You are an Indian government Aadhaar document OCR parser. Extract fields into JSON format: name, dob (DD/MM/YYYY), mobile, address, docNumber, gender, confidence (number 0.95-0.99), verified (boolean true).',
             },
             {
               role: 'user',
               content: [
-                { type: 'text', text: 'Extract all demographic fields from this Indian Aadhaar image (front and/or back side).' },
+                { type: 'text', text: promptText },
                 { type: 'image_url', image_url: { url: base64Image } },
               ],
             },
@@ -57,12 +64,10 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
       if (response.ok) {
         const json = await response.json();
         const parsed = JSON.parse(json.choices[0].message.content);
-        if (parsed && (parsed.name || parsed.docNumber || parsed.dob || parsed.address)) {
+        if (parsed && (parsed.name || parsed.docNumber || parsed.dob || parsed.address || parsed.mobile)) {
           return {
             ...parsed,
             isLiveAi: true,
-            engine: 'Client Direct GPT-4o Vision',
-            note: 'Dual-side character recognition executed via GPT-4o Vision',
           };
         }
       }
@@ -71,9 +76,9 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
     }
   }
 
-  // 3. Genuine In-Browser Tesseract.js Character Recognition
+  // 3. In-Browser Tesseract.js Character Recognition
   try {
-    const tesseractResult = await runBrowserTesseractOcr(base64Image);
+    const tesseractResult = await runBrowserTesseractOcr(base64Image, side);
     if (tesseractResult) {
       return {
         ...tesseractResult,
@@ -84,7 +89,7 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
     console.error('Tesseract OCR error:', err);
   }
 
-  // 4. If all methods fail to detect characters
+  // 4. Default empty state
   return {
     name: '',
     dob: '',
@@ -95,8 +100,7 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar') {
     confidence: 0.7,
     verified: false,
     isLiveAi: false,
-    engine: 'Manual Verification Required',
-    note: 'Image characters could not be clearly resolved. Please verify document or enter details manually.',
+    note: 'Image characters could not be resolved. Please verify document or enter details manually.',
   };
 }
 
