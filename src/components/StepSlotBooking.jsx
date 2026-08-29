@@ -4,7 +4,8 @@ import { fetchSlotRecommendations } from '../services/apiService';
 import { INITIAL_SLOTS } from '../data/rtoSlots';
 
 /**
- * Step 4: RTO Appointment Slot Booking & Form 2 Acknowledgment Slip (Dark Mode Ready)
+ * Step 4: RTO Appointment Slot Booking & Form 2 Acknowledgment Slip
+ * Clean Document Sheet (Non-Boxy)
  */
 export default function StepSlotBooking({
   profile,
@@ -52,9 +53,9 @@ export default function StepSlotBooking({
 
   if (booked) {
     return (
-      <div className="space-y-6">
-        {/* Success Banner */}
-        <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-lg p-5 text-emerald-950 dark:text-emerald-200 text-center space-y-2">
+      <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+        {/* Success Header */}
+        <div className="bg-emerald-50/80 dark:bg-emerald-950/60 rounded-xl p-5 text-emerald-950 dark:text-emerald-200 text-center space-y-2 border border-emerald-200 dark:border-emerald-800">
           <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-base mx-auto">
             ✓
           </div>
@@ -62,20 +63,20 @@ export default function StepSlotBooking({
             Learner's License Test Appointment Confirmed
           </h2>
           <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 max-w-xl mx-auto">
-            Your appointment has been registered with the Regional Transport Authority. Please download or print your official acknowledgment slip below.
+            Your appointment has been registered with the Regional Transport Authority. Retain your official Form 2 acknowledgment slip below.
           </p>
           <div className="pt-2 no-print">
             <button
               type="button"
               onClick={handlePrint}
-              className="px-5 py-2.5 bg-[#0f2a4a] dark:bg-blue-700 hover:bg-blue-900 dark:hover:bg-blue-600 text-white font-bold text-xs sm:text-sm rounded shadow-xs transition-colors inline-flex items-center gap-2"
+              className="px-5 py-2.5 bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded-full shadow-xs transition-colors"
             >
-              <span>Print Form 2 Acknowledgment Slip</span>
+              Print Form 2 Acknowledgment Slip
             </button>
           </div>
         </div>
 
-        {/* Official Application Summary Table */}
+        {/* Application Summary Ledger */}
         <DataTable
           title="Official Learner's License Application & Slot Allotment Slip"
           badge="CONFIRMED • READY FOR TEST"
@@ -93,65 +94,41 @@ export default function StepSlotBooking({
           ]}
         />
 
-        {/* Test Day Instructions Card */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-3">
-          <h4 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wide border-b border-slate-200 dark:border-slate-700 pb-2">
+        {/* Test Day Instructions */}
+        <div className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <h4 className="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-xs">
             Mandatory Checklist for Test Day Reporting
           </h4>
-          <ol className="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            <li>
-              <strong>Reporting Time:</strong> Arrive at the RTO testing counter at least 15 minutes before your allotted time (<span className="text-blue-900 dark:text-blue-300 font-semibold">{selectedSlot?.time}</span>).
-            </li>
-            <li>
-              <strong>Physical Documents Required:</strong> Original Aadhaar card and a printed copy of this Form 2 acknowledgment.
-            </li>
-            <li>
-              <strong>Biometric Verification:</strong> Live photo capture and thumb impression will be recorded at the RTO workstation.
-            </li>
-            <li>
-              <strong>Computerized LL Test:</strong> 15 multiple-choice questions on road safety will be administered on the Parivahan terminal.
-            </li>
-          </ol>
+          <ul className="list-disc list-inside space-y-1.5 leading-relaxed text-slate-600 dark:text-slate-400">
+            <li>Arrive at the RTO counter at least 15 minutes before your allotted window ({selectedSlot?.time}).</li>
+            <li>Bring original Aadhaar card and printed copy of this acknowledgment slip.</li>
+            <li>Live photograph capture and biometrics will be recorded at the workstation.</li>
+            <li>The computer-based test consists of 15 questions on road signs and traffic regulations.</li>
+          </ul>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Step Header */}
-      <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a] dark:text-blue-200">
-            Step 4: Select RTO Appointment Slot
-          </h2>
-          <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600 font-mono">
-            Slot Allotment Module
-          </span>
-        </div>
-        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-          Select an available testing date and time window for your physical document verification and computerized Learner's License examination.
-        </p>
-      </div>
-
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-4">
-        {/* Filter Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-3">
+    <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+      {/* Header */}
+      <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wide">
-              Available Test Slots
-            </h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Showing real-time seat availability across RTO testing centers
-            </p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              RTO Allotment Module • Step 4
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight mt-0.5">
+              Select RTO Appointment Slot
+            </h2>
           </div>
-
-          <div className="flex items-center gap-2 text-xs">
-            <span className="font-semibold text-slate-600 dark:text-slate-400">Filter Location:</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 dark:text-slate-400">Filter Location:</span>
             <select
               value={filterRto}
               onChange={(e) => setFilterRto(e.target.value)}
-              className="px-2.5 py-1.5 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs font-medium focus:ring-2 focus:ring-blue-700 focus:outline-none"
+              className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-700"
             >
               <option value="all">All RTO Centers</option>
               <option value="south">Bengaluru South (KA-05)</option>
@@ -161,98 +138,87 @@ export default function StepSlotBooking({
             </select>
           </div>
         </div>
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+          Select an available examination slot for your physical document verification and computerized test.
+        </p>
+      </div>
 
-        {/* Loading Spinner */}
-        {loading ? (
-          <div className="py-10 text-center space-y-2">
-            <div className="inline-block w-6 h-6 border-2 border-[#0f2a4a] dark:border-blue-400 border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs font-bold text-[#0f2a4a] dark:text-blue-300">Querying live RTO slot database...</p>
-          </div>
-        ) : (
-          /* Slot Cards List */
-          <div className="space-y-3">
-            {displayedSlots.map((slot) => {
-              const rec = slotRecs?.recommendations?.find((r) => r.slotId === slot.id);
-              const isSelected = selectedSlot?.id === slot.id;
+      {/* Slots List Stream */}
+      {loading ? (
+        <div className="py-12 text-center space-y-2">
+          <div className="inline-block w-6 h-6 border-2 border-blue-800 dark:border-blue-400 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Loading live RTO seat availability...</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          {displayedSlots.map((slot) => {
+            const rec = slotRecs?.recommendations?.find((r) => r.slotId === slot.id);
+            const isSelected = selectedSlot?.id === slot.id;
 
-              return (
-                <div
-                  key={slot.id}
-                  onClick={() => setSelectedSlot(slot)}
-                  className={`p-4 rounded border transition-all cursor-pointer ${
-                    isSelected
-                      ? 'border-blue-700 dark:border-blue-400 bg-blue-50/80 dark:bg-blue-950/60 ring-1 ring-blue-700 dark:ring-blue-400'
-                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-bold text-[#0f2a4a] dark:text-blue-200">
-                          {slot.date} — {slot.time}
-                        </span>
-                        <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded font-medium border border-slate-200 dark:border-slate-700">
-                          {slot.window} Window
-                        </span>
-                        {rec?.score >= 85 && (
-                          <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded">
-                            RECOMMENDED ({rec.score}% Match)
-                          </span>
-                        )}
-                      </div>
-
-                      <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold">{slot.rto}</p>
-
-                      <div className="flex items-center gap-2 pt-0.5">
-                        <span
-                          className={`inline-block w-2 h-2 rounded-full ${
-                            slot.seats > 10 ? 'bg-emerald-600' : 'bg-amber-600'
-                          }`}
-                        />
-                        <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
-                          {slot.seats} examination seats available
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1">
-                      <input
-                        type="radio"
-                        name="rtoSlotSelection"
-                        checked={isSelected}
-                        onChange={() => setSelectedSlot(slot)}
-                        className="text-blue-700 focus:ring-blue-700 h-4 w-4"
-                      />
-                    </div>
+            return (
+              <div
+                key={slot.id}
+                onClick={() => setSelectedSlot(slot)}
+                className={`py-3.5 px-3 rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                  isSelected
+                    ? 'bg-blue-50/70 dark:bg-blue-950/60 ring-1 ring-blue-700'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                }`}
+              >
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                      {slot.date} — {slot.time}
+                    </span>
+                    <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full font-medium">
+                      {slot.window}
+                    </span>
+                    {rec?.score >= 85 && (
+                      <span className="text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 px-2 py-0.5 rounded-full">
+                        Recommended
+                      </span>
+                    )}
                   </div>
 
-                  {rec && (
-                    <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                      <span className="text-blue-900 dark:text-blue-300 font-bold">Location Match:</span>
-                      <span>{rec.reason}</span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                  <p className="text-xs text-slate-600 dark:text-slate-300">{slot.rto}</p>
 
-        {/* Confirm Slot Button */}
-        <div className="pt-2">
-          <button
-            type="button"
-            onClick={handleConfirmBooking}
-            disabled={!selectedSlot}
-            className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors flex items-center justify-center gap-2"
-          >
-            <span>
-              {selectedSlot
-                ? `Confirm Booking: ${selectedSlot.date} at ${selectedSlot.time}`
-                : 'Select an RTO slot above to proceed'}
-            </span>
-          </button>
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                    <span
+                      className={`inline-block w-2 h-2 rounded-full ${
+                        slot.seats > 10 ? 'bg-emerald-600' : 'bg-amber-600'
+                      }`}
+                    />
+                    <span>{slot.seats} examination seats open</span>
+                  </div>
+                </div>
+
+                <div className="shrink-0 self-end sm:self-center">
+                  <input
+                    type="radio"
+                    name="rtoSlotSelection"
+                    checked={isSelected}
+                    onChange={() => setSelectedSlot(slot)}
+                    className="text-blue-700 h-4 w-4"
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
+      )}
+
+      {/* Confirm Button */}
+      <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+        <button
+          type="button"
+          onClick={handleConfirmBooking}
+          disabled={!selectedSlot}
+          className="w-full py-3.5 bg-blue-800 hover:bg-blue-900 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:cursor-not-allowed text-white font-bold text-sm sm:text-base rounded-full shadow-xs transition-colors"
+        >
+          {selectedSlot
+            ? `Confirm Reservation: ${selectedSlot.date} at ${selectedSlot.time}`
+            : 'Select an RTO appointment slot to proceed'}
+        </button>
       </div>
     </div>
   );

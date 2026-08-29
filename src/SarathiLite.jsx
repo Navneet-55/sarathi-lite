@@ -23,7 +23,7 @@ const BLANK_PROFILE = {
 export default function SarathiLite() {
   const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(1);
-  const [trafficPhase, setTrafficPhase] = useState('guide'); // 'guide' | 'test'
+  const [trafficPhase, setTrafficPhase] = useState('guide');
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
   const [darkMode, setDarkMode] = useState(false);
@@ -226,13 +226,13 @@ export default function SarathiLite() {
         </div>
 
         {/* Official Header Banner */}
-        <header className="bg-[#0f2a4a] text-white px-4 py-3.5 border-b-2 border-amber-500 shadow-xs">
+        <header className="bg-[#0f2a4a] text-white px-4 py-3.5 border-b border-amber-500 shadow-xs">
           <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
                 Government of India • Ministry of Road Transport & Highways
               </p>
-              <h1 className="text-base sm:text-xl font-bold tracking-tight">
+              <h1 className="text-base sm:text-lg font-bold tracking-tight">
                 Sarathi Parivahan - Learner's License Portal (Lite)
               </h1>
             </div>
@@ -248,46 +248,43 @@ export default function SarathiLite() {
         </header>
 
         {/* Landing Page Main Content */}
-        <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 flex flex-col justify-center">
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="border-b border-slate-200 dark:border-slate-700 pb-4 text-center space-y-2">
-              <span className="text-[11px] font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded border border-blue-200 dark:border-blue-800 uppercase tracking-wider">
+        <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-12 flex flex-col justify-center">
+          <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-8 sm:p-10 shadow-sm space-y-8">
+            <div className="text-center space-y-3">
+              <span className="text-[11px] font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3.5 py-1 rounded-full uppercase tracking-wider">
                 Online Driving License Services
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-200">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight">
                 Learner's License Application Portal
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-                Official portal for fresh Learner's Driving License applications. Complete document verification via Aadhaar OCR, review mandatory road safety rules, pass the 5-question qualifying test, pay challan fees, and reserve your RTO slot.
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Streamlined public portal simulating the official end-to-end Learner's License process: Aadhaar OCR verification, traffic regulations training, 5-question test, fee settlement, and RTO slot allotment.
               </p>
             </div>
 
-            {/* Sequential Application Procedure Bar */}
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded p-4">
-              <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
-                Sequential Application Procedure:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-semibold text-slate-800 dark:text-slate-200">
-                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-                  <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+            {/* Sequential Flow Steps */}
+            <div className="pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                  <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     1
                   </span>
                   <span>Application & OCR</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-                  <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                  <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     2
                   </span>
                   <span>Rules Guide & Test</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-                  <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                  <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     3
                   </span>
                   <span>Fee Payment (₹150)</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
-                  <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-900">
+                  <span className="w-6 h-6 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     4
                   </span>
                   <span>Slot Reservation</span>
@@ -300,11 +297,11 @@ export default function SarathiLite() {
               <button
                 type="button"
                 onClick={handleStartApplication}
-                className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors"
+                className="w-full py-4 bg-blue-800 hover:bg-blue-900 text-white font-bold text-sm sm:text-base rounded-full shadow-xs transition-colors"
               >
                 Start Fresh Application Form →
               </button>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] text-slate-400">
                 Fresh form • Step-by-step entry or automated document scan
               </p>
             </div>
@@ -312,8 +309,8 @@ export default function SarathiLite() {
         </main>
 
         {/* Official Footer */}
-        <footer className="bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-3.5 px-4 text-center text-xs text-slate-600 dark:text-slate-400">
-          <p className="font-semibold text-slate-800 dark:text-slate-300">
+        <footer className="py-4 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
+          <p className="font-medium">
             Sarathi Parivahan • Ministry of Road Transport and Highways • Government of India
           </p>
         </footer>
@@ -332,7 +329,7 @@ export default function SarathiLite() {
       </div>
 
       {/* Official Top Navigation Bar */}
-      <header className="bg-[#0f2a4a] text-white px-4 py-3 border-b-2 border-amber-500 shadow-xs sticky top-0 z-20 no-print">
+      <header className="bg-[#0f2a4a] text-white px-4 py-3 border-b border-amber-500/80 shadow-xs sticky top-0 z-20 no-print">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div>
             <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider hidden sm:block">
@@ -343,15 +340,14 @@ export default function SarathiLite() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            {/* My Profile Button */}
             {profile?.name && (
               <button
                 type="button"
                 onClick={() => setProfileModalOpen(true)}
-                className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded border border-white/20 transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full border border-white/20 transition-colors"
                 title="View your citizen profile record"
               >
-                <span>My Profile</span>
+                My Profile
               </button>
             )}
 
@@ -375,29 +371,29 @@ export default function SarathiLite() {
       </header>
 
       {/* Applicant Meta Status Bar */}
-      <section className="bg-slate-100 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 no-print">
+      <section className="bg-slate-100/70 dark:bg-slate-850/70 border-b border-slate-200/80 dark:border-slate-800 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 no-print">
         <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Application ID:</span>
-            <strong className="text-[#0f2a4a] dark:text-blue-300 font-mono font-bold bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+            <span className="text-slate-500 font-medium">Application ID:</span>
+            <strong className="text-[#0f2a4a] dark:text-blue-300 font-mono font-bold">
               {profile?.applicationId || 'New Draft'}
             </strong>
             <span className="text-slate-300 dark:text-slate-600">|</span>
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Applicant:</span>
+            <span className="text-slate-500 font-medium">Applicant:</span>
             <strong className="text-slate-900 dark:text-slate-100 font-semibold">
               {profile?.name || 'Pending Registration'}
             </strong>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 dark:text-slate-400 font-medium">Jurisdiction:</span>
-            <span className="font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800">
+            <span className="text-slate-500 font-medium">Jurisdiction:</span>
+            <span className="font-semibold text-blue-900 dark:text-blue-300">
               {profile?.rto}
             </span>
           </div>
         </div>
       </section>
 
-      {/* 4-Step Direct Text-Based Progress Bar */}
+      {/* Progress Status Bar */}
       <div className="no-print">
         <ProgressBar
           currentStep={currentStep}
@@ -409,8 +405,8 @@ export default function SarathiLite() {
         />
       </div>
 
-      {/* Main Form Content Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 pb-28">
+      {/* Main Content Sheet Area */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 pb-32">
         {/* Step 1: Application Form & Distinct Front/Back OCR */}
         {currentStep === 1 && (
           <StepApplicationOcr
@@ -483,7 +479,7 @@ export default function SarathiLite() {
       />
 
       {/* Bottom Step Navigation Bar */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-3 z-10 shadow-lg no-print">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-t border-slate-200/80 dark:border-slate-800 px-4 py-3 z-20 shadow-lg no-print">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <button
             type="button"
@@ -495,17 +491,17 @@ export default function SarathiLite() {
               }
             }}
             disabled={currentStep === 1}
-            className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm rounded border border-slate-300 dark:border-slate-600 transition-colors"
+            className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-700 dark:text-slate-200 font-semibold text-xs sm:text-sm rounded-full transition-colors"
           >
             ← Previous Step
           </button>
 
-          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 hidden sm:inline">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 hidden sm:inline">
             Step {currentStep} of 4 — {
               currentStep === 1
                 ? 'Application & OCR'
                 : currentStep === 2
-                ? (trafficPhase === 'guide' ? 'Traffic Rules Guide' : 'Traffic Rules 5-Q Test')
+                ? (trafficPhase === 'guide' ? 'Traffic Rules Guide' : '5-Question Test')
                 : currentStep === 3
                 ? 'Fee Payment'
                 : 'Slot Booking'
@@ -527,7 +523,7 @@ export default function SarathiLite() {
               (currentStep === 3 && !paid) ||
               currentStep === 4
             }
-            className="px-5 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm rounded shadow-xs transition-colors"
+            className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm rounded-full shadow-xs transition-colors"
           >
             {currentStep === 1
               ? (profile?.name ? 'Proceed to Traffic Rules →' : 'Enter Name or Scan Aadhaar')

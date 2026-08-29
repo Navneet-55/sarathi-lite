@@ -6,19 +6,17 @@ const TOTAL_TEST_QUESTIONS = 5;
 const REQUIRED_PASS_SCORE = 3;
 
 /**
- * Step 2: Strictly 5 Questions Traffic Practice Test with Audio Pause, Visual Signs, and Dark Mode
+ * Step 2: 5-Question Traffic Practice Test (Clean Non-Boxy Design)
  */
-export default function StepTrafficPractice({ onPassed, practicePassed, onProceedToPayment, onBackToGuide }) {
+export default function StepTrafficPractice({ onPassed, practicePassed: _practicePassed, onProceedToPayment, onBackToGuide }) {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [answers, setAnswers] = useState([]); // records { questionId, isCorrect, selectedOption }
-  const [audioState, setAudioState] = useState('idle'); // 'idle' | 'playing' | 'paused'
+  const [answers, setAnswers] = useState([]);
+  const [audioState, setAudioState] = useState('idle');
   const [testFinished, setTestFinished] = useState(false);
 
-  // Initialize strictly 5 questions on mount or reset
   const initTest = () => {
-    // Shuffle and pick strictly 5 questions
     const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
     const selectedFive = shuffled.slice(0, TOTAL_TEST_QUESTIONS);
     setQuestions(selectedFive);
@@ -36,7 +34,6 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
     };
   }, []);
 
-  // Audio Player Handlers (Play / Pause / Resume / Stop)
   const playAudio = (textToRead) => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
@@ -98,15 +95,15 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
 
     const totalScore = updatedAnswers.filter((a) => a.isCorrect).length;
     if (totalScore >= REQUIRED_PASS_SCORE) {
-      onPassed();
+      onPassed && onPassed();
     }
   };
 
-  const handleNext = () => {
+  const handleNextQuestion = () => {
     stopAudio();
-    setSelectedOption(null);
     if (currentIndex + 1 < TOTAL_TEST_QUESTIONS) {
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex(currentIndex + 1);
+      setSelectedOption(null);
     } else {
       setTestFinished(true);
     }
@@ -115,13 +112,19 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
   const currentScore = answers.filter((a) => a.isCorrect).length;
 
   return (
-    <div className="space-y-6">
+    <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
       {/* Header Banner */}
-      <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a] dark:text-blue-200">
-            Mandatory Traffic Rules & Road Signs Knowledge Test
-          </h2>
+      <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              Examination Module • 5 Questions
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight mt-0.5">
+              Learner's License Knowledge Test
+            </h2>
+          </div>
+
           <div className="flex items-center gap-2">
             {onBackToGuide && (
               <button
@@ -130,59 +133,29 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
                   stopAudio();
                   onBackToGuide();
                 }}
-                className="text-[11px] text-blue-700 dark:text-blue-300 hover:underline font-bold px-2 py-0.5"
+                className="text-xs text-blue-700 dark:text-blue-400 hover:underline font-semibold"
               >
                 ← Back to Study Guide
               </button>
             )}
-            <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600 font-mono">
-              5 Questions
-            </span>
           </div>
         </div>
-        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-          Answer the 5 regulatory road safety questions below. Score at least {REQUIRED_PASS_SCORE} out of 5 to qualify for Step 3 (Fee Payment).
-        </p>
       </div>
 
-      {/* Progress Tracker Strip */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Test Progress
-            </span>
-            <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-xl font-extrabold text-[#0f2a4a] dark:text-blue-200">
-                Question {Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS)} of {TOTAL_TEST_QUESTIONS}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
-                (Score: {currentScore}/{answers.length})
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">
-                Qualification Status
-              </span>
-              {currentScore >= REQUIRED_PASS_SCORE || practicePassed ? (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-300 dark:border-emerald-800">
-                  <span>✓</span> Qualified ({currentScore}/{TOTAL_TEST_QUESTIONS} Passed)
-                </span>
-              ) : (
-                <span className="text-xs font-semibold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded border border-amber-300 dark:border-amber-800">
-                  Need {REQUIRED_PASS_SCORE} correct to qualify
-                </span>
-              )}
-            </div>
-          </div>
+      {/* Status Strip */}
+      <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-slate-100 dark:border-slate-800 text-xs">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-slate-900 dark:text-slate-100">
+            Question {Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS)} of {TOTAL_TEST_QUESTIONS}
+          </span>
+          <span className="text-slate-400">|</span>
+          <span className="text-slate-500 dark:text-slate-400">
+            Score: <strong>{currentScore}</strong> of {answers.length}
+          </span>
         </div>
 
-        {/* 5 Fixed Question Step Indicator */}
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mr-1">Questions:</span>
+        {/* 5 Indicator Dots */}
+        <div className="flex items-center gap-1.5">
           {Array.from({ length: TOTAL_TEST_QUESTIONS }).map((_, idx) => {
             const answerRecord = answers[idx];
             const isCurrent = idx === currentIndex && !testFinished;
@@ -190,16 +163,15 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
             return (
               <div
                 key={idx}
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border transition-colors ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
                   answerRecord
                     ? answerRecord.isCorrect
-                      ? 'bg-emerald-700 border-emerald-800 text-white'
-                      : 'bg-rose-600 border-rose-700 text-white'
+                      ? 'bg-emerald-700 text-white'
+                      : 'bg-rose-600 text-white'
                     : isCurrent
-                    ? 'border-[#0f2a4a] dark:border-blue-400 bg-blue-50 dark:bg-slate-700 text-[#0f2a4a] dark:text-blue-300 ring-2 ring-blue-300 dark:ring-blue-500'
-                    : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600'
+                    ? 'bg-blue-800 text-white ring-2 ring-blue-200 dark:ring-blue-900'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                 }`}
-                title={`Question ${idx + 1}`}
               >
                 {answerRecord ? (answerRecord.isCorrect ? '✓' : '✗') : idx + 1}
               </div>
@@ -208,117 +180,92 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
         </div>
       </div>
 
-      {/* Main Question / Results Card */}
+      {/* Main Question Flow */}
       {!testFinished && currentQ ? (
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-4">
-          {/* Question Header & Category Badge */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#0f2a4a] dark:text-blue-300 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 px-2.5 py-1 rounded uppercase tracking-wider">
-                Question {currentIndex + 1} of {TOTAL_TEST_QUESTIONS}: {currentQ.category || 'Road Sign'}
-              </span>
-              {currentQ.lawSection && (
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:inline font-mono">
-                  ({currentQ.lawSection})
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row gap-6 items-start">
+            {/* Visual Sign Reference */}
+            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center shrink-0 mx-auto md:mx-0">
+              <TrafficSignImage signId={currentQ.id} size={110} />
+            </div>
+
+            {/* Question Text & Audio Player */}
+            <div className="space-y-3 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full">
+                  {currentQ.category || 'Road Safety'}
                 </span>
-              )}
-            </div>
 
-            {/* Audio Playback Controller (Play, Pause, Resume, Stop) */}
-            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900 p-1 rounded border border-slate-300 dark:border-slate-700 text-xs">
-              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 px-1">Audio:</span>
-              {audioState === 'idle' && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    playAudio(
-                      `${currentQ.question}. Option A: ${currentQ.options[0]}. Option B: ${currentQ.options[1]}. Option C: ${currentQ.options[2]}. Option D: ${currentQ.options[3]}.`
-                    )
-                  }
-                  className="px-2 py-0.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded border border-slate-300 dark:border-slate-600 shadow-2xs"
-                  title="Listen to question audio"
-                >
-                  ▶ Listen
-                </button>
-              )}
+                {/* Audio Controls */}
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full text-xs">
+                  {audioState === 'idle' && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        playAudio(
+                          `${currentQ.question}. Option A: ${currentQ.options[0]}. Option B: ${currentQ.options[1]}. Option C: ${currentQ.options[2]}. Option D: ${currentQ.options[3]}.`
+                        )
+                      }
+                      className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-800"
+                    >
+                      ▶ Read Question
+                    </button>
+                  )}
+                  {audioState === 'playing' && (
+                    <button
+                      type="button"
+                      onClick={pauseAudio}
+                      className="text-[11px] font-bold text-amber-600 hover:underline"
+                    >
+                      ⏸ Pause
+                    </button>
+                  )}
+                  {audioState === 'paused' && (
+                    <button
+                      type="button"
+                      onClick={resumeAudio}
+                      className="text-[11px] font-bold text-blue-600 hover:underline"
+                    >
+                      ▶ Resume
+                    </button>
+                  )}
+                  {audioState !== 'idle' && (
+                    <button
+                      type="button"
+                      onClick={stopAudio}
+                      className="text-[11px] text-slate-400 hover:text-slate-600 ml-1"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
 
-              {audioState === 'playing' && (
-                <>
-                  <button
-                    type="button"
-                    onClick={pauseAudio}
-                    className="px-2 py-0.5 bg-amber-500 text-slate-900 font-bold rounded shadow-2xs"
-                    title="Pause audio playback"
-                  >
-                    ⏸ Pause
-                  </button>
-                  <button
-                    type="button"
-                    onClick={stopAudio}
-                    className="px-2 py-0.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-600"
-                    title="Stop audio playback"
-                  >
-                    ⏹ Stop
-                  </button>
-                </>
-              )}
-
-              {audioState === 'paused' && (
-                <>
-                  <button
-                    type="button"
-                    onClick={resumeAudio}
-                    className="px-2 py-0.5 bg-emerald-600 text-white font-bold rounded shadow-2xs"
-                    title="Resume audio playback"
-                  >
-                    ▶ Resume
-                  </button>
-                  <button
-                    type="button"
-                    onClick={stopAudio}
-                    className="px-2 py-0.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-600"
-                    title="Stop audio playback"
-                  >
-                    ⏹ Stop
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Question Text & Visual Road Sign Illustration Card */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-            {/* Visual Sign Reference Illustration */}
-            <div className="md:col-span-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 flex flex-col items-center justify-center text-center">
-              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-2">Sign Illustration:</span>
-              <TrafficSignImage signId={currentQ.id} />
-              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-2">
-                {currentQ.shape || 'Standard Sign'}
-              </span>
-            </div>
-
-            {/* Question Prompt */}
-            <div className="md:col-span-3">
-              <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug">
                 {currentQ.question}
-              </p>
+              </h3>
             </div>
           </div>
 
-          {/* Options Selection */}
-          <div className="space-y-2.5 pt-2">
-            {currentQ.options?.map((option, idx) => {
-              let btnStyle =
-                'border-slate-300 dark:border-slate-600 hover:border-[#0f2a4a] dark:hover:border-blue-400 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-850';
-              if (selectedOption !== null) {
-                if (idx === currentQ.correctIndex) {
-                  btnStyle =
-                    'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-950 dark:text-emerald-200 font-bold ring-1 ring-emerald-600';
-                } else if (idx === selectedOption) {
-                  btnStyle =
-                    'border-rose-600 bg-rose-50 dark:bg-rose-950/60 text-rose-950 dark:text-rose-200 ring-1 ring-rose-600';
+          {/* Options Stream */}
+          <div className="space-y-2.5">
+            {currentQ.options.map((opt, idx) => {
+              const isSelected = selectedOption === idx;
+              const isCorrectOption = idx === currentQ.correctIndex;
+              const hasAnswered = selectedOption !== null;
+
+              let optionStyle =
+                'border-slate-200/80 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200';
+
+              if (hasAnswered) {
+                if (isCorrectOption) {
+                  optionStyle =
+                    'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/60 text-emerald-950 dark:text-emerald-200 font-bold';
+                } else if (isSelected) {
+                  optionStyle =
+                    'border-rose-500 bg-rose-50/80 dark:bg-rose-950/60 text-rose-950 dark:text-rose-200';
                 } else {
-                  btnStyle = 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 bg-slate-50 dark:bg-slate-900 opacity-60';
+                  optionStyle = 'opacity-50 border-slate-200 dark:border-slate-800';
                 }
               }
 
@@ -327,77 +274,74 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
                   key={idx}
                   type="button"
                   onClick={() => handleSelectOption(idx)}
-                  disabled={selectedOption !== null}
-                  className={`w-full text-left p-3.5 text-xs sm:text-sm rounded border transition-all flex items-start gap-3 ${btnStyle}`}
+                  disabled={hasAnswered}
+                  className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3 text-xs sm:text-sm ${optionStyle}`}
                 >
-                  <span className="font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 rounded px-1.5 py-0.5 text-xs">
+                  <span
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                      hasAnswered && isCorrectOption
+                        ? 'bg-emerald-700 text-white'
+                        : hasAnswered && isSelected
+                        ? 'bg-rose-600 text-white'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
                     {String.fromCharCode(65 + idx)}
                   </span>
-                  <span className="flex-1 leading-normal">{option}</span>
+                  <span className="leading-relaxed flex-1">{opt}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Explanation & Proceed Button */}
+          {/* Explanation & Next Step */}
           {selectedOption !== null && (
-            <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-              <div
-                className={`p-3.5 rounded border text-xs sm:text-sm ${
-                  selectedOption === currentQ.correctIndex
-                    ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200'
-                    : 'bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200'
-                }`}
-              >
-                <p className="font-bold mb-1 flex items-center gap-1.5">
-                  {selectedOption === currentQ.correctIndex ? (
-                    <>
-                      <span className="text-emerald-700 dark:text-emerald-400 font-bold">✓</span>
-                      <span>Correct Answer</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-rose-700 dark:text-rose-400 font-bold">✗</span>
-                      <span>Incorrect Response</span>
-                    </>
-                  )}
+            <div className="pt-2 space-y-4">
+              <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl text-xs space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Statutory Rule Explanation
+                </span>
+                <p className="text-slate-800 dark:text-slate-200 leading-relaxed">
+                  {currentQ.explanation}
                 </p>
-                <p className="leading-relaxed text-slate-700 dark:text-slate-300">{currentQ.explanation}</p>
               </div>
 
-              <button
-                type="button"
-                onClick={handleNext}
-                className="w-full py-3.5 bg-[#0f2a4a] hover:bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-600 text-white text-xs sm:text-sm font-bold rounded shadow-xs transition-colors"
-              >
-                {currentIndex + 1 === TOTAL_TEST_QUESTIONS
-                  ? 'Finish Test & View Results'
-                  : `Next Question (${currentIndex + 2} of 5) →`}
-              </button>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleNextQuestion}
+                  className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
+                >
+                  {currentIndex + 1 < TOTAL_TEST_QUESTIONS ? 'Next Question →' : 'View Test Results →'}
+                </button>
+              </div>
             </div>
           )}
         </div>
       ) : (
-        /* Test Finished Final Summary Card */
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-xs space-y-5 text-center">
+        /* Test Completion Sheet */
+        <div className="text-center py-6 space-y-5">
           <div
-            className={`w-12 h-12 rounded-full mx-auto flex items-center justify-center font-bold text-xl ${
+            className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto ${
               currentScore >= REQUIRED_PASS_SCORE
-                ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300'
-                : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300'
+                ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
+                : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
             }`}
           >
             {currentScore >= REQUIRED_PASS_SCORE ? '✓' : '✗'}
           </div>
 
-          <div>
-            <h3 className="text-xl font-bold text-[#0f2a4a] dark:text-blue-200">
-              Test Result: {currentScore} / {TOTAL_TEST_QUESTIONS} Correct
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-md mx-auto">
+          <div className="space-y-1">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">
               {currentScore >= REQUIRED_PASS_SCORE
-                ? `Congratulations! You have satisfied the mandatory qualification threshold (Min. ${REQUIRED_PASS_SCORE}/5). You may now proceed to Step 3: Fee Payment.`
-                : `You scored ${currentScore}/5. You need at least ${REQUIRED_PASS_SCORE} correct answers to qualify. You can review the rules or retake the test.`}
+                ? 'Test Qualified Successfully'
+                : 'Test Attempt Incomplete'}
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              You scored <strong>{currentScore}</strong> out of {TOTAL_TEST_QUESTIONS} questions.
+              {currentScore >= REQUIRED_PASS_SCORE
+                ? ' You are eligible to proceed to Step 3 (Statutory Fee Payment).'
+                : ' You need at least 3 correct answers to qualify.'}
             </p>
           </div>
 
@@ -405,18 +349,18 @@ export default function StepTrafficPractice({ onPassed, practicePassed, onProcee
             <button
               type="button"
               onClick={initTest}
-              className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-bold rounded border border-slate-300 dark:border-slate-600 transition-colors"
+              className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-full transition-colors"
             >
-              Retake Practice Test (5 Questions)
+              Retry 5-Question Test
             </button>
 
-            {currentScore >= REQUIRED_PASS_SCORE && onProceedToPayment && (
+            {currentScore >= REQUIRED_PASS_SCORE && (
               <button
                 type="button"
                 onClick={onProceedToPayment}
-                className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold rounded shadow-xs transition-colors"
+                className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
               >
-                Proceed to Step 3: Fee Payment →
+                Proceed to Fee Payment (Step 3) →
               </button>
             )}
           </div>
