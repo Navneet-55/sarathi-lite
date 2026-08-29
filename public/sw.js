@@ -1,17 +1,6 @@
-const CACHE_NAME = 'sarathi-lite-v1.3';
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.ico',
-];
+const CACHE_NAME = 'sarathi-lite-v1.3.1';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
   self.skipWaiting();
 });
 
@@ -30,31 +19,25 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Network-first with cache fallback
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Ignore chrome-extension and non-http(s)
+  if (!event.request.url.startsWith('http')) return;
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request)
-        .then((networkResponse) => {
-          if (
-            !networkResponse ||
-            networkResponse.status !== 200 ||
-            networkResponse.type !== 'basic'
-          ) {
-            return networkResponse;
-          }
-          const responseToCache = networkResponse.clone();
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
+            cache.put(event.request, responseClone);
           });
-          return networkResponse;
-        })
-        .catch(() => {
-          return caches.match('/');
-        });
-    })
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });

@@ -4,8 +4,8 @@ import { Analytics } from '@vercel/analytics/react'
 import SarathiLite from './SarathiLite'
 import './index.css'
 
-// Register PWA Service Worker for Offline Roadmap & Sign Access
-if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+// Register PWA Service Worker safely (Vite environment check)
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch((err) => {
       console.log('SW registration note:', err);
