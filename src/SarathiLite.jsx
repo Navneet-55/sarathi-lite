@@ -5,6 +5,7 @@ import StepApplicationOcr from './components/StepApplicationOcr';
 import StepTrafficPractice from './components/StepTrafficPractice';
 import StepFeePayment from './components/StepFeePayment';
 import StepSlotBooking from './components/StepSlotBooking';
+import MyProfileModal from './components/MyProfileModal';
 import { fetchOcrData } from './services/apiService';
 
 const INITIAL_PROFILE = {
@@ -22,6 +23,7 @@ export default function SarathiLite() {
   const [currentStep, setCurrentStep] = useState(1);
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   // Application Form & OCR State
   const [profile, setProfile] = useState(INITIAL_PROFILE);
@@ -72,6 +74,7 @@ export default function SarathiLite() {
     setPaymentRef(null);
     setSelectedSlot(null);
     setBooked(false);
+    setProfileModalOpen(false);
   };
 
   const handleDocUpload = (e) => {
@@ -259,6 +262,16 @@ export default function SarathiLite() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            {/* My Profile Section Button */}
+            <button
+              type="button"
+              onClick={() => setProfileModalOpen(true)}
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded border border-white/20 transition-colors flex items-center gap-1.5"
+              title="View your citizen profile records"
+            >
+              <span>My Profile</span>
+            </button>
+
             <AccessibilityBar
               textSize={textSize}
               setTextSize={setTextSize}
@@ -327,6 +340,7 @@ export default function SarathiLite() {
           <StepTrafficPractice
             onPassed={() => setPracticePassed(true)}
             practicePassed={practicePassed}
+            onProceedToPayment={() => setCurrentStep(3)}
           />
         )}
 
@@ -354,6 +368,17 @@ export default function SarathiLite() {
           />
         )}
       </main>
+
+      {/* My Profile Citizen Record Modal */}
+      <MyProfileModal
+        profile={profile}
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+        currentStep={currentStep}
+        paid={paid}
+        paymentRef={paymentRef}
+        selectedSlot={selectedSlot}
+      />
 
       {/* Bottom Step Navigation Bar */}
       <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-3 z-10 shadow-lg no-print">
