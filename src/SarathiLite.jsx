@@ -219,34 +219,6 @@ export default function SarathiLite() {
         </main>
       </div>
 
-          <div className="mt-8 space-y-3">
-            {[
-              { icon: '📸', title: 'AI Document Scan', desc: 'Upload Aadhaar — fields auto-filled' },
-              { icon: '₹', title: '1-Click Mock Pay', desc: '₹150 RTO fee — no real money' },
-              { icon: '🚦', title: 'Traffic Sign Tutor', desc: 'Learn signs with GPT-powered quiz' },
-              { icon: '📅', title: 'Smart Slot Picks', desc: 'AI recommends best RTO appointment' },
-            ].map((f) => (
-              <div key={f.title} className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <span className="text-2xl">{f.icon}</span>
-                <div>
-                  <p className="font-semibold text-slate-800">{f.title}</p>
-                  <p className="text-sm text-slate-500">{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={handleDemoLogin}
-            className="mt-8 w-full py-4 bg-gradient-to-r from-saffron to-orange-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-orange-200 active:scale-[0.98] transition-transform"
-          >
-            ⚡ 1-Click Demo Login
-          </button>
-          <p className="mt-3 text-center text-xs text-slate-400">
-            Mock profile · No real Aadhaar or OTP needed
-          </p>
-        </main>
-      </div>
     )
   }
 

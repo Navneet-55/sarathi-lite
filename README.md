@@ -1,6 +1,27 @@
-# Sarathi-Lite
+# Sarathi Parivahan — Learner's License Portal (Lite)
 
-AI-powered learner's license portal — hackathon build for Varun Mayya x OpenAI.
+A streamlined, citizen-friendly web portal that simulates the end-to-end Learner's License application process — from Aadhaar OCR to slot booking.
+
+Built by **[Navneet-55](https://github.com/Navneet-55)**.
+
+---
+
+## Features
+
+- **1-Click Demo Login** — pre-filled mock citizen profile (no real Aadhaar or OTP needed)
+- **Document OCR** — AI vision parses uploaded Aadhaar and auto-fills application fields
+- **Traffic Sign Tutor** — GPT-powered quiz to prepare for the Learner's License test
+- **Mock Fee Payment** — simulated ₹150 RTO fee payment (no real money)
+- **Smart Slot Booking** — AI-ranked RTO appointment slot recommendations
+
+## Application Flow
+
+```
+Step 1: Application & OCR
+  → Step 2: Traffic Rules Practice
+  → Step 3: Fee Payment
+  → Step 4: Slot Booking
+```
 
 ## Quick Start
 
@@ -9,38 +30,35 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) and tap **1-Click Demo Login**.
+Open [http://localhost:5173](http://localhost:5173) and click **1-Click Demo Login**.
 
-## OpenAI Setup
+## Environment Setup (Optional AI Features)
 
-Copy `.env.example` to `.env` and add your key:
+Copy `.env.example` to `.env` and add your OpenAI key:
 
 ```
-OPENAI_API_KEY=sk-...
+VITE_OPENAI_API_KEY=sk-...
 ```
 
-For Vercel, add `OPENAI_API_KEY` in project Environment Variables.
+Without a key, the app falls back to mock responses — the full demo still works.
 
-Without a key, the app falls back to mock responses so the demo still works.
-
-## Features
-
-- **1-Click Demo Login** — pre-filled mock citizen profile
-- **Document OCR** — GPT-4o-mini vision parses uploaded Aadhaar (structured output)
-- **Mock Payment** — 1-click ₹150 RTO fee (no real money)
-- **Traffic Sign Tutor** — GPT-generated quiz for learner's license prep
-- **Smart Slot Picks** — AI ranks best RTO appointment slots
-
-## Deploy to Vercel
+## Deploy
 
 ```bash
 npx vercel
 ```
 
-API routes in `/api` deploy as serverless functions automatically.
+API routes in `/api` are deployed as serverless functions automatically.
 
-## Stack
+## Tech Stack
 
-React + Vite + Tailwind CSS · OpenAI GPT-4o-mini structured outputs · Vercel
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + Vite |
+| Styling | Tailwind CSS |
+| AI | OpenAI GPT-4o-mini (structured outputs) |
+| Deployment | Vercel |
 
-**Lead Developer:** Navneet Patnaik
+## License
+
+MIT © [Navneet-55](https://github.com/Navneet-55)
