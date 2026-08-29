@@ -1,48 +1,73 @@
 import React from 'react';
 
 /**
- * Accessibility Utility Bar (Text size control: A- | A | A+)
+ * Enhanced Accessibility Utility Bar (GIGW Compliant)
+ * Controls: Text sizing (A- | A | A+) + High Contrast Mode toggle
  */
-export default function AccessibilityBar({ textSize, setTextSize }) {
+export default function AccessibilityBar({ textSize, setTextSize, contrast, setContrast }) {
   return (
-    <div className="flex items-center gap-1.5 text-xs font-bold" aria-label="Accessibility controls">
-      <span className="text-blue-200 mr-1 text-[11px] font-normal hidden sm:inline">Text Size:</span>
-      <button
-        type="button"
-        onClick={() => setTextSize('small')}
-        className={`px-2 py-0.5 rounded border transition-colors ${
-          textSize === 'small'
-            ? 'bg-white text-[#0f2a4a] border-white'
-            : 'border-blue-800 text-blue-100 hover:bg-blue-900'
-        }`}
-        title="Decrease text size"
-      >
-        A-
-      </button>
-      <button
-        type="button"
-        onClick={() => setTextSize('normal')}
-        className={`px-2 py-0.5 rounded border transition-colors ${
-          textSize === 'normal'
-            ? 'bg-white text-[#0f2a4a] border-white'
-            : 'border-blue-800 text-blue-100 hover:bg-blue-900'
-        }`}
-        title="Normal text size"
-      >
-        A
-      </button>
-      <button
-        type="button"
-        onClick={() => setTextSize('large')}
-        className={`px-2 py-0.5 rounded border transition-colors ${
-          textSize === 'large'
-            ? 'bg-white text-[#0f2a4a] border-white'
-            : 'border-blue-800 text-blue-100 hover:bg-blue-900'
-        }`}
-        title="Increase text size"
-      >
-        A+
-      </button>
+    <div className="flex items-center gap-2 text-xs font-semibold" aria-label="Accessibility tools">
+      {/* Font Size Group */}
+      <div className="flex items-center gap-1 bg-white/10 p-0.5 rounded border border-white/20">
+        <span className="text-blue-100 text-[10px] uppercase tracking-wider px-1 hidden sm:inline">Size:</span>
+        <button
+          type="button"
+          onClick={() => setTextSize('small')}
+          className={`px-2 py-0.5 rounded text-xs transition-colors ${
+            textSize === 'small'
+              ? 'bg-amber-400 text-slate-900 font-bold shadow-xs'
+              : 'text-white hover:bg-white/20'
+          }`}
+          title="Decrease text size (A-)"
+          aria-label="Decrease text size"
+        >
+          A-
+        </button>
+        <button
+          type="button"
+          onClick={() => setTextSize('normal')}
+          className={`px-2 py-0.5 rounded text-xs transition-colors ${
+            textSize === 'normal'
+              ? 'bg-white text-[#0f2a4a] font-bold shadow-xs'
+              : 'text-white hover:bg-white/20'
+          }`}
+          title="Standard text size (A)"
+          aria-label="Standard text size"
+        >
+          A
+        </button>
+        <button
+          type="button"
+          onClick={() => setTextSize('large')}
+          className={`px-2 py-0.5 rounded text-xs transition-colors ${
+            textSize === 'large'
+              ? 'bg-amber-400 text-slate-900 font-bold shadow-xs'
+              : 'text-white hover:bg-white/20'
+          }`}
+          title="Increase text size (A+)"
+          aria-label="Increase text size"
+        >
+          A+
+        </button>
+      </div>
+
+      {/* Contrast Mode Toggle */}
+      {setContrast && (
+        <button
+          type="button"
+          onClick={() => setContrast(contrast === 'high' ? 'standard' : 'high')}
+          className={`px-2 py-1 rounded text-[11px] font-bold border transition-colors flex items-center gap-1 ${
+            contrast === 'high'
+              ? 'bg-yellow-400 text-black border-yellow-300'
+              : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+          }`}
+          title="Toggle High Contrast Mode"
+          aria-pressed={contrast === 'high'}
+        >
+          <span aria-hidden="true">◐</span>
+          <span className="hidden sm:inline">{contrast === 'high' ? 'High Contrast' : 'Contrast'}</span>
+        </button>
+      )}
     </div>
   );
 }

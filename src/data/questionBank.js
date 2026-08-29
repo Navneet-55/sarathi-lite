@@ -1,96 +1,198 @@
 /**
- * Authentic Indian Road Traffic Signs Question Bank (MV Act)
- * Used for Learner's License practice test
+ * Authentic Indian Road Traffic Signs & Regulations Question Bank
+ * Sourced in accordance with the Motor Vehicles Act, 1988 & IRC (Indian Roads Congress) standards
  */
 export const QUESTION_BANK = [
   {
     id: 1,
-    question: "What does a red octagonal sign on the road indicate?",
-    options: ["Stop completely", "Yield to traffic", "No Parking", "Speed limit ahead"],
+    question: "What is the mandatory action required when approaching a red octagonal STOP sign?",
+    options: [
+      "Bring the vehicle to a complete halt before the stop line and proceed only when clear",
+      "Slow down and continue if no vehicle is approaching from the right",
+      "Sound horn and proceed at 20 km/h",
+      "Stop only if emergency vehicles are in transit"
+    ],
     correctIndex: 0,
-    explanation: "A red octagonal sign strictly mandates an immediate and complete halt.",
+    explanation: "Under Section 119 of the Motor Vehicles Act, an octagonal STOP sign (IRC:67) mandates a 100% complete halt at the stop line before proceeding.",
     signEmoji: "🛑",
-    category: "Mandatory"
+    shape: "Octagonal",
+    category: "Mandatory / Regulatory",
+    lawSection: "Section 119, MV Act 1988"
   },
   {
     id: 2,
-    question: "What is the meaning of a circular sign with a red border containing '50'?",
-    options: ["Minimum speed 50 km/h", "Maximum speed limit 50 km/h", "Distance to next town 50 km", "Weight limit 50 tonnes"],
+    question: "What does a circular sign with a red border containing the numeral '50' indicate?",
+    options: [
+      "Minimum permissible speed is 50 km/h",
+      "Maximum legal speed limit is 50 km/h",
+      "Next petrol pump is 50 km ahead",
+      "Axle weight capacity limit is 50 quintals"
+    ],
     correctIndex: 1,
-    explanation: "Numbers inside a red circular border specify the maximum legal speed limit in km/h.",
+    explanation: "Circular signs with red borders signify prohibition or mandatory limits. The number indicates the maximum legal speed limit under standard conditions.",
     signEmoji: "⭕",
-    category: "Mandatory"
+    shape: "Circular",
+    category: "Mandatory / Speed Restriction",
+    lawSection: "Section 112, MV Act 1988"
   },
   {
     id: 3,
-    question: "What does a triangular warning sign with a pedestrian icon indicate?",
-    options: ["Pedestrian crossing ahead", "Pedestrians prohibited", "School zone end", "Footpath ahead"],
+    question: "What does an equilateral triangle pointing upwards with a pedestrian zebra crossing icon warn drivers about?",
+    options: [
+      "Pedestrian zebra crossing ahead; yield right-of-way to pedestrians",
+      "Pedestrian movement is strictly prohibited",
+      "Foot-over bridge available ahead",
+      "Designated jogging track zone"
+    ],
     correctIndex: 0,
-    explanation: "Triangular signs with red borders are cautionary. This warns drivers of an upcoming pedestrian zebra crossing.",
+    explanation: "Upward triangular signs with red borders are Cautionary Signs. Drivers must decelerate and give precedence to pedestrians crossing.",
     signEmoji: "🚶",
-    category: "Cautionary"
+    shape: "Triangular",
+    category: "Cautionary / Warning",
+    lawSection: "Rule 11, Rules of the Road Regulations"
   },
   {
     id: 4,
-    question: "What does a circular sign with a blue background and a white left-curved arrow specify?",
-    options: ["Left turn prohibited", "Compulsory turn left", "One way traffic to right", "Keep right"],
-    correctIndex: 1,
-    explanation: "Blue circular signs are mandatory direction control signs. A left arrow means driver must turn left.",
-    signEmoji: "⬅️",
-    category: "Mandatory"
+    question: "What does a blue circular sign with a white arrow pointing straight ahead command?",
+    options: [
+      "Compulsory ahead only; no turns permitted",
+      "One way traffic in the opposite direction",
+      "Narrow bridge ahead",
+      "Lane change recommended"
+    ],
+    correctIndex: 0,
+    explanation: "Blue circular signs without red slashes are Positive Mandatory Direction signs. Traffic must travel strictly in the indicated arrow direction.",
+    signEmoji: "⬆️",
+    shape: "Circular",
+    category: "Mandatory / Positive Direction",
+    lawSection: "IRC:67 Standard Sign"
   },
   {
     id: 5,
-    question: "What does a sign showing a horn crossed out with a red diagonal bar mean?",
-    options: ["Use horn frequently", "Horn prohibited zone", "Bugle sound area", "Emergency vehicles only"],
-    correctIndex: 1,
-    explanation: "A crossed-out horn icon indicates a Silent Zone (e.g. near hospitals, courts, schools) where honking is illegal.",
+    question: "What does a circular sign showing an automobile horn crossed by a red diagonal slash signify?",
+    options: [
+      "Horn prohibited / Silence zone (near hospitals, schools, courts)",
+      "Sound horn continuously while driving",
+      "Horn testing area ahead",
+      "Defective horns are penalized"
+    ],
+    correctIndex: 0,
+    explanation: "A crossed-out horn indicates a designated Silence Zone. Honking within 100 meters of hospitals, educational institutions, and courts is an offence.",
     signEmoji: "🔇",
-    category: "Mandatory"
+    shape: "Circular",
+    category: "Mandatory / Prohibitory",
+    lawSection: "Noise Pollution Rules & MV Act"
   },
   {
     id: 6,
-    question: "What does an inverted red triangle sign signify?",
-    options: ["Give Way / Yield", "No Entry", "Hospital ahead", "Dead end ahead"],
+    question: "What is the meaning of an inverted (downward-pointing) triangular sign with a red border?",
+    options: [
+      "Give Way / Yield right of way to traffic on the major road",
+      "Dead end / No thoroughfare ahead",
+      "Rest area ahead",
+      "Toll plaza approaching"
+    ],
     correctIndex: 0,
-    explanation: "An inverted triangle is the universal 'Give Way' sign, directing drivers to yield right-of-way to main road traffic.",
+    explanation: "The inverted triangle is universally recognized as 'GIVE WAY'. It assigns priority to traffic already moving on the priority carriageway.",
     signEmoji: "🔻",
-    category: "Mandatory"
+    shape: "Inverted Triangle",
+    category: "Mandatory / Priority Control",
+    lawSection: "IRC:67 Mandatory Series"
   },
   {
     id: 7,
-    question: "What does a circular sign with a U-turn arrow crossed out with a red slash indicate?",
-    options: ["U-Turn permitted", "U-Turn prohibited", "Sharp left curve", "Roundabout ahead"],
-    correctIndex: 1,
-    explanation: "A red slash across any symbol means that specific driving maneuver is strictly forbidden.",
+    question: "What does a circular sign with a U-turn arrow crossed by a red diagonal slash indicate?",
+    options: [
+      "U-Turn is strictly prohibited",
+      "Compulsory U-turn ahead",
+      "Roundabout ahead with right-of-way",
+      "Sharp left hairpin bend ahead"
+    ],
+    correctIndex: 0,
+    explanation: "A red slash across a U-turn arrow prohibits turning the vehicle 180 degrees at that junction or road cut.",
     signEmoji: "↩️",
-    category: "Mandatory"
+    shape: "Circular",
+    category: "Mandatory / Prohibitory",
+    lawSection: "Section 119, MV Act 1988"
   },
   {
     id: 8,
-    question: "What does a triangular sign showing two converging arrows indicate?",
-    options: ["Road narrows ahead", "Dual carriageway ahead", "Bridge ahead", "Two way traffic"],
+    question: "What does a cautionary triangular sign showing a hump on the road surface indicate?",
+    options: [
+      "Speed breaker / Rough road hump ahead; reduce speed immediately",
+      "Mountain terrain beginning",
+      "Railway level crossing without barrier",
+      "Dual road merge ahead"
+    ],
     correctIndex: 0,
-    explanation: "Converging road edge lines inside a cautionary triangle warn drivers that the road ahead narrows.",
+    explanation: "This cautionary sign alerts motorists to reduce vehicle velocity to safely negotiate a speed breaker or uneven surface.",
     signEmoji: "⚠️",
-    category: "Cautionary"
+    shape: "Triangular",
+    category: "Cautionary / Road Condition",
+    lawSection: "IRC Road Safety Guidelines"
   },
   {
     id: 9,
-    question: "What does a circular sign with a white horizontal bar inside a red circle mean?",
-    options: ["No Entry for all vehicles", "Stop for inspection", "One way traffic", "Customs post"],
+    question: "What does a circular red sign with a central horizontal white bar signify?",
+    options: [
+      "No Entry for all vehicular traffic",
+      "One way traffic to the right",
+      "Speed check camera zone",
+      "Commercial vehicles restricted"
+    ],
     correctIndex: 0,
-    explanation: "A red circle with a horizontal white stripe or crossed arrow indicates No Entry for vehicles.",
+    explanation: "A solid red disc with a horizontal white bar is the standard 'NO ENTRY' sign. Entry into that road is strictly forbidden.",
     signEmoji: "⛔",
-    category: "Mandatory"
+    shape: "Circular",
+    category: "Mandatory / Prohibitory",
+    lawSection: "Section 115, MV Act 1988"
   },
   {
     id: 10,
-    question: "What does a triangular sign showing a hump on the road surface caution drivers about?",
-    options: ["Speed breaker or rough road ahead", "Mountain ahead", "Overbridge ahead", "Steep hill climb"],
+    question: "When are you legally permitted to overtake a vehicle on its left side in India?",
+    options: [
+      "When the vehicle ahead is signaling and making a right turn in an open multi-lane road",
+      "Whenever the right lane is congested",
+      "At night when flashing headlights",
+      "Left overtaking is never permissible under any circumstance"
+    ],
     correctIndex: 0,
-    explanation: "A hump symbol in a cautionary triangle warns drivers to reduce speed for an upcoming speed bump or uneven road.",
-    signEmoji: "🛵",
-    category: "Cautionary"
+    explanation: "According to the Rules of the Road Regulations (1989), overtaking on the left is permitted only when the front vehicle indicates its intention to turn right.",
+    signEmoji: "🚗",
+    shape: "Rule-Based",
+    category: "Traffic Regulation Rule",
+    lawSection: "Rule 14, Rules of the Road Regulations"
+  },
+  {
+    id: 11,
+    question: "What does a triangular cautionary sign showing two children with school bags indicate?",
+    options: [
+      "School zone ahead; drive with extreme caution and reduce speed",
+      "Children playground area; parking permitted",
+      "Pedestrian footpath closed",
+      "Public park entrance"
+    ],
+    correctIndex: 0,
+    explanation: "Warns drivers that children may suddenly cross the road. Drivers must slow down to school zone speed limits (usually 25 km/h).",
+    signEmoji: "🚸",
+    shape: "Triangular",
+    category: "Cautionary / Warning",
+    lawSection: "School Safety Guidelines, MoRTH"
+  },
+  {
+    id: 12,
+    question: "What does a circular sign with a blue background and a white bicycle symbol specify?",
+    options: [
+      "Compulsory cycle track / Dedicated bicycle lane only",
+      "Cycles prohibited",
+      "Motorcycle lane",
+      "Bicycle repair shop ahead"
+    ],
+    correctIndex: 0,
+    explanation: "A blue circle indicates a compulsory path reserved exclusively for non-motorized pedal bicycles.",
+    signEmoji: "🚲",
+    shape: "Circular",
+    category: "Mandatory / Lane Reservation",
+    lawSection: "IRC:67 Mandatory Series"
   }
 ];

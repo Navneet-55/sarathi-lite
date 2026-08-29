@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchTrafficQuestion } from '../services/apiService';
 
 /**
- * Step 2: Traffic Rules & Signs Practice Quiz
+ * Step 2: Mandatory Road Traffic Signs & Regulations Practice Test
  */
-export default function StepTrafficPractice({ onPassed }) {
+export default function StepTrafficPractice({ onPassed, practicePassed }) {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [seenIds, setSeenIds] = useState([]);
   const [score, setScore] = useState(0);
-  const [attempted, setAttempted] = useState(0);
-  const PASSING_SCORE = 3;
+  const [history, setHistory] = useState([]); // record of previous answers
+  const REQUIRED_PASS_SCORE = 3;
 
-  const loadQuestion = async () => {
+  const loadQuestion = useCallback(async () => {
     setLoading(true);
     setSelectedOption(null);
     try {
@@ -27,7 +27,7 @@ export default function StepTrafficPractice({ onPassed }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [seenIds]);
 
   useEffect(() => {
     loadQuestion();
@@ -37,73 +37,167 @@ export default function StepTrafficPractice({ onPassed }) {
     if (selectedOption !== null) return;
     setSelectedOption(index);
     const isCorrect = index === currentQuestion.correctIndex;
-    setAttempted((prev) => prev + 1);
+
+    const newHistoryItem = {
+      questionId: currentQuestion.id,
+      isCorrect,
+      question: currentQuestion.question,
+    };
+    setHistory((prev) => [...prev, newHistoryItem]);
+
     if (isCorrect) {
       const newScore = score + 1;
       setScore(newScore);
-      if (newScore >= PASSING_SCORE) {
+      if (newScore >= REQUIRED_PASS_SCORE) {
         onPassed();
       }
     }
   };
 
+  const handleSpeech = () => {
+    if ('speechSynthesis' in window && currentQuestion) {
+      const utterance = new SpeechSynthesisUtterance(
+        `${currentQuestion.question}. Option A: ${currentQuestion.options[0]}. Option B: ${currentQuestion.options[1]}. Option C: ${currentQuestion.options[2]}. Option D: ${currentQuestion.options[3]}.`
+      );
+      utterance.lang = 'en-IN';
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const totalAttempted = history.length;
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-[#0f2a4a]">Step 2: Traffic Rules & Mandatory Road Sign Practice</h2>
+      {/* Header Banner */}
+      <div className="border-b border-slate-200 pb-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a]">
+            Step 2: Traffic Rules & Mandatory Road Sign Practice
+          </h2>
+          <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-300 font-mono">
+            RTO Learner Test Mock
+          </span>
+        </div>
         <p className="text-xs text-slate-600 mt-1">
-          Prepare for your Learner's License test by practicing mandatory Indian Motor Vehicle Act traffic signs.
+          According to the Central Motor Vehicles Rules (1989), applicants must score a minimum of {REQUIRED_PASS_SCORE} correct answers to qualify for the Learner's License slot.
         </p>
       </div>
 
-      {/* Progress & Scoreboard Card */}
-      <div className="bg-white rounded-lg border border-slate-200 p-4 flex items-center justify-between shadow-xs">
-        <div>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Test Progress</span>
-          <p className="text-sm font-bold text-[#0f2a4a]">
-            Score: {score} / {attempted}
-          </p>
+      {/* Progress & Qualification Tracker */}
+      <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Test Score Summary
+            </span>
+            <div className="flex items-baseline gap-2 mt-0.5">
+              <span className="text-xl font-extrabold text-[#0f2a4a]">
+                {score} / {totalAttempted}
+              </span>
+              <span className="text-xs text-slate-500">Correctly Answered</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                Qualification Status
+              </span>
+              {score >= REQUIRED_PASS_SCORE || practicePassed ? (
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-300">
+                  <span>✓</span> Qualified for Step 3
+                </span>
+              ) : (
+                <span className="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded border border-amber-300">
+                  {REQUIRED_PASS_SCORE - score} more required to pass
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="text-right">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Passing Requirement</span>
-          <p className="text-xs font-bold text-emerald-700">
-            {score >= PASSING_SCORE ? '✓ Qualification Criteria Met' : `Need ${PASSING_SCORE} correct answers`}
-          </p>
+
+        {/* Question Dot Tracker */}
+        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+          <span className="text-[11px] text-slate-500 font-medium mr-1">Questions:</span>
+          {Array.from({ length: Math.max(5, totalAttempted + (selectedOption !== null ? 1 : 0)) }).map((_, idx) => {
+            const h = history[idx];
+            const isCurrent = idx === totalAttempted && selectedOption === null;
+
+            return (
+              <div
+                key={idx}
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors ${
+                  h
+                    ? h.isCorrect
+                      ? 'bg-emerald-600 border-emerald-700 text-white'
+                      : 'bg-rose-500 border-rose-600 text-white'
+                    : isCurrent
+                    ? 'border-[#0f2a4a] bg-blue-50 text-[#0f2a4a] ring-2 ring-blue-200'
+                    : 'border-slate-200 bg-slate-100 text-slate-400'
+                }`}
+                title={h ? `Question ${idx + 1}: ${h.isCorrect ? 'Correct' : 'Incorrect'}` : `Question ${idx + 1}`}
+              >
+                {h ? (h.isCorrect ? '✓' : '✗') : idx + 1}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Quiz Card */}
       <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
         {loading ? (
-          <div className="py-12 text-center">
-            <div className="inline-block w-6 h-6 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin mb-2" />
-            <p className="text-xs text-slate-600 font-medium">Fetching question from question bank...</p>
+          <div className="py-12 text-center space-y-2">
+            <div className="inline-block w-6 h-6 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-bold text-[#0f2a4a]">Loading traffic sign question...</p>
           </div>
         ) : currentQuestion ? (
           <div className="space-y-4">
+            {/* Question Top Badge */}
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <span className="text-xs font-bold text-[#0f2a4a] uppercase tracking-wide">
-                Category: {currentQuestion.category || 'Road Sign'}
-              </span>
-              <span className="text-3xl" role="img" aria-label="sign icon">
-                {currentQuestion.signEmoji || '🛑'}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#0f2a4a] bg-slate-100 border border-slate-300 px-2 py-0.5 rounded uppercase tracking-wider">
+                  {currentQuestion.category || 'Road Sign'}
+                </span>
+                {currentQuestion.lawSection && (
+                  <span className="text-[11px] text-slate-500 hidden sm:inline">
+                    ({currentQuestion.lawSection})
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSpeech}
+                  className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold border border-slate-300 flex items-center gap-1"
+                  title="Read question aloud"
+                >
+                  <span>🔊</span>
+                  <span className="hidden sm:inline">Listen</span>
+                </button>
+                <span className="text-3xl filter drop-shadow-xs" role="img" aria-label="sign icon">
+                  {currentQuestion.signEmoji || '🛑'}
+                </span>
+              </div>
             </div>
 
-            <p className="text-sm sm:text-base font-bold text-slate-800">
+            {/* Question Prompt */}
+            <p className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
               {currentQuestion.question}
             </p>
 
-            <div className="space-y-2">
+            {/* Options List */}
+            <div className="space-y-2.5 pt-1">
               {currentQuestion.options?.map((option, idx) => {
-                let btnStyle = 'border-slate-300 hover:bg-slate-50 text-slate-800';
+                let btnStyle = 'border-slate-300 hover:border-[#0f2a4a] hover:bg-slate-50 text-slate-800 bg-white';
                 if (selectedOption !== null) {
                   if (idx === currentQuestion.correctIndex) {
-                    btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold';
+                    btnStyle = 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold ring-1 ring-emerald-500';
                   } else if (idx === selectedOption) {
-                    btnStyle = 'border-rose-500 bg-rose-50 text-rose-900';
+                    btnStyle = 'border-rose-500 bg-rose-50 text-rose-950 ring-1 ring-rose-400';
                   } else {
-                    btnStyle = 'border-slate-200 text-slate-400 opacity-60';
+                    btnStyle = 'border-slate-200 text-slate-400 bg-slate-50 opacity-60';
                   }
                 }
 
@@ -113,40 +207,52 @@ export default function StepTrafficPractice({ onPassed }) {
                     type="button"
                     onClick={() => handleSelectOption(idx)}
                     disabled={selectedOption !== null}
-                    className={`w-full text-left p-3 text-xs sm:text-sm rounded border transition-all flex items-start gap-3 ${btnStyle}`}
+                    className={`w-full text-left p-3.5 text-xs sm:text-sm rounded border transition-all flex items-start gap-3 ${btnStyle}`}
                   >
-                    <span className="font-bold text-slate-500">
-                      {String.fromCharCode(65 + idx)}.
+                    <span className="font-bold text-slate-600 bg-slate-100 rounded px-1.5 py-0.5 text-xs">
+                      {String.fromCharCode(65 + idx)}
                     </span>
-                    <span>{option}</span>
+                    <span className="flex-1 leading-normal">{option}</span>
                   </button>
                 );
               })}
             </div>
 
+            {/* Answer Explanation & Next Question */}
             {selectedOption !== null && (
-              <div className="space-y-3 pt-2">
+              <div className="space-y-3 pt-3 border-t border-slate-200">
                 <div
-                  className={`p-3 rounded border text-xs sm:text-sm ${
+                  className={`p-3.5 rounded border text-xs sm:text-sm ${
                     selectedOption === currentQuestion.correctIndex
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                      : 'bg-rose-50 border-rose-200 text-rose-800'
+                      ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                      : 'bg-rose-50 border-rose-300 text-rose-950'
                   }`}
                 >
-                  <p className="font-bold mb-1">
-                    {selectedOption === currentQuestion.correctIndex
-                      ? '✓ Correct Answer'
-                      : '✗ Incorrect'}
+                  <p className="font-bold mb-1 flex items-center gap-1.5">
+                    {selectedOption === currentQuestion.correctIndex ? (
+                      <>
+                        <span className="text-emerald-700">✓</span>
+                        <span>Correct Answer</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-rose-700">✗</span>
+                        <span>Incorrect Response</span>
+                      </>
+                    )}
                   </p>
-                  <p>{currentQuestion.explanation}</p>
+                  <p className="leading-relaxed text-slate-700">
+                    {currentQuestion.explanation}
+                  </p>
                 </div>
 
                 <button
                   type="button"
                   onClick={loadQuestion}
-                  className="w-full py-2.5 bg-[#0f2a4a] text-white text-xs sm:text-sm font-bold rounded hover:bg-blue-900 transition-colors"
+                  className="w-full py-3 bg-[#0f2a4a] hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded shadow-xs transition-colors flex items-center justify-center gap-2"
                 >
-                  Next Question →
+                  <span>Next Practice Question</span>
+                  <span>→</span>
                 </button>
               </div>
             )}
