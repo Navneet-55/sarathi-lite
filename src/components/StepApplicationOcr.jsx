@@ -3,7 +3,7 @@ import DataTable from './DataTable';
 import { RTO_OFFICES } from '../data/rtoSlots';
 
 /**
- * Step 1: Applicant Registration & Genuine Aadhaar OCR Verification
+ * Step 1: Applicant Registration & Genuine Aadhaar OCR Verification (Dark Mode Ready)
  */
 export default function StepApplicationOcr({
   profile,
@@ -34,61 +34,61 @@ export default function StepApplicationOcr({
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="border-b border-slate-200 pb-3">
+      <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a]">
-            Step 1: Application Details & Document OCR Verification
+          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a] dark:text-blue-200">
+            Step 1: Application Form & Aadhaar Document OCR Verification
           </h2>
-          <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-300 font-mono">
+          <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600 font-mono">
             Form 2 (Rules 4, 8)
           </span>
         </div>
-        <p className="text-xs text-slate-600 mt-1">
-          Verify your demographic details or upload your Aadhaar document to automatically extract and populate your application via Optical Character Recognition (OCR).
+        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          Fill in your applicant demographic details below, or upload your Aadhaar document to automatically extract and populate your application via Optical Character Recognition (OCR).
         </p>
       </div>
 
       {/* Section 1: Demographics Form */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] uppercase tracking-wide flex items-center gap-2">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
+          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wide flex items-center gap-2">
             <span className="w-5 h-5 bg-[#0f2a4a] text-white rounded text-[11px] flex items-center justify-center font-bold">1</span>
             Applicant Demographics & Jurisdiction
           </h3>
-          <span className="text-[11px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+          <span className="text-[11px] text-emerald-800 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
             eKYC Ready
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Full Legal Name <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               value={profile?.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="Full legal name as in Aadhaar"
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900"
+              placeholder="e.g. Enter your full name"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Mobile Number (for SMS Alerts) <span className="text-rose-600">*</span>
             </label>
             <input
               type="text"
               value={profile?.mobile || ''}
               onChange={(e) => handleInputChange('mobile', e.target.value)}
-              placeholder="+91 98765 43210"
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900"
+              placeholder="e.g. +91 98765 43210"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Date of Birth (DD/MM/YYYY) <span className="text-rose-600">*</span>
             </label>
             <input
@@ -96,12 +96,12 @@ export default function StepApplicationOcr({
               value={profile?.dob || ''}
               onChange={(e) => handleInputChange('dob', e.target.value)}
               placeholder="DD/MM/YYYY"
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Aadhaar UID / VID Reference
             </label>
             <input
@@ -109,31 +109,31 @@ export default function StepApplicationOcr({
               value={profile?.aadhaar || ''}
               onChange={(e) => handleInputChange('aadhaar', e.target.value)}
               placeholder="XXXX XXXX 1234"
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900 font-mono"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Permanent Residential Address <span className="text-rose-600">*</span>
             </label>
             <textarea
               rows={2}
               value={profile?.address || ''}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              placeholder="Complete residential address with pin code"
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900"
+              placeholder="Enter complete residential address with pin code"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
               Target RTO Office Jurisdiction <span className="text-rose-600">*</span>
             </label>
             <select
               value={profile?.rto || ''}
               onChange={(e) => handleInputChange('rto', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
             >
               {RTO_OFFICES.map((rto) => (
                 <option key={rto.code} value={rto.name}>
@@ -141,7 +141,7 @@ export default function StepApplicationOcr({
                 </option>
               ))}
             </select>
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
               Select the RTO office corresponding to your residence under the Motor Vehicles Act.
             </p>
           </div>
@@ -149,13 +149,13 @@ export default function StepApplicationOcr({
       </div>
 
       {/* Section 2: Aadhaar OCR Upload & Scanner */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] uppercase tracking-wide flex items-center gap-2">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
+          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wide flex items-center gap-2">
             <span className="w-5 h-5 bg-[#0f2a4a] text-white rounded text-[11px] flex items-center justify-center font-bold">2</span>
             Aadhaar eKYC Document OCR Scanner
           </h3>
-          <span className="text-[11px] text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+          <span className="text-[11px] text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800 font-semibold">
             {ocrResult?.engine ? ocrResult.engine : 'Optical Character Recognition'}
           </span>
         </div>
@@ -178,8 +178,8 @@ export default function StepApplicationOcr({
           onDrop={handleDrop}
           className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors relative overflow-hidden ${
             isDragOver
-              ? 'border-blue-700 bg-blue-50/50'
-              : 'border-slate-300 bg-slate-50/50 hover:bg-slate-50'
+              ? 'border-blue-700 bg-blue-50/50 dark:bg-blue-900/30'
+              : 'border-slate-300 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-900'
           }`}
         >
           {docPreview ? (
@@ -187,7 +187,7 @@ export default function StepApplicationOcr({
               <img
                 src={docPreview}
                 alt="Aadhaar Document Preview"
-                className="max-h-52 rounded border border-slate-300 shadow-xs mx-auto"
+                className="max-h-52 rounded border border-slate-300 dark:border-slate-600 shadow-xs mx-auto"
               />
               {ocrLoading && (
                 <div
@@ -198,10 +198,10 @@ export default function StepApplicationOcr({
             </div>
           ) : (
             <div className="py-3 space-y-1.5">
-              <p className="text-xs sm:text-sm font-bold text-slate-800">
-                Upload Aadhaar Card image (Front side) for real character recognition
+              <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                Upload Aadhaar Card image (Front side) for character recognition
               </p>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Drag and drop image file here, or click browse button below (Supports JPG, PNG, WebP up to 5MB)
               </p>
             </div>
@@ -220,7 +220,7 @@ export default function StepApplicationOcr({
               <button
                 type="button"
                 onClick={triggerSampleOcr}
-                className="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-bold rounded transition-colors"
+                className="px-4 py-2 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 text-xs font-bold rounded transition-colors"
               >
                 Load Sample Aadhaar
               </button>
@@ -230,10 +230,10 @@ export default function StepApplicationOcr({
 
         {/* Scanning Progress */}
         {ocrLoading && (
-          <div className="p-3.5 bg-blue-50 border border-blue-200 rounded flex items-center justify-center gap-3">
-            <div className="w-4 h-4 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs font-bold text-[#0f2a4a]">
-              Optical character recognition in progress • Performing deep text extraction on image pixels...
+          <div className="p-3.5 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded flex items-center justify-center gap-3">
+            <div className="w-4 h-4 border-2 border-[#0f2a4a] dark:border-blue-400 border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs font-bold text-[#0f2a4a] dark:text-blue-300">
+              Optical character recognition in progress • Extracting text from document pixels...
             </span>
           </div>
         )}
@@ -253,7 +253,7 @@ export default function StepApplicationOcr({
                 ['Residential Address', ocrResult.address || <span className="text-slate-400 italic">Not detected on front side</span>],
                 [
                   'Validation Result',
-                  <span key="status" className="inline-flex items-center gap-1 text-emerald-800 font-bold">
+                  <span key="status" className="inline-flex items-center gap-1 text-emerald-800 dark:text-emerald-400 font-bold">
                     <span>✓</span> eKYC Optical Character Recognition Complete
                   </span>,
                 ],
@@ -265,7 +265,7 @@ export default function StepApplicationOcr({
                 <button
                   type="button"
                   onClick={() => setShowRawText(!showRawText)}
-                  className="text-[11px] text-blue-800 hover:text-blue-950 font-bold underline flex items-center gap-1"
+                  className="text-[11px] text-blue-800 dark:text-blue-300 hover:underline font-bold flex items-center gap-1"
                 >
                   {showRawText ? 'Hide Raw OCR Text Feed' : 'View Raw Extracted Text Feed'}
                 </button>
@@ -278,7 +278,7 @@ export default function StepApplicationOcr({
             )}
 
             {ocrResult.note && (
-              <p className="text-[11px] text-slate-600 bg-slate-100 p-2.5 rounded border border-slate-200">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 p-2.5 rounded border border-slate-200 dark:border-slate-700">
                 <strong>Notice:</strong> {ocrResult.note}
               </p>
             )}

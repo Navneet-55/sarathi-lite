@@ -2,31 +2,35 @@ import React, { useState, useEffect } from 'react';
 import AccessibilityBar from './components/AccessibilityBar';
 import ProgressBar from './components/ProgressBar';
 import StepApplicationOcr from './components/StepApplicationOcr';
+import TrafficRulesGuide from './components/TrafficRulesGuide';
 import StepTrafficPractice from './components/StepTrafficPractice';
 import StepFeePayment from './components/StepFeePayment';
 import StepSlotBooking from './components/StepSlotBooking';
 import MyProfileModal from './components/MyProfileModal';
 import { fetchOcrData } from './services/apiService';
 
-const INITIAL_PROFILE = {
-  name: 'Navneet',
-  aadhaar: 'XXXX-XXXX-4521',
-  mobile: '+91 98765 43210',
-  dob: '15/03/1998',
-  address: 'HSR Layout, Sector 3, Bengaluru, Karnataka 560102',
-  applicationId: 'KA-2026-LL-88421',
+// Initial Fresh Blank Profile (No Preloaded Names)
+const BLANK_PROFILE = {
+  name: '',
+  aadhaar: '',
+  mobile: '',
+  dob: '',
+  address: '',
+  applicationId: '',
   rto: 'RTO Bengaluru South (KA-05)',
 };
 
 export default function SarathiLite() {
   const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(1);
+  const [trafficPhase, setTrafficPhase] = useState('guide'); // 'guide' | 'test'
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
+  const [darkMode, setDarkMode] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
-  // Application Form & OCR State
-  const [profile, setProfile] = useState(INITIAL_PROFILE);
+  // Application Form & OCR State (Starts 100% Blank)
+  const [profile, setProfile] = useState(BLANK_PROFILE);
   const [docPreview, setDocPreview] = useState(null);
   const [ocrResult, setOcrResult] = useState(null);
   const [ocrLoading, setOcrLoading] = useState(false);
@@ -56,16 +60,32 @@ export default function SarathiLite() {
     }
   }, [textSize]);
 
-  const handleDemoLogin = () => {
-    setProfile({ ...INITIAL_PROFILE });
+  // Dark Mode Class Sync on HTML document
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, [darkMode]);
+
+  const handleStartApplication = () => {
+    setProfile({
+      ...BLANK_PROFILE,
+      applicationId: `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
+    });
     setScreen('app');
     setCurrentStep(1);
+    setTrafficPhase('guide');
   };
 
   const handleReset = () => {
     setScreen('landing');
     setCurrentStep(1);
-    setProfile(INITIAL_PROFILE);
+    setTrafficPhase('guide');
+    setProfile(BLANK_PROFILE);
     setDocPreview(null);
     setOcrResult(null);
     setPracticePassed(false);
@@ -98,6 +118,7 @@ export default function SarathiLite() {
             dob: data.dob || prev.dob,
             address: data.address || prev.address,
             aadhaar: data.docNumber || prev.aadhaar,
+            applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
           }));
         }
       } catch (err) {
@@ -125,6 +146,7 @@ export default function SarathiLite() {
           dob: data.dob || prev.dob,
           address: data.address || prev.address,
           aadhaar: data.docNumber || prev.aadhaar,
+          applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
         }));
       }
       setOcrLoading(false);
@@ -138,7 +160,7 @@ export default function SarathiLite() {
   // Render Landing Page
   if (screen === 'landing') {
     return (
-      <div className={`min-h-screen bg-[#f8fafc] flex flex-col font-sans ${getContrastClass()}`}>
+      <div className={`min-h-screen bg-[#f8fafc] dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col font-sans ${getContrastClass()}`}>
         {/* National Tri-Color Accent Bar */}
         <div className="h-1 w-full flex" aria-hidden="true">
           <div className="flex-1 bg-[#FF9933]" />
@@ -162,50 +184,52 @@ export default function SarathiLite() {
               setTextSize={setTextSize}
               contrast={contrast}
               setContrast={setContrast}
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
             />
           </div>
         </header>
 
         {/* Landing Page Main Content */}
         <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 flex flex-col justify-center">
-          <div className="bg-white rounded-lg border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="border-b border-slate-200 pb-4 text-center space-y-2">
-              <span className="text-[11px] font-bold text-blue-900 bg-blue-50 px-3 py-1 rounded border border-blue-200 uppercase tracking-wider">
+          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="border-b border-slate-200 dark:border-slate-700 pb-4 text-center space-y-2">
+              <span className="text-[11px] font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded border border-blue-200 dark:border-blue-800 uppercase tracking-wider">
                 Online Driving License Services
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a]">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-200">
                 Learner's License Application Portal
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-                Official public service portal for Learner's Driving License applications under the Motor Vehicles Act (1988). Complete document verification, traffic rules preparation, challan settlement, and appointment slot booking.
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Official portal for fresh Learner's Driving License applications. Complete document verification via Aadhaar OCR, review mandatory road safety rules, pass the 5-question qualifying test, pay challan fees, and reserve your RTO slot.
               </p>
             </div>
 
-            {/* Simple Linear Workflow Bar (No Box Cards) */}
-            <div className="bg-slate-50 border border-slate-200 rounded p-4">
-              <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-3">
+            {/* Sequential Application Procedure Bar */}
+            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded p-4">
+              <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
                 Sequential Application Procedure:
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-semibold text-slate-800">
-                <div className="flex items-center gap-2 p-2 bg-white rounded border border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
                   <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     1
                   </span>
                   <span>Application & OCR</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white rounded border border-slate-200">
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
                   <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     2
                   </span>
-                  <span>Traffic Rules Test</span>
+                  <span>Rules Guide & Test</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white rounded border border-slate-200">
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
                   <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     3
                   </span>
                   <span>Fee Payment (₹150)</span>
                 </div>
-                <div className="flex items-center gap-2 p-2 bg-white rounded border border-slate-200">
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
                   <span className="w-5 h-5 rounded-full bg-[#0f2a4a] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                     4
                   </span>
@@ -214,25 +238,25 @@ export default function SarathiLite() {
               </div>
             </div>
 
-            {/* Login Action Bar */}
+            {/* Start Fresh Application Action */}
             <div className="pt-2 text-center max-w-sm mx-auto space-y-2">
               <button
                 type="button"
-                onClick={handleDemoLogin}
+                onClick={handleStartApplication}
                 className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors"
               >
-                Access Portal (1-Click Demo Login)
+                Start Fresh Application Form →
               </button>
-              <p className="text-[11px] text-slate-500">
-                Pre-filled citizen profile for testing • Instant eKYC simulation
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Fresh form • Step-by-step entry or automated document scan
               </p>
             </div>
           </div>
         </main>
 
         {/* Official Footer */}
-        <footer className="bg-slate-100 border-t border-slate-200 py-3.5 px-4 text-center text-xs text-slate-600">
-          <p className="font-semibold text-slate-800">
+        <footer className="bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-3.5 px-4 text-center text-xs text-slate-600 dark:text-slate-400">
+          <p className="font-semibold text-slate-800 dark:text-slate-300">
             Sarathi Parivahan • Ministry of Road Transport and Highways • Government of India
           </p>
         </footer>
@@ -242,7 +266,7 @@ export default function SarathiLite() {
 
   // Render Portal Workflow (Steps 1 to 4)
   return (
-    <div className={`min-h-screen bg-[#f8fafc] flex flex-col font-sans ${getContrastClass()}`}>
+    <div className={`min-h-screen bg-[#f8fafc] dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col font-sans ${getContrastClass()}`}>
       {/* National Tri-Color Accent Bar */}
       <div className="h-1 w-full flex no-print" aria-hidden="true">
         <div className="flex-1 bg-[#FF9933]" />
@@ -262,48 +286,54 @@ export default function SarathiLite() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            {/* My Profile Section Button */}
-            <button
-              type="button"
-              onClick={() => setProfileModalOpen(true)}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded border border-white/20 transition-colors flex items-center gap-1.5"
-              title="View your citizen profile records"
-            >
-              <span>My Profile</span>
-            </button>
+            {/* My Profile Button (Only accessible when profile info is created/entered) */}
+            {profile?.name && (
+              <button
+                type="button"
+                onClick={() => setProfileModalOpen(true)}
+                className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded border border-white/20 transition-colors flex items-center gap-1.5"
+                title="View your citizen profile record"
+              >
+                <span>My Profile</span>
+              </button>
+            )}
 
             <AccessibilityBar
               textSize={textSize}
               setTextSize={setTextSize}
               contrast={contrast}
               setContrast={setContrast}
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
             />
             <button
               type="button"
               onClick={handleReset}
               className="text-xs text-blue-200 hover:text-white underline font-semibold px-1"
             >
-              Exit Demo
+              Exit / Reset
             </button>
           </div>
         </div>
       </header>
 
       {/* Applicant Meta Status Bar */}
-      <section className="bg-slate-100 border-b border-slate-200 px-4 py-2 text-xs text-slate-700 no-print">
+      <section className="bg-slate-100 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-700 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 no-print">
         <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            <span className="text-slate-500 font-medium">Application ID:</span>
-            <strong className="text-[#0f2a4a] font-mono font-bold bg-white px-2 py-0.5 rounded border border-slate-200">
-              {profile?.applicationId}
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Application ID:</span>
+            <strong className="text-[#0f2a4a] dark:text-blue-300 font-mono font-bold bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              {profile?.applicationId || 'New Draft'}
             </strong>
-            <span className="text-slate-300">|</span>
-            <span className="text-slate-500 font-medium">Applicant:</span>
-            <strong className="text-slate-900 font-semibold">{profile?.name}</strong>
+            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Applicant:</span>
+            <strong className="text-slate-900 dark:text-slate-100 font-semibold">
+              {profile?.name || 'Pending Registration'}
+            </strong>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 font-medium">Jurisdiction:</span>
-            <span className="font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Jurisdiction:</span>
+            <span className="font-bold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-800">
               {profile?.rto}
             </span>
           </div>
@@ -324,6 +354,7 @@ export default function SarathiLite() {
 
       {/* Main Form Content Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 pb-28">
+        {/* Step 1: Application Form & OCR */}
         {currentStep === 1 && (
           <StepApplicationOcr
             profile={profile}
@@ -336,14 +367,23 @@ export default function SarathiLite() {
           />
         )}
 
+        {/* Step 2: Traffic Rules Guide & Mandatory 5-Question Test */}
         {currentStep === 2 && (
-          <StepTrafficPractice
-            onPassed={() => setPracticePassed(true)}
-            practicePassed={practicePassed}
-            onProceedToPayment={() => setCurrentStep(3)}
-          />
+          <div>
+            {trafficPhase === 'guide' ? (
+              <TrafficRulesGuide onStartTest={() => setTrafficPhase('test')} />
+            ) : (
+              <StepTrafficPractice
+                onPassed={() => setPracticePassed(true)}
+                practicePassed={practicePassed}
+                onProceedToPayment={() => setCurrentStep(3)}
+                onBackToGuide={() => setTrafficPhase('guide')}
+              />
+            )}
+          </div>
         )}
 
+        {/* Step 3: Statutory Fee Payment */}
         {currentStep === 3 && (
           <StepFeePayment
             profile={profile}
@@ -356,6 +396,7 @@ export default function SarathiLite() {
           />
         )}
 
+        {/* Step 4: Slot Booking */}
         {currentStep === 4 && (
           <StepSlotBooking
             profile={profile}
@@ -381,23 +422,29 @@ export default function SarathiLite() {
       />
 
       {/* Bottom Step Navigation Bar */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-3 z-10 shadow-lg no-print">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-3 z-10 shadow-lg no-print">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <button
             type="button"
-            onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
+            onClick={() => {
+              if (currentStep === 2 && trafficPhase === 'test') {
+                setTrafficPhase('guide');
+              } else {
+                setCurrentStep((prev) => Math.max(prev - 1, 1));
+              }
+            }}
             disabled={currentStep === 1}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 font-bold text-xs sm:text-sm rounded border border-slate-300 transition-colors"
+            className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm rounded border border-slate-300 dark:border-slate-600 transition-colors"
           >
             ← Previous Step
           </button>
 
-          <span className="text-xs font-semibold text-slate-600 hidden sm:inline">
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 hidden sm:inline">
             Step {currentStep} of 4 — {
               currentStep === 1
                 ? 'Application & OCR'
                 : currentStep === 2
-                ? 'Traffic Rules Practice'
+                ? (trafficPhase === 'guide' ? 'Traffic Rules Guide' : 'Traffic Rules 5-Q Test')
                 : currentStep === 3
                 ? 'Fee Payment'
                 : 'Slot Booking'
@@ -406,16 +453,28 @@ export default function SarathiLite() {
 
           <button
             type="button"
-            onClick={() => setCurrentStep((prev) => Math.min(prev + 1, 4))}
+            onClick={() => {
+              if (currentStep === 2 && trafficPhase === 'guide') {
+                setTrafficPhase('test');
+              } else {
+                setCurrentStep((prev) => Math.min(prev + 1, 4));
+              }
+            }}
             disabled={
               (currentStep === 1 && !profile?.name) ||
-              (currentStep === 2 && !practicePassed) ||
+              (currentStep === 2 && trafficPhase === 'test' && !practicePassed) ||
               (currentStep === 3 && !paid) ||
               currentStep === 4
             }
-            className="px-5 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm rounded shadow-xs transition-colors"
+            className="px-5 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-bold text-xs sm:text-sm rounded shadow-xs transition-colors"
           >
-            {currentStep === 4 ? (booked ? 'Process Completed ✓' : 'Select Slot to Finish') : 'Proceed to Next Step →'}
+            {currentStep === 1
+              ? (profile?.name ? 'Proceed to Traffic Rules →' : 'Enter Name or Scan Aadhaar')
+              : currentStep === 2 && trafficPhase === 'guide'
+              ? 'Start 5-Q Test →'
+              : currentStep === 4
+              ? (booked ? 'Process Completed ✓' : 'Select Slot to Finish')
+              : 'Proceed to Next Step →'}
           </button>
         </div>
       </footer>

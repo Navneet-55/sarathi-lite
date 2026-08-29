@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DataTable from './DataTable';
 
 /**
- * Step 3: Official RTO Fee Challan Payment Settlement
+ * Step 3: Official RTO Fee Challan Payment Settlement (Dark Mode Ready)
  */
 export default function StepFeePayment({
   profile,
@@ -33,61 +33,61 @@ export default function StepFeePayment({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="border-b border-slate-200 pb-3">
+      <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a]">
+          <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a] dark:text-blue-200">
             Step 3: Statutory RTO Application Fee Challan Settlement
           </h2>
-          <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-300 font-mono">
+          <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600 font-mono">
             Challan Head: 0041-00-102
           </span>
         </div>
-        <p className="text-xs text-slate-600 mt-1">
+        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
           Settlement of statutory fees for Form 2 processing, computerized knowledge test, and smart card allotment under Rule 32 of CMVR.
         </p>
       </div>
 
       {/* Itemized Fee Breakdown Table */}
-      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
-        <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
-          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] uppercase tracking-wider">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden shadow-xs">
+        <div className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-4 py-2.5 flex items-center justify-between">
+          <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wider">
             Ministry Challan Fee Schedule
           </h3>
-          <span className="text-[11px] font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded">
+          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">
             Govt. Fixed Rate
           </span>
         </div>
         <table className="w-full text-left text-xs sm:text-sm">
           <thead>
-            <tr className="bg-slate-100/70 text-slate-700 border-b border-slate-200 text-[11px] uppercase font-bold">
+            <tr className="bg-slate-100/70 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 text-[11px] uppercase font-bold">
               <th className="py-2.5 px-4">Service Description</th>
               <th className="py-2.5 px-4">Statutory Rule</th>
               <th className="py-2.5 px-4 text-right">Amount (INR)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 text-slate-800">
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-700 text-slate-800 dark:text-slate-200">
             <tr>
               <td className="py-2.5 px-4 font-medium">Issue of Learner's License (Form 2)</td>
-              <td className="py-2.5 px-4 text-slate-500 text-xs">Rule 32, CMVR</td>
+              <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400 text-xs">Rule 32, CMVR</td>
               <td className="py-2.5 px-4 text-right font-mono">₹50.00</td>
             </tr>
-            <tr className="bg-slate-50/50">
+            <tr className="bg-slate-50/50 dark:bg-slate-800/50">
               <td className="py-2.5 px-4 font-medium">Learner's Test Fee (Computerized)</td>
-              <td className="py-2.5 px-4 text-slate-500 text-xs">Rule 32, CMVR</td>
+              <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400 text-xs">Rule 32, CMVR</td>
               <td className="py-2.5 px-4 text-right font-mono">₹50.00</td>
             </tr>
             <tr>
               <td className="py-2.5 px-4 font-medium">Online Service & Slot Reservation Fee</td>
-              <td className="py-2.5 px-4 text-slate-500 text-xs">Administrative Tariff</td>
+              <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400 text-xs">Administrative Tariff</td>
               <td className="py-2.5 px-4 text-right font-mono">₹50.00</td>
             </tr>
           </tbody>
           <tfoot>
-            <tr className="bg-slate-100 font-bold border-t-2 border-slate-300 text-[#0f2a4a]">
+            <tr className="bg-slate-100 dark:bg-slate-900 font-bold border-t-2 border-slate-300 dark:border-slate-700 text-[#0f2a4a] dark:text-blue-300">
               <td colSpan={2} className="py-3 px-4 text-right uppercase text-xs">
                 Total Payable Amount:
               </td>
-              <td className="py-3 px-4 text-right font-mono text-base text-blue-900">
+              <td className="py-3 px-4 text-right font-mono text-base text-blue-900 dark:text-blue-200">
                 ₹150.00
               </td>
             </tr>
@@ -96,10 +96,10 @@ export default function StepFeePayment({
       </div>
 
       {/* Payment Processing Card */}
-      <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-5 shadow-xs space-y-4">
         {!paid ? (
           <div className="space-y-4">
-            <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] uppercase tracking-wide border-b border-slate-200 pb-2">
+            <h3 className="text-xs sm:text-sm font-bold text-[#0f2a4a] dark:text-blue-300 uppercase tracking-wide border-b border-slate-200 dark:border-slate-700 pb-2">
               Select Electronic Payment Mode
             </h3>
 
@@ -116,8 +116,8 @@ export default function StepFeePayment({
                   onClick={() => setPayMethod(m.id)}
                   className={`p-3 rounded border text-left text-xs font-semibold transition-all ${
                     payMethod === m.id
-                      ? 'border-blue-700 bg-blue-50/80 text-blue-950 ring-1 ring-blue-700'
-                      : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                      ? 'border-blue-700 dark:border-blue-400 bg-blue-50/80 dark:bg-blue-950/60 text-blue-950 dark:text-blue-200 ring-1 ring-blue-700 dark:ring-blue-400'
+                      : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   <span className="leading-tight">{m.label}</span>
@@ -125,7 +125,7 @@ export default function StepFeePayment({
               ))}
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-700">
+            <div className="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded text-xs text-slate-700 dark:text-slate-300">
               <p className="leading-relaxed">
                 <strong>Electronic Simulation Mode:</strong> Simulated gateway sandbox. Authorizing will generate an official treasury challan reference without debiting your account.
               </p>
@@ -135,7 +135,7 @@ export default function StepFeePayment({
               type="button"
               onClick={handlePayment}
               disabled={paying}
-              className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-400 text-white font-bold text-sm rounded shadow-xs transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:bg-slate-400 text-white font-bold text-sm rounded shadow-xs transition-colors flex items-center justify-center gap-2"
             >
               {paying ? (
                 <>
@@ -150,14 +150,14 @@ export default function StepFeePayment({
         ) : (
           /* Payment Success & Formal Receipt */
           <div className="space-y-4">
-            <div className="bg-emerald-50 border border-emerald-300 rounded-lg p-4 text-emerald-950 flex flex-wrap items-center justify-between gap-3">
+            <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-lg p-4 text-emerald-950 dark:text-emerald-200 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm">
                   ✓
                 </div>
                 <div>
                   <h4 className="font-bold text-sm sm:text-base">Payment Authorized & Settled</h4>
-                  <p className="text-xs text-emerald-800">
+                  <p className="text-xs text-emerald-800 dark:text-emerald-300">
                     Official Treasury Reference Number: <strong>{paymentRef}</strong>
                   </p>
                 </div>
@@ -166,7 +166,7 @@ export default function StepFeePayment({
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3.5 py-1.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded border border-slate-300 shadow-xs no-print"
+                className="px-3.5 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold rounded border border-slate-300 dark:border-slate-600 shadow-xs no-print"
               >
                 Print Receipt
               </button>
@@ -179,11 +179,11 @@ export default function StepFeePayment({
               rows={[
                 ['Application Number', profile?.applicationId],
                 ['Applicant Full Name', profile?.name],
-                ['Transaction Reference ID', <span key="ref" className="font-mono font-bold text-blue-900">{paymentRef}</span>],
+                ['Transaction Reference ID', <span key="ref" className="font-mono font-bold text-blue-900 dark:text-blue-300">{paymentRef}</span>],
                 ['Payment Settlement Date', new Date().toLocaleString('en-IN')],
                 ['Accounting Head', '0041-00-102 RTO Motor Vehicle Taxes & Fees'],
                 ['Total Amount Settled', '₹150.00 (One Hundred and Fifty Rupees Only)'],
-                ['Receipt Status', <span key="status" className="font-bold text-emerald-700">SUCCESS • Treasury Accepted</span>],
+                ['Receipt Status', <span key="status" className="font-bold text-emerald-700 dark:text-emerald-400">SUCCESS • Treasury Accepted</span>],
               ]}
             />
           </div>

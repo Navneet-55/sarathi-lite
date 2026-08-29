@@ -2,9 +2,16 @@ import React from 'react';
 
 /**
  * Enhanced Accessibility Utility Bar (GIGW Compliant)
- * Controls: Text sizing (A- | A | A+) + High Contrast Mode toggle
+ * Controls: Text sizing (A- | A | A+) + Contrast Mode + Dark Mode toggle
  */
-export default function AccessibilityBar({ textSize, setTextSize, contrast, setContrast }) {
+export default function AccessibilityBar({
+  textSize,
+  setTextSize,
+  contrast,
+  setContrast,
+  darkMode,
+  setDarkMode,
+}) {
   return (
     <div className="flex items-center gap-2 text-xs font-semibold" aria-label="Accessibility tools">
       {/* Font Size Group */}
@@ -66,6 +73,24 @@ export default function AccessibilityBar({ textSize, setTextSize, contrast, setC
         >
           <span aria-hidden="true">◐</span>
           <span className="hidden sm:inline">{contrast === 'high' ? 'High Contrast' : 'Contrast'}</span>
+        </button>
+      )}
+
+      {/* Dark Mode Toggle */}
+      {setDarkMode && (
+        <button
+          type="button"
+          onClick={() => setDarkMode(!darkMode)}
+          className={`px-2 py-1 rounded text-[11px] font-bold border transition-colors flex items-center gap-1 ${
+            darkMode
+              ? 'bg-slate-900 text-amber-300 border-amber-400'
+              : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+          }`}
+          title="Toggle Dark Mode Theme"
+          aria-pressed={darkMode}
+        >
+          <span aria-hidden="true">{darkMode ? '☀️' : '🌙'}</span>
+          <span className="hidden sm:inline">{darkMode ? 'Light Theme' : 'Dark Mode'}</span>
         </button>
       )}
     </div>
