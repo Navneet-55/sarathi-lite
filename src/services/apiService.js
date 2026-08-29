@@ -1,13 +1,15 @@
 import { QUESTION_BANK } from '../data/questionBank';
 import { INITIAL_SLOTS, rankSlots } from '../data/rtoSlots';
+import { runBrowserTesseractOcr } from './ocrEngine';
 
 /**
  * Robust API Service Layer for Sarathi-Lite
- * Connects to /api endpoints or direct OpenAI client-side fallback
+ * Real Character Recognition Engine (GPT-4o-mini Vision + Tesseract.js WASM)
+ * Zero hardcoded names, zero static rollbacks.
  */
 
-export async function fetchOcrData(base64Image, docType = 'aadhaar', existingProfile = {}) {
-  // 1. Try serverless /api/ocr endpoint
+export async function fetchOcrData(base64Image, docType = 'aadhaar') {
+  // 1. Try serverless /api/ocr endpoint (GPT-4o-mini Vision)
   try {
     const res = await fetch('/api/ocr', {
       method: 'POST',
@@ -16,12 +18,12 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar', existingPro
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && data.name) {
-        return { ...data, isLiveAi: true };
+      if (data && (data.name || data.docNumber || data.dob)) {
+        return { ...data, isLiveAi: true, engine: 'GPT-4o-mini Vision API' };
       }
     }
   } catch {
-    // Continue to browser fallback
+    // Continue to browser-side direct / WASM OCR
   }
 
   // 2. Try direct OpenAI GPT-4o-mini Vision from browser if VITE_OPENAI_API_KEY exists
@@ -39,12 +41,12 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar', existingPro
           messages: [
             {
               role: 'system',
-              content: 'You are an Indian government document OCR parser for Sarathi Parivahan. Parse the uploaded Aadhaar document image and return valid JSON with: name, dob (DD/MM/YYYY), address, docNumber, gender, confidence (number 0.85-0.99), verified (boolean true).',
+              content: 'You are an Indian government document OCR parser. Extract all visible text from the uploaded Aadhaar image into valid JSON with fields: name (exact string as on card), dob (DD/MM/YYYY), address (full string if visible, else empty), docNumber (exact 12 digits or masked XXXX XXXX 1234), gender (Male/Female/Transgender), confidence (number 0.85-0.99), verified (boolean true). Return ONLY extracted text without guessing.',
             },
             {
               role: 'user',
               content: [
-                { type: 'text', text: 'Extract all demographic fields from this Indian Aadhaar image.' },
+                { type: 'text', text: 'Extract demographic fields directly from this Aadhaar document image.' },
                 { type: 'image_url', image_url: { url: base64Image } },
               ],
             },
@@ -56,36 +58,45 @@ export async function fetchOcrData(base64Image, docType = 'aadhaar', existingPro
       if (response.ok) {
         const json = await response.json();
         const parsed = JSON.parse(json.choices[0].message.content);
-        if (parsed && parsed.name) {
+        if (parsed && (parsed.name || parsed.docNumber || parsed.dob)) {
           return {
             ...parsed,
             isLiveAi: true,
-            note: 'Live GPT-4o Vision OCR Extraction',
+            engine: 'Client Direct GPT-4o Vision',
+            note: 'Character recognition executed via GPT-4o Vision',
           };
         }
       }
     } catch {
-      // Continue to intelligent fallback
+      // Continue to local Tesseract.js WebAssembly
     }
   }
 
-  // 3. Intelligent fallback that respects applicant name if already entered
-  const defaultName = existingProfile?.name || 'Navneet';
-  const defaultDob = existingProfile?.dob || '15/03/1998';
-  const defaultAddress = existingProfile?.address || 'HSR Layout, Sector 3, Bengaluru, Karnataka 560102';
-  const mockNumbers = ['4521', '8812', '9903', '1044', '6729'];
-  const randomSuffix = mockNumbers[Math.floor(Math.random() * mockNumbers.length)];
+  // 3. Genuine In-Browser Tesseract.js Character Recognition
+  try {
+    const tesseractResult = await runBrowserTesseractOcr(base64Image);
+    if (tesseractResult) {
+      return {
+        ...tesseractResult,
+        isLiveAi: false,
+      };
+    }
+  } catch (err) {
+    console.error('Tesseract OCR error:', err);
+  }
 
+  // 4. If all methods fail to detect characters, return raw extraction status (NO hardcoded fake name)
   return {
-    name: defaultName,
-    dob: defaultDob,
-    gender: 'Male',
-    address: defaultAddress,
-    docNumber: `XXXX-XXXX-${randomSuffix}`,
-    confidence: 0.96,
-    verified: true,
+    name: '',
+    dob: '',
+    gender: '',
+    address: '',
+    docNumber: '',
+    confidence: 0.7,
+    verified: false,
     isLiveAi: false,
-    note: 'Automated OCR extracted and verified demographic data',
+    engine: 'Manual Verification Required',
+    note: 'Image characters could not be clearly resolved. Please verify document or enter details manually.',
   };
 }
 

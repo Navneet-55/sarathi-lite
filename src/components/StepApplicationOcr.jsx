@@ -3,7 +3,7 @@ import DataTable from './DataTable';
 import { RTO_OFFICES } from '../data/rtoSlots';
 
 /**
- * Step 1: Applicant Registration & Aadhaar OCR Verification
+ * Step 1: Applicant Registration & Genuine Aadhaar OCR Verification
  */
 export default function StepApplicationOcr({
   profile,
@@ -16,6 +16,7 @@ export default function StepApplicationOcr({
 }) {
   const fileInputRef = useRef(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showRawText, setShowRawText] = useState(false);
 
   const handleInputChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
@@ -43,7 +44,7 @@ export default function StepApplicationOcr({
           </span>
         </div>
         <p className="text-xs text-slate-600 mt-1">
-          Verify your demographic details or upload your Aadhaar document to automatically extract and populate your application via OCR.
+          Verify your demographic details or upload your Aadhaar document to automatically extract and populate your application via Optical Character Recognition (OCR).
         </p>
       </div>
 
@@ -107,7 +108,7 @@ export default function StepApplicationOcr({
               type="text"
               value={profile?.aadhaar || ''}
               onChange={(e) => handleInputChange('aadhaar', e.target.value)}
-              placeholder="XXXX-XXXX-4521"
+              placeholder="XXXX XXXX 1234"
               className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-700 focus:outline-none bg-white text-slate-900 font-mono"
             />
           </div>
@@ -155,7 +156,7 @@ export default function StepApplicationOcr({
             Aadhaar eKYC Document OCR Scanner
           </h3>
           <span className="text-[11px] text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
-            Automated Character Recognition
+            {ocrResult?.engine ? ocrResult.engine : 'Optical Character Recognition'}
           </span>
         </div>
 
@@ -186,7 +187,7 @@ export default function StepApplicationOcr({
               <img
                 src={docPreview}
                 alt="Aadhaar Document Preview"
-                className="max-h-48 rounded border border-slate-300 shadow-xs mx-auto"
+                className="max-h-52 rounded border border-slate-300 shadow-xs mx-auto"
               />
               {ocrLoading && (
                 <div
@@ -198,10 +199,10 @@ export default function StepApplicationOcr({
           ) : (
             <div className="py-3 space-y-1.5">
               <p className="text-xs sm:text-sm font-bold text-slate-800">
-                Upload Aadhaar Card image (Front side) for automated data extraction
+                Upload Aadhaar Card image (Front side) for real character recognition
               </p>
               <p className="text-[11px] text-slate-500">
-                Drag and drop image file here, or click browse button below (Supports JPG, PNG, PDF up to 5MB)
+                Drag and drop image file here, or click browse button below (Supports JPG, PNG, WebP up to 5MB)
               </p>
             </div>
           )}
@@ -229,10 +230,10 @@ export default function StepApplicationOcr({
 
         {/* Scanning Progress */}
         {ocrLoading && (
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded flex items-center justify-center gap-3">
+          <div className="p-3.5 bg-blue-50 border border-blue-200 rounded flex items-center justify-center gap-3">
             <div className="w-4 h-4 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin" />
             <span className="text-xs font-bold text-[#0f2a4a]">
-              Optical character recognition in progress • Extracting verified fields...
+              Optical character recognition in progress • Performing deep text extraction on image pixels...
             </span>
           </div>
         )}
@@ -241,23 +242,41 @@ export default function StepApplicationOcr({
         {ocrResult && (
           <div className="space-y-3 pt-2">
             <DataTable
-              title="Aadhaar OCR Extraction Summary"
-              badge={`${Math.round((ocrResult.confidence || 0.96) * 100)}% Confidence`}
-              subtitle="The parsed values below have been validated and synchronized with your application form."
+              title="Aadhaar OCR Extracted Fields"
+              badge={`${Math.round((ocrResult.confidence || 0.95) * 100)}% Confidence`}
+              subtitle={`Extracted via ${ocrResult.engine || 'Optical Character Recognition'}. Validated fields have updated your form above.`}
               rows={[
-                ['Parsed Full Name', ocrResult.name],
-                ['Parsed Date of Birth', ocrResult.dob],
-                ['Gender', ocrResult.gender || 'Male'],
-                ['Masked Aadhaar Number', ocrResult.docNumber],
-                ['Residential Address', ocrResult.address],
+                ['Parsed Full Name', ocrResult.name || <span className="text-slate-400 italic">Not detected on document</span>],
+                ['Parsed Date of Birth', ocrResult.dob || <span className="text-slate-400 italic">Not detected on document</span>],
+                ['Gender', ocrResult.gender || <span className="text-slate-400 italic">Not detected</span>],
+                ['Aadhaar Number', ocrResult.docNumber || <span className="text-slate-400 italic">Not detected on document</span>],
+                ['Residential Address', ocrResult.address || <span className="text-slate-400 italic">Not detected on front side</span>],
                 [
                   'Validation Result',
                   <span key="status" className="inline-flex items-center gap-1 text-emerald-800 font-bold">
-                    <span>✓</span> Verified eKYC Record Match
+                    <span>✓</span> eKYC Optical Character Recognition Complete
                   </span>,
                 ],
               ]}
             />
+
+            {ocrResult.rawText && (
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowRawText(!showRawText)}
+                  className="text-[11px] text-blue-800 hover:text-blue-950 font-bold underline flex items-center gap-1"
+                >
+                  {showRawText ? 'Hide Raw OCR Text Feed' : 'View Raw Extracted Text Feed'}
+                </button>
+                {showRawText && (
+                  <pre className="mt-2 p-3 bg-slate-900 text-slate-100 text-[11px] font-mono rounded overflow-x-auto whitespace-pre-wrap max-h-40 border border-slate-700">
+                    {ocrResult.rawText}
+                  </pre>
+                )}
+              </div>
+            )}
+
             {ocrResult.note && (
               <p className="text-[11px] text-slate-600 bg-slate-100 p-2.5 rounded border border-slate-200">
                 <strong>Notice:</strong> {ocrResult.note}

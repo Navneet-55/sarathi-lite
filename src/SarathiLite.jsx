@@ -86,12 +86,12 @@ export default function SarathiLite() {
       setOcrResult(null);
 
       try {
-        const data = await fetchOcrData(base64, 'aadhaar', profile);
+        const data = await fetchOcrData(base64, 'aadhaar');
         setOcrResult(data);
-        if (data.name) {
+        if (data) {
           setProfile((prev) => ({
             ...prev,
-            name: data.name,
+            name: data.name || prev.name,
             dob: data.dob || prev.dob,
             address: data.address || prev.address,
             aadhaar: data.docNumber || prev.aadhaar,
@@ -113,12 +113,12 @@ export default function SarathiLite() {
     setDocPreview(sampleCanvas);
 
     setTimeout(async () => {
-      const data = await fetchOcrData(sampleCanvas, 'aadhaar', profile);
+      const data = await fetchOcrData(sampleCanvas, 'aadhaar');
       setOcrResult(data);
-      if (data.name) {
+      if (data) {
         setProfile((prev) => ({
           ...prev,
-          name: data.name,
+          name: data.name || prev.name,
           dob: data.dob || prev.dob,
           address: data.address || prev.address,
           aadhaar: data.docNumber || prev.aadhaar,
