@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from './DataTable';
+import DigitalSmartCard from './DigitalSmartCard';
 import { fetchSlotRecommendations } from '../services/apiService';
 import { INITIAL_SLOTS } from '../data/rtoSlots';
 import { TRANSLATIONS } from '../data/translations';
 
 /**
- * Step 4: RTO Appointment Slot Booking & Form 2 Acknowledgment Slip
- * Pure Bilingual Support (English & Hindi)
+ * Step 4: RTO Appointment Slot Booking, Form 2 Acknowledgment Slip & Digital Smart Card
  */
 export default function StepSlotBooking({
   profile,
@@ -21,6 +21,7 @@ export default function StepSlotBooking({
   const [slotRecs, setSlotRecs] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filterRto, setFilterRto] = useState('all');
+  const [activeView, setActiveView] = useState('slip'); // 'slip' | 'card'
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const isHi = lang === 'hi';
@@ -70,48 +71,89 @@ export default function StepSlotBooking({
           <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 max-w-xl mx-auto">
             {t.appointmentConfirmedDesc}
           </p>
-          <div className="pt-2 no-print">
+
+          {/* View Mode Toggle: Form 2 Slip vs Digital Smart Card */}
+          <div className="pt-3 flex flex-wrap items-center justify-center gap-2 no-print">
             <button
               type="button"
-              onClick={handlePrint}
-              className="px-5 py-2.5 bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded-full shadow-xs transition-colors"
+              onClick={() => setActiveView('slip')}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeView === 'slip'
+                  ? 'bg-blue-800 text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600'
+              }`}
             >
-              {t.printForm2SlipBtn}
+              📄 {isHi ? 'प्रपत्र 2 पावती पर्ची' : 'Form 2 Acknowledgment Slip'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView('card')}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeView === 'card'
+                  ? 'bg-amber-400 text-slate-950 shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600'
+              }`}
+            >
+              💳 {isHi ? 'डिजिटल स्मार्ट कार्ड (DigiLocker)' : 'Digital Smart Card (DigiLocker)'}
             </button>
           </div>
         </div>
 
-        {/* Application Summary Ledger */}
-        <DataTable
-          title={t.officialSlotSlipTitle}
-          badge={t.confirmedReadyBadge}
-          subtitle={t.slotSlipSubtitle}
-          lang={lang}
-          rows={[
-            [t.appNumberField, <span key="app" className="font-mono font-bold">{profile?.applicationId}</span>],
-            [t.applicantNameField, profile?.name],
-            [t.dobField, profile?.dob],
-            [t.mobileField, profile?.mobile],
-            [t.allottedSlotField, <strong key="dt" className="text-blue-900 dark:text-blue-300">{selectedSlot?.date} at {selectedSlot?.time}</strong>],
-            [t.reportingRtoField, selectedSlot?.rto || profile?.rto],
-            [t.feeChallanField, <span key="pay" className="font-mono">{paid ? paymentRef : (isHi ? 'पूर्व भुगतान (सत्यापित)' : 'Pre-paid (Verified)')}</span>],
-            [t.ekycStatusField, t.ekycVerifiedText],
-            [t.trafficQualField, t.trafficPassedText],
-          ]}
-        />
+        {activeView === 'card' ? (
+          /* Digital Smart Card Display */
+          <div className="pt-2">
+            <DigitalSmartCard
+              profile={profile}
+              paymentRef={paymentRef}
+              selectedSlot={selectedSlot}
+              lang={lang}
+            />
+          </div>
+        ) : (
+          /* Application Summary Ledger & Form 2 Slip */
+          <div className="space-y-6">
+            <div className="flex justify-end no-print">
+              <button
+                type="button"
+                onClick={handlePrint}
+                className="px-5 py-2 bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded-full shadow-xs transition-colors"
+              >
+                {t.printForm2SlipBtn}
+              </button>
+            </div>
 
-        {/* Test Day Instructions */}
-        <div className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800">
-          <h4 className="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-xs">
-            {t.mandatoryChecklistTitle}
-          </h4>
-          <ul className="list-disc list-inside space-y-1.5 leading-relaxed text-slate-600 dark:text-slate-400">
-            <li>{t.checkItem1(selectedSlot?.time || '09:30 AM')}</li>
-            <li>{t.checkItem2}</li>
-            <li>{t.checkItem3}</li>
-            <li>{t.checkItem4}</li>
-          </ul>
-        </div>
+            <DataTable
+              title={t.officialSlotSlipTitle}
+              badge={t.confirmedReadyBadge}
+              subtitle={t.slotSlipSubtitle}
+              lang={lang}
+              rows={[
+                [t.appNumberField, <span key="app" className="font-mono font-bold">{profile?.applicationId}</span>],
+                [t.applicantNameField, profile?.name],
+                [t.dobField, profile?.dob],
+                [t.mobileField, profile?.mobile],
+                [t.allottedSlotField, <strong key="dt" className="text-blue-900 dark:text-blue-300">{selectedSlot?.date} at {selectedSlot?.time}</strong>],
+                [t.reportingRtoField, selectedSlot?.rto || profile?.rto],
+                [t.feeChallanField, <span key="pay" className="font-mono">{paid ? paymentRef : (isHi ? 'पूर्व भुगतान (सत्यापित)' : 'Pre-paid (Verified)')}</span>],
+                [t.ekycStatusField, t.ekycVerifiedText],
+                [t.trafficQualField, t.trafficPassedText],
+              ]}
+            />
+
+            {/* Test Day Instructions */}
+            <div className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <h4 className="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-xs">
+                {t.mandatoryChecklistTitle}
+              </h4>
+              <ul className="list-disc list-inside space-y-1.5 leading-relaxed text-slate-600 dark:text-slate-400">
+                <li>{t.checkItem1(selectedSlot?.time || '09:30 AM')}</li>
+                <li>{t.checkItem2}</li>
+                <li>{t.checkItem3}</li>
+                <li>{t.checkItem4}</li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

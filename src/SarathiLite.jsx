@@ -7,6 +7,7 @@ import StepTrafficPractice from './components/StepTrafficPractice';
 import StepFeePayment from './components/StepFeePayment';
 import StepSlotBooking from './components/StepSlotBooking';
 import MyProfileModal from './components/MyProfileModal';
+import ApplicationTrackerModal from './components/ApplicationTrackerModal';
 import { fetchOcrData } from './services/apiService';
 import { TRANSLATIONS } from './data/translations';
 
@@ -28,8 +29,9 @@ export default function SarathiLite() {
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
   const [darkMode, setDarkMode] = useState(false);
-  const [lang, setLang] = useState('en'); // 'en' | 'hi'
+  const [lang, setLang] = useState('en'); // 'en' | 'hi' | 'kn' | 'mr' | 'ta'
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [trackModalOpen, setTrackModalOpen] = useState(false);
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
@@ -104,6 +106,7 @@ export default function SarathiLite() {
     setSelectedSlot(null);
     setBooked(false);
     setProfileModalOpen(false);
+    setTrackModalOpen(false);
   };
 
   // Dedicated Front-Side Upload Handler
@@ -241,20 +244,29 @@ export default function SarathiLite() {
                   {t.portalTitle}
                 </h1>
                 <span className="text-[10px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.5 rounded border border-amber-400/30">
-                  v1.2
+                  v1.3
                 </span>
               </div>
             </div>
-            <AccessibilityBar
-              textSize={textSize}
-              setTextSize={setTextSize}
-              contrast={contrast}
-              setContrast={setContrast}
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-              lang={lang}
-              setLang={setLang}
-            />
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setTrackModalOpen(true)}
+                className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full border border-white/20 transition-colors"
+              >
+                🔍 {t.trackStatus}
+              </button>
+              <AccessibilityBar
+                textSize={textSize}
+                setTextSize={setTextSize}
+                contrast={contrast}
+                setContrast={setContrast}
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+                lang={lang}
+                setLang={setLang}
+              />
+            </div>
           </div>
         </header>
 
@@ -325,6 +337,20 @@ export default function SarathiLite() {
             {t.allRightsReserved}
           </p>
         </footer>
+
+        {/* Application Status Tracker Modal */}
+        <ApplicationTrackerModal
+          isOpen={trackModalOpen}
+          onClose={() => setTrackModalOpen(false)}
+          profile={profile}
+          currentStep={currentStep}
+          practicePassed={practicePassed}
+          paid={paid}
+          paymentRef={paymentRef}
+          selectedSlot={selectedSlot}
+          booked={booked}
+          lang={lang}
+        />
       </div>
     );
   }
@@ -351,11 +377,20 @@ export default function SarathiLite() {
                 {t.portalTitle}
               </h1>
               <span className="text-[9px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.2 rounded border border-amber-400/30">
-                v1.2
+                v1.3
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setTrackModalOpen(true)}
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full border border-white/20 transition-colors hidden sm:inline-block"
+              title={t.trackStatus}
+            >
+              🔍 {t.trackStatus}
+            </button>
+
             {profile?.name && (
               <button
                 type="button"
@@ -502,6 +537,20 @@ export default function SarathiLite() {
         paid={paid}
         paymentRef={paymentRef}
         selectedSlot={selectedSlot}
+        lang={lang}
+      />
+
+      {/* Application Status Tracker Modal */}
+      <ApplicationTrackerModal
+        isOpen={trackModalOpen}
+        onClose={() => setTrackModalOpen(false)}
+        profile={profile}
+        currentStep={currentStep}
+        practicePassed={practicePassed}
+        paid={paid}
+        paymentRef={paymentRef}
+        selectedSlot={selectedSlot}
+        booked={booked}
         lang={lang}
       />
 

@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import TrafficSignImage from './TrafficSignImage';
+import FlashcardQuiz from './FlashcardQuiz';
+import HazardSimulator from './HazardSimulator';
 import { COMPLETE_TRAFFIC_SIGNS, CORE_DRIVING_RULES } from '../data/trafficSignCatalog';
 import { TRANSLATIONS } from '../data/translations';
 
 /**
  * Driver Road Safety & Traffic Sign Training Academy
- * Pure Bilingual Support (English & Hindi)
+ * Includes: 36 Traffic Signs + 60s Speed Flashcards + Hazard Perception Simulator
  */
 export default function TrafficRulesGuide({ onStartTest, lang = 'en' }) {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedSignId, setExpandedSignId] = useState(null);
+  const [showFlashcards, setShowFlashcards] = useState(false);
+  const [showHazardSim, setShowHazardSim] = useState(false);
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const isHi = lang === 'hi';
@@ -42,9 +46,22 @@ export default function TrafficRulesGuide({ onStartTest, lang = 'en' }) {
               {t.academyTitle}
             </h2>
           </div>
-          <span className="text-xs bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full font-semibold border border-blue-200 dark:border-blue-800">
-            {t.catalogCount(COMPLETE_TRAFFIC_SIGNS.length)}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowFlashcards(true)}
+              className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-full shadow-2xs transition-colors flex items-center gap-1"
+            >
+              <span>{t.flashcardBtn}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowHazardSim(true)}
+              className="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs rounded-full shadow-2xs transition-colors flex items-center gap-1"
+            >
+              <span>{t.hazardBtn}</span>
+            </button>
+          </div>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
           {t.academyDesc}
@@ -205,6 +222,22 @@ export default function TrafficRulesGuide({ onStartTest, lang = 'en' }) {
           {t.completeTrainingSubtext}
         </p>
       </div>
+
+      {/* 60s Speed Flashcard Modal */}
+      {showFlashcards && (
+        <FlashcardQuiz
+          onClose={() => setShowFlashcards(false)}
+          lang={lang}
+        />
+      )}
+
+      {/* Hazard Perception Simulator Modal */}
+      {showHazardSim && (
+        <HazardSimulator
+          onClose={() => setShowHazardSim(false)}
+          lang={lang}
+        />
+      )}
     </div>
   );
 }

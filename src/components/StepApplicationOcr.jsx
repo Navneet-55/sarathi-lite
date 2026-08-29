@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import DataTable from './DataTable';
+import CameraCaptureModal from './CameraCaptureModal';
 import { RTO_OFFICES } from '../data/rtoSlots';
 import { TRANSLATIONS } from '../data/translations';
 
 /**
- * Step 1: Citizen Application Form & Dual Front/Back Aadhaar OCR
- * Pure Bilingual Support (English & Hindi)
+ * Step 1: Citizen Application Form, Dual Front/Back Aadhaar OCR & Live Camera Scanner
  */
 export default function StepApplicationOcr({
   profile,
@@ -25,6 +25,7 @@ export default function StepApplicationOcr({
   const backInputRef = useRef(null);
   const [isFrontDragOver, setIsFrontDragOver] = useState(false);
   const [isBackDragOver, setIsBackDragOver] = useState(false);
+  const [cameraModalSide, setCameraModalSide] = useState(null); // 'front' | 'back' | null
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
@@ -47,6 +48,30 @@ export default function StepApplicationOcr({
       handleBackUpload({ target: { files: e.dataTransfer.files } });
     }
   };
+
+  const handleCameraCapture = (base64Data) => {
+    if (cameraModalSide === 'front') {
+      // Simulate file upload with data URL
+      const mockEvent = { target: { files: [dataURLtoFile(base64Data, 'aadhaar_front.jpg')] } };
+      handleFrontUpload(mockEvent);
+    } else if (cameraModalSide === 'back') {
+      const mockEvent = { target: { files: [dataURLtoFile(base64Data, 'aadhaar_back.jpg')] } };
+      handleBackUpload(mockEvent);
+    }
+    setCameraModalSide(null);
+  };
+
+  function dataURLtoFile(dataurl, filename) {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-8 text-slate-900 dark:text-slate-100">
@@ -235,7 +260,7 @@ export default function StepApplicationOcr({
                 </div>
               )}
 
-              <div className="mt-3 flex items-center justify-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
                 <button
                   type="button"
                   onClick={() => frontInputRef.current?.click()}
@@ -243,11 +268,18 @@ export default function StepApplicationOcr({
                 >
                   {frontPreview ? t.changeFront : t.browseFront}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setCameraModalSide('front')}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-semibold rounded-full transition-colors"
+                >
+                  {t.cameraScanFront}
+                </button>
                 {triggerSampleFront && (
                   <button
                     type="button"
                     onClick={triggerSampleFront}
-                    className="px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
+                    className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
                   >
                     {t.sampleFrontBtn}
                   </button>
@@ -319,7 +351,7 @@ export default function StepApplicationOcr({
                 </div>
               )}
 
-              <div className="mt-3 flex items-center justify-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
                 <button
                   type="button"
                   onClick={() => backInputRef.current?.click()}
@@ -327,11 +359,18 @@ export default function StepApplicationOcr({
                 >
                   {backPreview ? t.changeBack : t.browseBack}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setCameraModalSide('back')}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-semibold rounded-full transition-colors"
+                >
+                  {t.cameraScanBack}
+                </button>
                 {triggerSampleBack && (
                   <button
                     type="button"
                     onClick={triggerSampleBack}
-                    className="px-3.5 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
+                    className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold rounded-full transition-colors"
                   >
                     {t.sampleBackBtn}
                   </button>
@@ -373,6 +412,15 @@ export default function StepApplicationOcr({
           </div>
         )}
       </div>
+
+      {/* Live Camera Scanner Modal */}
+      <CameraCaptureModal
+        isOpen={cameraModalSide !== null}
+        onClose={() => setCameraModalSide(null)}
+        onCapture={handleCameraCapture}
+        title={cameraModalSide === 'front' ? t.cameraScanFront : t.cameraScanBack}
+        lang={lang}
+      />
     </div>
   );
 }
