@@ -6,7 +6,7 @@ import React from 'react';
  */
 export default function DataTable({ title, rows, badge, subtitle }) {
   return (
-    <div className="bg-slate-50/70 dark:bg-slate-850/70 rounded-xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
+    <div className="bg-slate-50/70 dark:bg-slate-900 rounded-xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-750 space-y-3">
       {title && (
         <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200/80 dark:border-slate-800">
           <div>

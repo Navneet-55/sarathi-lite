@@ -53,7 +53,7 @@ export default function StepSlotBooking({
 
   if (booked) {
     return (
-      <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6 text-slate-900 dark:text-slate-100">
         {/* Success Header */}
         <div className="bg-emerald-50/80 dark:bg-emerald-950/60 rounded-xl p-5 text-emerald-950 dark:text-emerald-200 text-center space-y-2 border border-emerald-200 dark:border-emerald-800">
           <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-base mx-auto">
@@ -111,7 +111,7 @@ export default function StepSlotBooking({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6 text-slate-900 dark:text-slate-100">
       {/* Header */}
       <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-2">

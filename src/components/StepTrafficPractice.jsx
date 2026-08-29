@@ -6,7 +6,7 @@ const TOTAL_TEST_QUESTIONS = 5;
 const REQUIRED_PASS_SCORE = 3;
 
 /**
- * Step 2: 5-Question Traffic Practice Test (Clean Non-Boxy Design)
+ * Step 2: 5-Question Traffic Practice Test (Clean Non-Boxy Design with High Contrast Dark Mode)
  */
 export default function StepTrafficPractice({ onPassed, practicePassed: _practicePassed, onProceedToPayment, onBackToGuide }) {
   const [questions, setQuestions] = useState([]);
@@ -112,15 +112,15 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
   const currentScore = answers.filter((a) => a.isCorrect).length;
 
   return (
-    <div className="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6 text-slate-900 dark:text-slate-100">
       {/* Header Banner */}
-      <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+      <div className="border-b border-slate-100 dark:border-slate-700 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
               Examination Module • 5 Questions
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-100 tracking-tight mt-0.5">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-200 tracking-tight mt-0.5">
               Learner's License Knowledge Test
             </h2>
           </div>
@@ -133,7 +133,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                   stopAudio();
                   onBackToGuide();
                 }}
-                className="text-xs text-blue-700 dark:text-blue-400 hover:underline font-semibold"
+                className="text-xs text-blue-700 dark:text-blue-300 hover:underline font-semibold"
               >
                 ← Back to Study Guide
               </button>
@@ -143,14 +143,14 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
       </div>
 
       {/* Status Strip */}
-      <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-slate-100 dark:border-slate-800 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-slate-100 dark:border-slate-700 text-xs">
         <div className="flex items-center gap-2">
           <span className="font-bold text-slate-900 dark:text-slate-100">
             Question {Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS)} of {TOTAL_TEST_QUESTIONS}
           </span>
-          <span className="text-slate-400">|</span>
-          <span className="text-slate-500 dark:text-slate-400">
-            Score: <strong>{currentScore}</strong> of {answers.length}
+          <span className="text-slate-400 dark:text-slate-500">|</span>
+          <span className="text-slate-600 dark:text-slate-300">
+            Score: <strong className="text-slate-900 dark:text-white">{currentScore}</strong> of {answers.length}
           </span>
         </div>
 
@@ -166,11 +166,11 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
                   answerRecord
                     ? answerRecord.isCorrect
-                      ? 'bg-emerald-700 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-rose-600 text-white'
                     : isCurrent
-                    ? 'bg-blue-800 text-white ring-2 ring-blue-200 dark:ring-blue-900'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                    ? 'bg-blue-700 text-white ring-2 ring-blue-300 dark:ring-blue-500'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-400'
                 }`}
               >
                 {answerRecord ? (answerRecord.isCorrect ? '✓' : '✗') : idx + 1}
@@ -185,19 +185,19 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6 items-start">
             {/* Visual Sign Reference */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center shrink-0 mx-auto md:mx-0">
+            <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center shrink-0 mx-auto md:mx-0 border border-slate-200/60 dark:border-slate-700">
               <TrafficSignImage signId={currentQ.id} size={110} />
             </div>
 
             {/* Question Text & Audio Player */}
             <div className="space-y-3 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">
                   {currentQ.category || 'Road Safety'}
                 </span>
 
                 {/* Audio Controls */}
-                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full text-xs">
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full text-xs">
                   {audioState === 'idle' && (
                     <button
                       type="button"
@@ -206,7 +206,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                           `${currentQ.question}. Option A: ${currentQ.options[0]}. Option B: ${currentQ.options[1]}. Option C: ${currentQ.options[2]}. Option D: ${currentQ.options[3]}.`
                         )
                       }
-                      className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-800"
+                      className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-800 dark:hover:text-blue-300"
                     >
                       ▶ Read Question
                     </button>
@@ -215,7 +215,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                     <button
                       type="button"
                       onClick={pauseAudio}
-                      className="text-[11px] font-bold text-amber-600 hover:underline"
+                      className="text-[11px] font-bold text-amber-600 dark:text-amber-300 hover:underline"
                     >
                       ⏸ Pause
                     </button>
@@ -224,7 +224,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                     <button
                       type="button"
                       onClick={resumeAudio}
-                      className="text-[11px] font-bold text-blue-600 hover:underline"
+                      className="text-[11px] font-bold text-blue-600 dark:text-blue-300 hover:underline"
                     >
                       ▶ Resume
                     </button>
@@ -233,7 +233,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                     <button
                       type="button"
                       onClick={stopAudio}
-                      className="text-[11px] text-slate-400 hover:text-slate-600 ml-1"
+                      className="text-[11px] text-slate-400 hover:text-slate-200 ml-1"
                     >
                       ✕
                     </button>
@@ -241,7 +241,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 </div>
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50 leading-snug">
                 {currentQ.question}
               </h3>
             </div>
@@ -255,17 +255,17 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
               const hasAnswered = selectedOption !== null;
 
               let optionStyle =
-                'border-slate-200/80 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200';
+                'border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100';
 
               if (hasAnswered) {
                 if (isCorrectOption) {
                   optionStyle =
-                    'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/60 text-emerald-950 dark:text-emerald-200 font-bold';
+                    'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/70 text-emerald-950 dark:text-emerald-100 font-bold';
                 } else if (isSelected) {
                   optionStyle =
-                    'border-rose-500 bg-rose-50/80 dark:bg-rose-950/60 text-rose-950 dark:text-rose-200';
+                    'border-rose-500 bg-rose-50 dark:bg-rose-950/70 text-rose-950 dark:text-rose-100';
                 } else {
-                  optionStyle = 'opacity-50 border-slate-200 dark:border-slate-800';
+                  optionStyle = 'opacity-40 border-slate-200 dark:border-slate-700 bg-slate-50/40 dark:bg-slate-900';
                 }
               }
 
@@ -280,10 +280,10 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                   <span
                     className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
                       hasAnswered && isCorrectOption
-                        ? 'bg-emerald-700 text-white'
+                        ? 'bg-emerald-600 text-white'
                         : hasAnswered && isSelected
                         ? 'bg-rose-600 text-white'
-                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
                     }`}
                   >
                     {String.fromCharCode(65 + idx)}
@@ -297,11 +297,11 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
           {/* Explanation & Next Step */}
           {selectedOption !== null && (
             <div className="pt-2 space-y-4">
-              <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl text-xs space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <div className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700 rounded-xl text-xs space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Statutory Rule Explanation
                 </span>
-                <p className="text-slate-800 dark:text-slate-200 leading-relaxed">
+                <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                   {currentQ.explanation}
                 </p>
               </div>
@@ -310,7 +310,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
                 <button
                   type="button"
                   onClick={handleNextQuestion}
-                  className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
+                  className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
                 >
                   {currentIndex + 1 < TOTAL_TEST_QUESTIONS ? 'Next Question →' : 'View Test Results →'}
                 </button>
@@ -324,20 +324,20 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
           <div
             className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto ${
               currentScore >= REQUIRED_PASS_SCORE
-                ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
-                : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300'
+                ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
+                : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800'
             }`}
           >
             {currentScore >= REQUIRED_PASS_SCORE ? '✓' : '✗'}
           </div>
 
           <div className="space-y-1">
-            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
               {currentScore >= REQUIRED_PASS_SCORE
                 ? 'Test Qualified Successfully'
                 : 'Test Attempt Incomplete'}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               You scored <strong>{currentScore}</strong> out of {TOTAL_TEST_QUESTIONS} questions.
               {currentScore >= REQUIRED_PASS_SCORE
                 ? ' You are eligible to proceed to Step 3 (Statutory Fee Payment).'
@@ -349,7 +349,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
             <button
               type="button"
               onClick={initTest}
-              className="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-full transition-colors"
+              className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 text-xs font-semibold rounded-full transition-colors"
             >
               Retry 5-Question Test
             </button>
@@ -358,7 +358,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed: _practic
               <button
                 type="button"
                 onClick={onProceedToPayment}
-                className="px-6 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
+                className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
               >
                 Proceed to Fee Payment (Step 3) →
               </button>

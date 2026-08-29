@@ -8,6 +8,10 @@ export default {
         saffron: '#FF9933',
         india: '#138808',
         navy: '#000080',
+        slate: {
+          750: '#253248',
+          850: '#172033',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
