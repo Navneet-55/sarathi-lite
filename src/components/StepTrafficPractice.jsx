@@ -1,64 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import TrafficSignImage from './TrafficSignImage';
+import TestPassCertificateModal from './TestPassCertificateModal';
 import { QUESTION_BANK } from '../data/questionBank';
 import { TRANSLATIONS } from '../data/translations';
 
-const TOTAL_TEST_QUESTIONS = 5;
-const REQUIRED_PASS_SCORE = 3;
+const SPEECH_LANG_MAP = {
+  en: 'en-IN',
+  hi: 'hi-IN',
+  kn: 'kn-IN',
+  mr: 'mr-IN',
+  ta: 'ta-IN',
+  te: 'te-IN',
+};
 
 /**
- * Step 2: 5-Question Traffic Practice Test (Pure Bilingual Support & Hindi Voice Speech)
+ * Step 2: Traffic Knowledge Test & Official 15-Question Timed RTO Computerized Exam Simulation
  */
 export default function StepTrafficPractice({
+  profile,
   onPassed,
   practicePassed: _practicePassed,
   onProceedToPayment,
   onBackToGuide,
   lang = 'en',
 }) {
+  const [testMode, setTestMode] = useState('quick'); // 'quick' (5Q) | 'rto' (15Q)
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [audioState, setAudioState] = useState('idle');
   const [testFinished, setTestFinished] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const isHi = lang === 'hi';
 
-  const initTest = () => {
+  const totalQuestionsTarget = testMode === 'rto' ? 15 : 5;
+  const requiredPassScore = testMode === 'rto' ? 9 : 3;
+
+  const initTest = (mode = testMode) => {
+    const targetCount = mode === 'rto' ? 15 : 5;
     const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
-    const selectedFive = shuffled.slice(0, TOTAL_TEST_QUESTIONS);
-    setQuestions(selectedFive);
+    const selected = shuffled.slice(0, targetCount);
+    setQuestions(selected);
     setCurrentIndex(0);
     setSelectedOption(null);
     setAnswers([]);
     setTestFinished(false);
+    setShowCertificate(false);
     stopAudio();
   };
 
   useEffect(() => {
-    initTest();
+    initTest(testMode);
     return () => {
       stopAudio();
     };
-  }, []);
+  }, [testMode]);
 
   const playAudio = (textToRead) => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.lang = isHi ? 'hi-IN' : 'en-IN';
+    utterance.lang = SPEECH_LANG_MAP[lang] || 'en-IN';
     utterance.rate = 0.92;
 
-    utterance.onend = () => {
-      setAudioState('idle');
-    };
-
-    utterance.onerror = () => {
-      setAudioState('idle');
-    };
+    utterance.onend = () => setAudioState('idle');
+    utterance.onerror = () => setAudioState('idle');
 
     window.speechSynthesis.speak(utterance);
     setAudioState('playing');
@@ -108,14 +118,14 @@ export default function StepTrafficPractice({
     setAnswers(updatedAnswers);
 
     const totalScore = updatedAnswers.filter((a) => a.isCorrect).length;
-    if (totalScore >= REQUIRED_PASS_SCORE) {
+    if (totalScore >= requiredPassScore) {
       onPassed && onPassed();
     }
   };
 
   const handleNextQuestion = () => {
     stopAudio();
-    if (currentIndex + 1 < TOTAL_TEST_QUESTIONS) {
+    if (currentIndex + 1 < totalQuestionsTarget) {
       setCurrentIndex(currentIndex + 1);
       setSelectedOption(null);
     } else {
@@ -124,6 +134,7 @@ export default function StepTrafficPractice({
   };
 
   const currentScore = answers.filter((a) => a.isCorrect).length;
+  const isPassed = currentScore >= requiredPassScore;
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-6 text-slate-900 dark:text-slate-100">
@@ -132,14 +143,40 @@ export default function StepTrafficPractice({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-              {t.examModuleBadge}
+              {testMode === 'rto' ? 'Official RTO Computer Simulation' : t.examModuleBadge}
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f2a4a] dark:text-blue-200 tracking-tight mt-0.5">
               {t.examTitle}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Mode Switcher */}
+            <div className="flex bg-slate-100 dark:bg-slate-700 p-0.5 rounded-full text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setTestMode('quick')}
+                className={`px-3 py-1 rounded-full transition-all ${
+                  testMode === 'quick'
+                    ? 'bg-blue-800 text-white shadow-xs'
+                    : 'text-slate-700 dark:text-slate-200'
+                }`}
+              >
+                {isHi ? '5-प्रश्न त्वरित टेस्ट' : 'Quick 5-Q Test'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setTestMode('rto')}
+                className={`px-3 py-1 rounded-full transition-all ${
+                  testMode === 'rto'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-xs'
+                    : 'text-slate-700 dark:text-slate-200'
+                }`}
+              >
+                {isHi ? '15-प्रश्न आरटीओ सिमुलेशन' : 'Official 15-Q RTO Exam'}
+              </button>
+            </div>
+
             {onBackToGuide && (
               <button
                 type="button"
@@ -147,7 +184,7 @@ export default function StepTrafficPractice({
                   stopAudio();
                   onBackToGuide();
                 }}
-                className="text-xs text-blue-700 dark:text-blue-300 hover:underline font-semibold"
+                className="text-xs text-blue-700 dark:text-blue-300 hover:underline font-semibold ml-2"
               >
                 {t.backToStudyGuide}
               </button>
@@ -160,24 +197,24 @@ export default function StepTrafficPractice({
       <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-slate-100 dark:border-slate-700 text-xs">
         <div className="flex items-center gap-2">
           <span className="font-bold text-slate-900 dark:text-slate-100">
-            {t.questionOf(Math.min(currentIndex + 1, TOTAL_TEST_QUESTIONS), TOTAL_TEST_QUESTIONS)}
+            {t.questionOf(Math.min(currentIndex + 1, totalQuestionsTarget), totalQuestionsTarget)}
           </span>
           <span className="text-slate-400 dark:text-slate-500">|</span>
           <span className="text-slate-600 dark:text-slate-300">
-            {t.scoreOf(currentScore, answers.length)}
+            {t.scoreOf(currentScore, answers.length)} (Pass: {requiredPassScore}/{totalQuestionsTarget})
           </span>
         </div>
 
-        {/* 5 Indicator Dots */}
-        <div className="flex items-center gap-1.5">
-          {Array.from({ length: TOTAL_TEST_QUESTIONS }).map((_, idx) => {
+        {/* Dynamic Indicator Dots */}
+        <div className="flex items-center gap-1 overflow-x-auto max-w-full py-1">
+          {Array.from({ length: totalQuestionsTarget }).map((_, idx) => {
             const answerRecord = answers[idx];
             const isCurrent = idx === currentIndex && !testFinished;
 
             return (
               <div
                 key={idx}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
+                className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-bold shrink-0 transition-all ${
                   answerRecord
                     ? answerRecord.isCorrect
                       ? 'bg-emerald-600 text-white'
@@ -330,7 +367,7 @@ export default function StepTrafficPractice({
                   onClick={handleNextQuestion}
                   className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
                 >
-                  {currentIndex + 1 < TOTAL_TEST_QUESTIONS ? t.nextQuestionBtn : t.viewResultsBtn}
+                  {currentIndex + 1 < totalQuestionsTarget ? t.nextQuestionBtn : t.viewResultsBtn}
                 </button>
               </div>
             </div>
@@ -341,49 +378,66 @@ export default function StepTrafficPractice({
         <div className="text-center py-6 space-y-5">
           <div
             className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold mx-auto ${
-              currentScore >= REQUIRED_PASS_SCORE
+              isPassed
                 ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
                 : 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800'
             }`}
           >
-            {currentScore >= REQUIRED_PASS_SCORE ? '✓' : '✗'}
+            {isPassed ? '✓' : '✗'}
           </div>
 
           <div className="space-y-1">
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-              {currentScore >= REQUIRED_PASS_SCORE
-                ? t.testQualifiedTitle
-                : t.testIncompleteTitle}
+              {isPassed ? t.testQualifiedTitle : t.testIncompleteTitle}
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-              {t.scoredSummary(currentScore, TOTAL_TEST_QUESTIONS)}
-              {currentScore >= REQUIRED_PASS_SCORE
-                ? t.eligibleForPayment
-                : t.needMinScore(REQUIRED_PASS_SCORE)}
+              {t.scoredSummary(currentScore, totalQuestionsTarget)}
+              {isPassed ? t.eligibleForPayment : t.needMinScore(requiredPassScore)}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               type="button"
-              onClick={initTest}
+              onClick={() => initTest(testMode)}
               className="px-5 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 text-xs font-semibold rounded-full transition-colors"
             >
               {t.retryTestBtn}
             </button>
 
-            {currentScore >= REQUIRED_PASS_SCORE && (
-              <button
-                type="button"
-                onClick={onProceedToPayment}
-                className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
-              >
-                {t.proceedToPaymentBtn}
-              </button>
+            {isPassed && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowCertificate(true)}
+                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-full shadow-xs transition-colors flex items-center gap-1.5"
+                >
+                  <span>📜</span>
+                  <span>{isHi ? 'योग्यता प्रमाण पत्र देखें' : 'View Pass Certificate'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onProceedToPayment}
+                  className="px-6 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-colors"
+                >
+                  {t.proceedToPaymentBtn}
+                </button>
+              </>
             )}
           </div>
         </div>
       )}
+
+      {/* Test Pass Certificate Modal */}
+      <TestPassCertificateModal
+        isOpen={showCertificate}
+        onClose={() => setShowCertificate(false)}
+        profile={profile}
+        score={currentScore}
+        totalQuestions={totalQuestionsTarget}
+        lang={lang}
+      />
     </div>
   );
 }

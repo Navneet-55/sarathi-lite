@@ -10,15 +10,16 @@ export default function DigitalSmartCard({ profile, paymentRef: _paymentRef, sel
 
   const issueDate = new Date().toLocaleDateString(isHi ? 'hi-IN' : 'en-IN');
   const validUntil = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toLocaleDateString(isHi ? 'hi-IN' : 'en-IN');
+  const vehicleClasses = (profile?.vehicleClasses || ['MCWG', 'LMV']).join(' + ');
 
   const handlePrintCard = () => {
     window.print();
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-sans">
       {/* Digital Smart Card Body */}
-      <div className="relative mx-auto max-w-md w-full bg-gradient-to-br from-[#0B2545] via-[#133E68] to-[#0B2545] text-white rounded-2xl p-5 sm:p-6 shadow-xl border-2 border-amber-400/40 overflow-hidden font-sans">
+      <div className="relative mx-auto max-w-md w-full bg-gradient-to-br from-[#0B2545] via-[#133E68] to-[#0B2545] text-white rounded-2xl p-5 sm:p-6 shadow-xl border-2 border-amber-400/40 overflow-hidden">
         {/* Background Watermark Pattern */}
         <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center font-bold text-7xl uppercase tracking-widest select-none">
           SARATHI
@@ -79,8 +80,19 @@ export default function DigitalSmartCard({ profile, paymentRef: _paymentRef, sel
                 <span className="font-semibold text-white">{profile?.dob || '15/03/1998'}</span>
               </div>
               <div>
-                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'श्रेणी' : 'Class'}</span>
-                <span className="font-bold text-amber-300">LMV + MCWG</span>
+                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'रक्त समूह' : 'Blood Grp'}</span>
+                <span className="font-bold text-rose-300">{profile?.bloodGroup || 'O+'}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-[10px]">
+              <div>
+                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'श्रेणी (COV)' : 'Class (COV)'}</span>
+                <span className="font-bold text-amber-300 truncate block">{vehicleClasses}</span>
+              </div>
+              <div>
+                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'अंगदाता' : 'Donor'}</span>
+                <span className="font-bold text-emerald-300">{profile?.organDonor ? 'YES 🫀' : 'NO'}</span>
               </div>
             </div>
 
@@ -90,7 +102,7 @@ export default function DigitalSmartCard({ profile, paymentRef: _paymentRef, sel
                 <span className="font-semibold text-white">{issueDate}</span>
               </div>
               <div>
-                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'वैधता (6 माह)' : 'Valid Upto'}</span>
+                <span className="text-[8px] text-slate-300 uppercase block">{isHi ? 'वैधता' : 'Valid Upto'}</span>
                 <span className="font-semibold text-amber-300">{validUntil}</span>
               </div>
             </div>

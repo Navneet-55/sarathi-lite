@@ -4,8 +4,17 @@ import CameraCaptureModal from './CameraCaptureModal';
 import { RTO_OFFICES } from '../data/rtoSlots';
 import { TRANSLATIONS } from '../data/translations';
 
+const VEHICLE_CLASSES = [
+  { id: 'MCWOG', label: 'MCWOG — Motorcycle Without Gear (Scooter <50cc)', icon: '🛵' },
+  { id: 'MCWG', label: 'MCWG — Motorcycle With Gear (Motorcycle / Bike)', icon: '🏍️' },
+  { id: 'LMV', label: 'LMV — Light Motor Vehicle (Car / Jeep / Van)', icon: '🚗' },
+  { id: '3W-NT', label: '3W-NT — 3-Wheeler Non-Transport Auto', icon: '🛺' },
+];
+
+const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'Unknown'];
+
 /**
- * Step 1: Citizen Application Form, Dual Front/Back Aadhaar OCR & Live Camera Scanner
+ * Step 1: Citizen Application Form, Multi-Class Selector, Blood Group, Organ Donor & Dual OCR
  */
 export default function StepApplicationOcr({
   profile,
@@ -25,12 +34,28 @@ export default function StepApplicationOcr({
   const backInputRef = useRef(null);
   const [isFrontDragOver, setIsFrontDragOver] = useState(false);
   const [isBackDragOver, setIsBackDragOver] = useState(false);
-  const [cameraModalSide, setCameraModalSide] = useState(null); // 'front' | 'back' | null
+  const [cameraModalSide, setCameraModalSide] = useState(null);
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  const isHi = lang === 'hi';
 
   const handleInputChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleToggleVehicleClass = (classId) => {
+    setProfile((prev) => {
+      const currentClasses = prev.vehicleClasses || ['MCWG', 'LMV'];
+      let updated;
+      if (currentClasses.includes(classId)) {
+        // Prevent unselecting all
+        if (currentClasses.length === 1) return prev;
+        updated = currentClasses.filter((c) => c !== classId);
+      } else {
+        updated = [...currentClasses, classId];
+      }
+      return { ...prev, vehicleClasses: updated };
+    });
   };
 
   const handleFrontDrop = (e) => {
@@ -51,7 +76,6 @@ export default function StepApplicationOcr({
 
   const handleCameraCapture = (base64Data) => {
     if (cameraModalSide === 'front') {
-      // Simulate file upload with data URL
       const mockEvent = { target: { files: [dataURLtoFile(base64Data, 'aadhaar_front.jpg')] } };
       handleFrontUpload(mockEvent);
     } else if (cameraModalSide === 'back') {
@@ -72,6 +96,8 @@ export default function StepApplicationOcr({
     }
     return new File([u8arr], filename, { type: mime });
   }
+
+  const selectedClasses = profile?.vehicleClasses || ['MCWG', 'LMV'];
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm p-6 sm:p-8 space-y-8 text-slate-900 dark:text-slate-100">
@@ -157,20 +183,24 @@ export default function StepApplicationOcr({
             />
           </div>
 
-          <div className="md:col-span-2">
+          <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
-              {t.addressLabel} <span className="text-rose-600">*</span>
+              {isHi ? 'रक्त समूह (Blood Group)' : 'Blood Group (Medical Profile)'} <span className="text-rose-600">*</span>
             </label>
-            <textarea
-              rows={2}
-              value={profile?.address || ''}
-              onChange={(e) => handleInputChange('address', e.target.value)}
-              placeholder={t.addressPlaceholder}
-              className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
-            />
+            <select
+              value={profile?.bloodGroup || 'O+'}
+              onChange={(e) => handleInputChange('bloodGroup', e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 font-medium focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
+            >
+              {BLOOD_GROUPS.map((bg) => (
+                <option key={bg} value={bg}>
+                  {bg}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="md:col-span-2">
+          <div>
             <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
               {t.rtoLabel} <span className="text-rose-600">*</span>
             </label>
@@ -185,6 +215,69 @@ export default function StepApplicationOcr({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1.5">
+              {t.addressLabel} <span className="text-rose-600">*</span>
+            </label>
+            <textarea
+              rows={2}
+              value={profile?.address || ''}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              placeholder={t.addressPlaceholder}
+              className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-950 focus:ring-2 focus:ring-blue-700 focus:outline-none transition-colors"
+            />
+          </div>
+
+          {/* Vehicle Class Selector */}
+          <div className="md:col-span-2 space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <label className="block text-slate-700 dark:text-slate-300 font-semibold">
+              {isHi ? 'वाहन श्रेणी का चयन (Vehicle Class Cov)' : 'Selected Vehicle Class Categories (COV)'} <span className="text-rose-600">*</span>
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {VEHICLE_CLASSES.map((vc) => {
+                const isSelected = selectedClasses.includes(vc.id);
+                return (
+                  <button
+                    key={vc.id}
+                    type="button"
+                    onClick={() => handleToggleVehicleClass(vc.id)}
+                    className={`p-3 rounded-xl border text-left text-xs font-semibold transition-all flex items-center gap-2.5 ${
+                      isSelected
+                        ? 'border-blue-700 bg-blue-50/70 dark:bg-blue-950/60 text-blue-950 dark:text-blue-200 ring-1 ring-blue-700'
+                        : 'border-slate-200 dark:border-slate-700 bg-slate-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="text-base">{vc.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="block truncate">{vc.label}</span>
+                      <span className="text-[10px] text-slate-500 block">₹150 Tariff / Class</span>
+                    </div>
+                    <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] font-bold ${isSelected ? 'bg-blue-800 text-white' : 'border border-slate-400'}`}>
+                      {isSelected ? '✓' : ''}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Organ Donation Pledge */}
+          <div className="md:col-span-2 p-3.5 bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/40 rounded-xl flex items-start gap-3 text-xs">
+            <input
+              type="checkbox"
+              id="organDonorCheck"
+              checked={profile?.organDonor || false}
+              onChange={(e) => handleInputChange('organDonor', e.target.checked)}
+              className="mt-0.5 h-4 w-4 text-blue-700 rounded border-slate-300 focus:ring-blue-600"
+            />
+            <label htmlFor="organDonorCheck" className="text-amber-950 dark:text-amber-200 leading-snug cursor-pointer">
+              <strong>{isHi ? 'अंगदान प्रतिज्ञा (Organ Donor Pledge):' : 'Organ Donor Consent (Section 134A):'}</strong>{' '}
+              {isHi
+                ? 'मैं दुर्घटना या मृत्यु की स्थिति में स्वेच्छा से अपने अंगों को जरूरतमंद मरीजों हेतु दान करने की सहमति देता/देती हूँ।'
+                : 'I wish to pledge as an Organ Donor in case of accidental death under National Organ Donation guidelines.'}
+            </label>
           </div>
         </div>
       </div>
@@ -401,6 +494,18 @@ export default function StepApplicationOcr({
                 [t.mobileLabel, profile?.mobile || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
                 [t.aadhaarLabel, profile?.aadhaar || <span className="text-slate-400 italic">{t.uploadFrontHint}</span>],
                 [t.addressLabel, profile?.address || <span className="text-slate-400 italic">{t.uploadBackHint}</span>],
+                [
+                  isHi ? 'रक्त समूह व अंगदान' : 'Blood Group & Organ Pledge',
+                  <span key="bg" className="font-semibold text-blue-900 dark:text-blue-300">
+                    {profile?.bloodGroup || 'O+'} {profile?.organDonor ? '(🫀 Organ Donor: YES)' : ''}
+                  </span>,
+                ],
+                [
+                  isHi ? 'चयनित वाहन श्रेणी' : 'Vehicle Categories',
+                  <span key="cov" className="font-bold text-amber-600 dark:text-amber-400 font-mono">
+                    {selectedClasses.join(' + ')}
+                  </span>,
+                ],
                 [
                   t.ekycStatusField,
                   <span key="status" className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold">

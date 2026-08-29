@@ -3,8 +3,7 @@ import DataTable from './DataTable';
 import { TRANSLATIONS } from '../data/translations';
 
 /**
- * Step 3: Statutory RTO Fee Challan Settlement
- * Pure Bilingual Support (English & Hindi)
+ * Step 3: Statutory RTO Fee Challan Settlement with Dynamic Vehicle Category Calculation
  */
 export default function StepFeePayment({
   profile,
@@ -20,6 +19,10 @@ export default function StepFeePayment({
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const isHi = lang === 'hi';
+
+  const vehicleClasses = profile?.vehicleClasses || ['MCWG', 'LMV'];
+  const baseRatePerClass = 150;
+  const totalPayableAmount = vehicleClasses.length * baseRatePerClass;
 
   const handlePayment = () => {
     if (paying || paid) return;
@@ -56,7 +59,7 @@ export default function StepFeePayment({
             </h2>
           </div>
           <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1 rounded-full font-medium">
-            {t.tariffFixedRate}
+            ₹{baseRatePerClass}.00 per Vehicle Category
           </span>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
@@ -66,38 +69,33 @@ export default function StepFeePayment({
 
       {/* Itemized Challan Table */}
       <div className="bg-slate-50/70 dark:bg-slate-900/50 rounded-xl p-4 sm:p-5 border border-slate-200/70 dark:border-slate-700 space-y-3">
-        <div className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider pb-1">
-          {t.challanScheduleTitle}
+        <div className="flex justify-between items-center text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider pb-1">
+          <span>{t.challanScheduleTitle}</span>
+          <span className="text-amber-600 dark:text-amber-400 font-mono">
+            {vehicleClasses.length} {vehicleClasses.length === 1 ? 'Category' : 'Categories'} ({vehicleClasses.join(', ')})
+          </span>
         </div>
 
         <div className="divide-y divide-slate-200/70 dark:divide-slate-700 text-xs sm:text-sm">
-          <div className="py-2.5 flex items-center justify-between">
-            <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service1Title}</p>
-              <p className="text-[11px] text-slate-400">{t.service1Rule}</p>
+          {vehicleClasses.map((cov, idx) => (
+            <div key={idx} className="py-2.5 flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800 dark:text-slate-200">
+                  {t.service1Title} — Class {cov}
+                </p>
+                <p className="text-[11px] text-slate-400">{t.service1Rule}</p>
+              </div>
+              <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">
+                ₹{baseRatePerClass}.00
+              </span>
             </div>
-            <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
-          </div>
-
-          <div className="py-2.5 flex items-center justify-between">
-            <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service2Title}</p>
-              <p className="text-[11px] text-slate-400">{t.service2Rule}</p>
-            </div>
-            <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
-          </div>
-
-          <div className="py-2.5 flex items-center justify-between">
-            <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">{t.service3Title}</p>
-              <p className="text-[11px] text-slate-400">{t.service3Rule}</p>
-            </div>
-            <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">₹50.00</span>
-          </div>
+          ))}
 
           <div className="pt-3 pb-1 flex items-center justify-between font-bold text-sm sm:text-base text-blue-950 dark:text-blue-200">
             <span>{t.totalPayable}</span>
-            <span className="font-mono text-lg text-blue-900 dark:text-blue-300">₹150.00</span>
+            <span className="font-mono text-lg text-blue-900 dark:text-blue-300">
+              ₹{totalPayableAmount}.00
+            </span>
           </div>
         </div>
       </div>
@@ -138,7 +136,7 @@ export default function StepFeePayment({
                 <span>{t.authorizingTreasury}</span>
               </>
             ) : (
-              <span>{t.authorizePaymentBtn('₹150.00', payMethod.toUpperCase())}</span>
+              <span>{t.authorizePaymentBtn(`₹${totalPayableAmount}.00`, payMethod.toUpperCase())}</span>
             )}
           </button>
         </div>
@@ -175,10 +173,11 @@ export default function StepFeePayment({
             rows={[
               [t.appNumberField, profile?.applicationId],
               [t.applicantNameField, profile?.name],
+              [isHi ? 'स्वीकृत वाहन श्रेणियां' : 'Approved Vehicle Classes', vehicleClasses.join(' + ')],
               [t.transactionRefField, <span key="ref" className="font-mono font-bold text-blue-900 dark:text-blue-300">{paymentRef}</span>],
               [t.paymentDateField, new Date().toLocaleString(isHi ? 'hi-IN' : 'en-IN')],
               [t.accountingHeadField, isHi ? '0041-00-102 आरटीओ मोटर वाहन कर एवं शुल्क' : '0041-00-102 RTO Motor Vehicle Taxes & Fees'],
-              [t.totalSettledField, isHi ? '₹150.00 (एक सौ पचास रुपये मात्र)' : '₹150.00 (One Hundred and Fifty Rupees Only)'],
+              [t.totalSettledField, `₹${totalPayableAmount}.00 (Settled in full)`],
               [t.receiptStatusField, <span key="status" className="font-bold text-emerald-700 dark:text-emerald-400">{t.treasurySuccessStatus}</span>],
             ]}
           />

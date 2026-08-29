@@ -8,6 +8,7 @@ import StepFeePayment from './components/StepFeePayment';
 import StepSlotBooking from './components/StepSlotBooking';
 import MyProfileModal from './components/MyProfileModal';
 import ApplicationTrackerModal from './components/ApplicationTrackerModal';
+import SarathiMitraChat from './components/SarathiMitraChat';
 import { fetchOcrData } from './services/apiService';
 import { TRANSLATIONS } from './data/translations';
 
@@ -18,6 +19,9 @@ const BLANK_PROFILE = {
   mobile: '',
   dob: '',
   address: '',
+  bloodGroup: 'O+',
+  organDonor: false,
+  vehicleClasses: ['MCWG', 'LMV'],
   applicationId: '',
   rto: 'RTO Bengaluru South (KA-05)',
 };
@@ -29,7 +33,7 @@ export default function SarathiLite() {
   const [textSize, setTextSize] = useState('normal');
   const [contrast, setContrast] = useState('standard');
   const [darkMode, setDarkMode] = useState(false);
-  const [lang, setLang] = useState('en'); // 'en' | 'hi' | 'kn' | 'mr' | 'ta'
+  const [lang, setLang] = useState('en'); // 'en' | 'hi' | 'kn' | 'mr' | 'ta' | 'te'
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [trackModalOpen, setTrackModalOpen] = useState(false);
 
@@ -244,7 +248,7 @@ export default function SarathiLite() {
                   {t.portalTitle}
                 </h1>
                 <span className="text-[10px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.5 rounded border border-amber-400/30">
-                  v1.3
+                  v1.4
                 </span>
               </div>
             </div>
@@ -351,6 +355,9 @@ export default function SarathiLite() {
           booked={booked}
           lang={lang}
         />
+
+        {/* Sarathi Mitra Floating AI Assistant */}
+        <SarathiMitraChat lang={lang} />
       </div>
     );
   }
@@ -377,7 +384,7 @@ export default function SarathiLite() {
                 {t.portalTitle}
               </h1>
               <span className="text-[9px] bg-amber-400/20 text-amber-300 font-mono font-bold px-1.5 py-0.2 rounded border border-amber-400/30">
-                v1.3
+                v1.4
               </span>
             </div>
           </div>
@@ -489,6 +496,7 @@ export default function SarathiLite() {
               />
             ) : (
               <StepTrafficPractice
+                profile={profile}
                 onPassed={() => setPracticePassed(true)}
                 practicePassed={practicePassed}
                 onProceedToPayment={() => setCurrentStep(3)}
@@ -554,6 +562,9 @@ export default function SarathiLite() {
         lang={lang}
       />
 
+      {/* Sarathi Mitra Floating AI Assistant */}
+      <SarathiMitraChat lang={lang} />
+
       {/* Bottom Step Navigation Bar */}
       <footer className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs border-t border-slate-200/80 dark:border-slate-800 px-4 py-3 z-20 shadow-lg no-print">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
@@ -604,7 +615,7 @@ export default function SarathiLite() {
             {currentStep === 1
               ? (profile?.name ? t.proceedToTrafficRules : t.enterNameToProceed)
               : currentStep === 2 && trafficPhase === 'guide'
-              ? (lang === 'hi' ? '5-प्रश्नों की परीक्षा शुरू करें →' : 'Start 5-Q Test →')
+              ? (lang === 'hi' ? 'परीक्षा शुरू करें →' : 'Start Knowledge Test →')
               : currentStep === 4
               ? (booked ? t.processCompleted : (lang === 'hi' ? 'स्लॉट चुनें' : 'Select Slot to Finish'))
               : t.nextStep}
