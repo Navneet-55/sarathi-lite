@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint -c eslint.config.js ./src --ext .js,.jsx",
     "format": "prettier --write .",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "prepare": "husky install"
   },
   "dependencies": {

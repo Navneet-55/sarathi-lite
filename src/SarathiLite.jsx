@@ -20,6 +20,10 @@ const BLANK_PROFILE = {
   rto: 'RTO Bengaluru South (KA-05)',
 };
 
+function generateApplicationId() {
+  return `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`;
+}
+
 export default function SarathiLite() {
   const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(1);
@@ -74,7 +78,7 @@ export default function SarathiLite() {
   const handleStartApplication = () => {
     setProfile({
       ...BLANK_PROFILE,
-      applicationId: `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
+      applicationId: generateApplicationId(),
     });
     setScreen('app');
     setCurrentStep(1);
@@ -104,55 +108,43 @@ export default function SarathiLite() {
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = reader.result;
-      setDocPreview(base64);
-      setOcrLoading(true);
-      setOcrResult(null);
-
-      try {
-        const data = await fetchOcrData(base64, 'aadhaar');
-        setOcrResult(data);
-        if (data) {
-          setProfile((prev) => ({
-            ...prev,
-            name: data.name || prev.name,
-            dob: data.dob || prev.dob,
-            mobile: data.mobile || prev.mobile,
-            address: data.address || prev.address,
-            aadhaar: data.docNumber || prev.aadhaar,
-            applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
-          }));
-        }
-      } catch (err) {
-        console.error('OCR processing error:', err);
-      } finally {
-        setOcrLoading(false);
-      }
+      await runOcrFlow(base64);
     };
     reader.readAsDataURL(file);
   };
 
-  const triggerSampleOcr = async () => {
-    setOcrLoading(true);
-    setOcrResult(null);
-    const sampleCanvas = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Navneet</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Male / Purush</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>XXXX XXXX 4521</text></svg>";
-    setDocPreview(sampleCanvas);
+  const applyOcrToProfile = (data) => {
+    if (!data) return;
+    setProfile((prev) => ({
+      ...prev,
+      name: data.name || prev.name,
+      dob: data.dob || prev.dob,
+      mobile: data.mobile || prev.mobile,
+      address: data.address || prev.address,
+      aadhaar: data.docNumber || prev.aadhaar,
+      applicationId: prev.applicationId || generateApplicationId(),
+    }));
+  };
 
-    setTimeout(async () => {
-      const data = await fetchOcrData(sampleCanvas, 'aadhaar');
+  const runOcrFlow = async (base64Image) => {
+    setDocPreview(base64Image);
+    setOcrResult(null);
+    setOcrLoading(true);
+
+    try {
+      const data = await fetchOcrData(base64Image, 'aadhaar');
       setOcrResult(data);
-      if (data) {
-        setProfile((prev) => ({
-          ...prev,
-          name: data.name || prev.name,
-          dob: data.dob || prev.dob,
-          mobile: data.mobile || prev.mobile,
-          address: data.address || prev.address,
-          aadhaar: data.docNumber || prev.aadhaar,
-          applicationId: prev.applicationId || `KA-2026-LL-${Math.floor(10000 + Math.random() * 90000)}`,
-        }));
-      }
+      applyOcrToProfile(data);
+    } catch (err) {
+      console.error('OCR processing error:', err);
+    } finally {
       setOcrLoading(false);
-    }, 850);
+    }
+  };
+
+  const triggerSampleOcr = async () => {
+    const sampleCanvas = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffffff' stroke='%23cbd5e1' stroke-width='2'/><rect x='20' y='20' width='360' height='30' fill='%230f2a4a'/><text x='200' y='40' fill='%23ffffff' font-size='14' font-family='sans-serif' font-weight='bold' text-anchor='middle'>GOVERNMENT OF INDIA - AADHAAR</text><circle cx='60' cy='120' r='30' fill='%23e2e8f0'/><text x='110' y='105' font-size='14' font-family='sans-serif' font-weight='bold' fill='%231e293b'>Navneet</text><text x='110' y='125' font-size='12' font-family='sans-serif' fill='%2364748b'>DOB: 15/03/1998</text><text x='110' y='145' font-size='12' font-family='sans-serif' fill='%2364748b'>Male / Purush</text><text x='200' y='210' font-size='16' font-family='monospace' font-weight='bold' fill='%230f2a4a' text-anchor='middle'>XXXX XXXX 4521</text></svg>";
+    await runOcrFlow(sampleCanvas);
   };
 
   const getContrastClass = () => {
