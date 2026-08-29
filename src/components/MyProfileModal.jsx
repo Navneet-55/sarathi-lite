@@ -4,7 +4,7 @@ import { TRANSLATIONS } from '../data/translations';
 
 /**
  * My Profile Citizen Detail Drawer / Modal
- * Pure Bilingual Support (English & Hindi)
+ * Pure Multilingual Support
  */
 export default function MyProfileModal({
   profile,
@@ -20,10 +20,11 @@ export default function MyProfileModal({
 
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const isHi = lang === 'hi';
+  const vehicleClasses = (profile?.vehicleClasses || ['MCWG', 'LMV']).join(' + ');
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto flex flex-col">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto flex flex-col font-sans">
         {/* Modal Top Bar */}
         <div className="bg-[#0b2545] text-white px-5 py-3.5 flex items-center justify-between border-b border-amber-500 rounded-t-2xl">
           <div>
@@ -59,6 +60,9 @@ export default function MyProfileModal({
               [t.fullNameLabel, profile?.name || t.notProvided],
               [t.mobileLabel, profile?.mobile || t.notProvided],
               [t.dobLabel, profile?.dob || t.notProvided],
+              [isHi ? 'रक्त समूह' : 'Blood Group', profile?.bloodGroup || 'O+'],
+              [isHi ? 'अंगदान सहमति' : 'Organ Donor Pledge', profile?.organDonor ? (isHi ? 'हाँ (सहमति दी गई 🫀)' : 'YES (Pledged 🫀)') : (isHi ? 'नहीं' : 'NO')],
+              [isHi ? 'वाहन श्रेणियां' : 'Vehicle Categories', <strong key="cov" className="text-amber-600 dark:text-amber-400 font-mono">{vehicleClasses}</strong>],
               [t.aadhaarLabel, <span key="aadh" className="font-mono">{profile?.aadhaar || t.notProvided}</span>],
               [t.addressLabel, profile?.address || t.notProvided],
               [t.rtoLabel, <strong key="rto" className="text-blue-900 dark:text-blue-300">{profile?.rto}</strong>],
@@ -88,7 +92,7 @@ export default function MyProfileModal({
                   </span>
                 ) : (
                   <span key="np" className="text-slate-500 dark:text-slate-400 font-medium">
-                    {isHi ? 'भुगतान लंबित (₹150)' : 'Pending Settlement (₹150)'}
+                    {isHi ? 'भुगतान लंबित' : 'Pending Settlement'}
                   </span>
                 ),
               ],
