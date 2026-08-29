@@ -106,30 +106,28 @@ export default function StepFeePayment({
             {/* Payment Method Selector */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'upi', label: 'UPI (BHIM / GPay / PhonePe)', icon: '📱' },
-                { id: 'card', label: 'Debit / Credit Card (RuPay)', icon: '💳' },
-                { id: 'netbanking', label: 'Internet Banking (SBI/All)', icon: '🏦' },
+                { id: 'upi', label: 'UPI Payment Gateway (BHIM / GPay / PhonePe)' },
+                { id: 'card', label: 'Debit / Credit Card (RuPay / Visa / Master)' },
+                { id: 'netbanking', label: 'Internet Banking (SBI & Nationalized Banks)' },
               ].map((m) => (
                 <button
                   key={m.id}
                   type="button"
                   onClick={() => setPayMethod(m.id)}
-                  className={`p-3 rounded border text-left text-xs font-semibold flex items-center gap-2.5 transition-all ${
+                  className={`p-3 rounded border text-left text-xs font-semibold transition-all ${
                     payMethod === m.id
                       ? 'border-blue-700 bg-blue-50/80 text-blue-950 ring-1 ring-blue-700'
                       : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <span className="text-xl" aria-hidden="true">{m.icon}</span>
                   <span className="leading-tight">{m.label}</span>
                 </button>
               ))}
             </div>
 
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded text-xs text-slate-700 flex items-start gap-2">
-              <span className="text-blue-700 text-sm">ℹ️</span>
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-700">
               <p className="leading-relaxed">
-                <strong>Instant Sandbox Simulation:</strong> No real bank debit or debit card details required. Click below to simulate instant treasury receipt generation.
+                <strong>Electronic Simulation Mode:</strong> Simulated gateway sandbox. Authorizing will generate an official treasury challan reference without debiting your account.
               </p>
             </div>
 
@@ -137,18 +135,15 @@ export default function StepFeePayment({
               type="button"
               onClick={handlePayment}
               disabled={paying}
-              className="w-full py-4 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-400 text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-400 text-white font-bold text-sm rounded shadow-xs transition-colors flex items-center justify-center gap-2"
             >
               {paying ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Settling with Treasury Payment Gateway...</span>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Authorizing with Treasury Gateway...</span>
                 </>
               ) : (
-                <>
-                  <span>🔒</span>
-                  <span>Authorize & Pay ₹150.00 via {payMethod.toUpperCase()}</span>
-                </>
+                <span>Authorize Payment of ₹150.00 via {payMethod.toUpperCase()}</span>
               )}
             </button>
           </div>
@@ -157,13 +152,13 @@ export default function StepFeePayment({
           <div className="space-y-4">
             <div className="bg-emerald-50 border border-emerald-300 rounded-lg p-4 text-emerald-950 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                <div className="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm">
                   ✓
                 </div>
                 <div>
                   <h4 className="font-bold text-sm sm:text-base">Payment Authorized & Settled</h4>
                   <p className="text-xs text-emerald-800">
-                    Official Treasury Receipt generated under Reference: <strong>{paymentRef}</strong>
+                    Official Treasury Reference Number: <strong>{paymentRef}</strong>
                   </p>
                 </div>
               </div>
@@ -171,17 +166,16 @@ export default function StepFeePayment({
               <button
                 type="button"
                 onClick={handlePrint}
-                className="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded border border-slate-300 shadow-xs flex items-center gap-1.5 no-print"
+                className="px-3.5 py-1.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded border border-slate-300 shadow-xs no-print"
               >
-                <span>🖨️</span>
-                <span>Print Receipt</span>
+                Print Receipt
               </button>
             </div>
 
             <DataTable
               title="Official RTO Treasury Payment Receipt"
-              badge="VERIFIED PAID"
-              subtitle="Keep this receipt for your records and test day physical reporting."
+              badge="PAID & ACCEPTED"
+              subtitle="Retain this payment record for your physical verification at the RTO center."
               rows={[
                 ['Application Number', profile?.applicationId],
                 ['Applicant Full Name', profile?.name],

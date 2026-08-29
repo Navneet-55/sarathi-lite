@@ -10,7 +10,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [seenIds, setSeenIds] = useState([]);
   const [score, setScore] = useState(0);
-  const [history, setHistory] = useState([]); // record of previous answers
+  const [history, setHistory] = useState([]);
   const REQUIRED_PASS_SCORE = 3;
 
   const loadQuestion = useCallback(async () => {
@@ -55,10 +55,9 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
   };
 
   const handleSpeech = () => {
-    if ('speechSynthesis' in window && currentQuestion) {
-      const utterance = new SpeechSynthesisUtterance(
-        `${currentQuestion.question}. Option A: ${currentQuestion.options[0]}. Option B: ${currentQuestion.options[1]}. Option C: ${currentQuestion.options[2]}. Option D: ${currentQuestion.options[3]}.`
-      );
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window && currentQuestion) {
+      const text = `${currentQuestion.question}. Option A: ${currentQuestion.options[0]}. Option B: ${currentQuestion.options[1]}. Option C: ${currentQuestion.options[2]}. Option D: ${currentQuestion.options[3]}.`;
+      const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-IN';
       window.speechSynthesis.speak(utterance);
     }
@@ -72,14 +71,14 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
       <div className="border-b border-slate-200 pb-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg sm:text-xl font-bold text-[#0f2a4a]">
-            Step 2: Traffic Rules & Mandatory Road Sign Practice
+            Step 2: Mandatory Traffic Rules & Road Signs Practice Test
           </h2>
           <span className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-300 font-mono">
-            RTO Learner Test Mock
+            CMVR Rule 11
           </span>
         </div>
         <p className="text-xs text-slate-600 mt-1">
-          According to the Central Motor Vehicles Rules (1989), applicants must score a minimum of {REQUIRED_PASS_SCORE} correct answers to qualify for the Learner's License slot.
+          Under the Central Motor Vehicles Rules (1989), applicants must score a minimum of {REQUIRED_PASS_SCORE} correct answers to qualify for the Learner's License slot.
         </p>
       </div>
 
@@ -88,7 +87,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Test Score Summary
+              Assessment Score
             </span>
             <div className="flex items-baseline gap-2 mt-0.5">
               <span className="text-xl font-extrabold text-[#0f2a4a]">
@@ -104,12 +103,12 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                 Qualification Status
               </span>
               {score >= REQUIRED_PASS_SCORE || practicePassed ? (
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-300">
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-300">
                   <span>✓</span> Qualified for Step 3
                 </span>
               ) : (
                 <span className="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-1 rounded border border-amber-300">
-                  {REQUIRED_PASS_SCORE - score} more required to pass
+                  {REQUIRED_PASS_SCORE - score} more correct required to pass
                 </span>
               )}
             </div>
@@ -130,7 +129,7 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                   h
                     ? h.isCorrect
                       ? 'bg-emerald-600 border-emerald-700 text-white'
-                      : 'bg-rose-500 border-rose-600 text-white'
+                      : 'bg-rose-600 border-rose-700 text-white'
                     : isCurrent
                     ? 'border-[#0f2a4a] bg-blue-50 text-[#0f2a4a] ring-2 ring-blue-200'
                     : 'border-slate-200 bg-slate-100 text-slate-400'
@@ -147,9 +146,9 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
       {/* Quiz Card */}
       <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
         {loading ? (
-          <div className="py-12 text-center space-y-2">
+          <div className="py-10 text-center space-y-2">
             <div className="inline-block w-6 h-6 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs font-bold text-[#0f2a4a]">Loading traffic sign question...</p>
+            <p className="text-xs font-bold text-[#0f2a4a]">Loading road regulation question...</p>
           </div>
         ) : currentQuestion ? (
           <div className="space-y-4">
@@ -170,15 +169,11 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                 <button
                   type="button"
                   onClick={handleSpeech}
-                  className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold border border-slate-300 flex items-center gap-1"
-                  title="Read question aloud"
+                  className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold border border-slate-300"
+                  title="Read question aloud for accessibility"
                 >
-                  <span>🔊</span>
-                  <span className="hidden sm:inline">Listen</span>
+                  Listen Audio
                 </button>
-                <span className="text-3xl filter drop-shadow-xs" role="img" aria-label="sign icon">
-                  {currentQuestion.signEmoji || '🛑'}
-                </span>
               </div>
             </div>
 
@@ -193,9 +188,9 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                 let btnStyle = 'border-slate-300 hover:border-[#0f2a4a] hover:bg-slate-50 text-slate-800 bg-white';
                 if (selectedOption !== null) {
                   if (idx === currentQuestion.correctIndex) {
-                    btnStyle = 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold ring-1 ring-emerald-500';
+                    btnStyle = 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold ring-1 ring-emerald-600';
                   } else if (idx === selectedOption) {
-                    btnStyle = 'border-rose-500 bg-rose-50 text-rose-950 ring-1 ring-rose-400';
+                    btnStyle = 'border-rose-600 bg-rose-50 text-rose-950 ring-1 ring-rose-600';
                   } else {
                     btnStyle = 'border-slate-200 text-slate-400 bg-slate-50 opacity-60';
                   }
@@ -231,12 +226,12 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                   <p className="font-bold mb-1 flex items-center gap-1.5">
                     {selectedOption === currentQuestion.correctIndex ? (
                       <>
-                        <span className="text-emerald-700">✓</span>
+                        <span className="text-emerald-700 font-bold">✓</span>
                         <span>Correct Answer</span>
                       </>
                     ) : (
                       <>
-                        <span className="text-rose-700">✗</span>
+                        <span className="text-rose-700 font-bold">✗</span>
                         <span>Incorrect Response</span>
                       </>
                     )}
@@ -249,10 +244,9 @@ export default function StepTrafficPractice({ onPassed, practicePassed }) {
                 <button
                   type="button"
                   onClick={loadQuestion}
-                  className="w-full py-3 bg-[#0f2a4a] hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded shadow-xs transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-[#0f2a4a] hover:bg-blue-900 text-white text-xs sm:text-sm font-bold rounded shadow-xs transition-colors"
                 >
-                  <span>Next Practice Question</span>
-                  <span>→</span>
+                  Proceed to Next Practice Question →
                 </button>
               </div>
             )}

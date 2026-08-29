@@ -55,9 +55,11 @@ export default function StepSlotBooking({
       <div className="space-y-6">
         {/* Success Banner */}
         <div className="bg-emerald-50 border border-emerald-300 rounded-lg p-5 text-emerald-950 text-center space-y-2">
-          <div className="text-4xl" aria-hidden="true">🎉</div>
+          <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-base mx-auto">
+            ✓
+          </div>
           <h2 className="text-lg sm:text-xl font-bold">
-            Learner's License Test Appointment Confirmed!
+            Learner's License Test Appointment Confirmed
           </h2>
           <p className="text-xs sm:text-sm text-emerald-800 max-w-xl mx-auto">
             Your appointment has been registered with the Regional Transport Authority. Please download or print your official acknowledgment slip below.
@@ -68,8 +70,7 @@ export default function StepSlotBooking({
               onClick={handlePrint}
               className="px-5 py-2.5 bg-[#0f2a4a] hover:bg-blue-900 text-white font-bold text-xs sm:text-sm rounded shadow-xs transition-colors inline-flex items-center gap-2"
             >
-              <span>🖨️</span>
-              <span>Print Official Form 2 Acknowledgment Slip</span>
+              <span>Print Form 2 Acknowledgment Slip</span>
             </button>
           </div>
         </div>
@@ -78,7 +79,7 @@ export default function StepSlotBooking({
         <DataTable
           title="Official Learner's License Application & Slot Allotment Slip"
           badge="CONFIRMED • READY FOR TEST"
-          subtitle="Ministry of Road Transport & Highways — Sarathi Portal Reference"
+          subtitle="Ministry of Road Transport & Highways — Sarathi Portal Record"
           rows={[
             ['Application Number', <span key="app" className="font-mono font-bold">{profile?.applicationId}</span>],
             ['Applicant Full Name', profile?.name],
@@ -163,7 +164,7 @@ export default function StepSlotBooking({
 
         {/* Loading Spinner */}
         {loading ? (
-          <div className="py-12 text-center space-y-2">
+          <div className="py-10 text-center space-y-2">
             <div className="inline-block w-6 h-6 border-2 border-[#0f2a4a] border-t-transparent rounded-full animate-spin" />
             <p className="text-xs font-bold text-[#0f2a4a]">Querying live RTO slot database...</p>
           </div>
@@ -178,9 +179,9 @@ export default function StepSlotBooking({
                 <div
                   key={slot.id}
                   onClick={() => setSelectedSlot(slot)}
-                  className={`p-4 rounded-lg border transition-all cursor-pointer ${
+                  className={`p-4 rounded border transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-blue-700 bg-blue-50/80 ring-2 ring-blue-700 shadow-xs'
+                      ? 'border-blue-700 bg-blue-50/80 ring-1 ring-blue-700'
                       : 'border-slate-200 bg-white hover:bg-slate-50'
                   }`}
                 >
@@ -195,7 +196,7 @@ export default function StepSlotBooking({
                         </span>
                         {rec?.score >= 85 && (
                           <span className="text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded">
-                            ⭐ AI TOP PICK ({rec.score}% Match)
+                            RECOMMENDED ({rec.score}% Match)
                           </span>
                         )}
                       </div>
@@ -205,7 +206,7 @@ export default function StepSlotBooking({
                       <div className="flex items-center gap-2 pt-0.5">
                         <span
                           className={`inline-block w-2 h-2 rounded-full ${
-                            slot.seats > 10 ? 'bg-emerald-500' : 'bg-amber-500'
+                            slot.seats > 10 ? 'bg-emerald-600' : 'bg-amber-600'
                           }`}
                         />
                         <span className="text-[11px] text-slate-600 font-medium">
@@ -227,7 +228,7 @@ export default function StepSlotBooking({
 
                   {rec && (
                     <div className="mt-2.5 pt-2 border-t border-slate-100 text-[11px] text-slate-600 flex items-center gap-1.5">
-                      <span className="text-blue-700 font-bold">Recommendation Note:</span>
+                      <span className="text-blue-900 font-bold">Location Match:</span>
                       <span>{rec.reason}</span>
                     </div>
                   )}
@@ -243,9 +244,8 @@ export default function StepSlotBooking({
             type="button"
             onClick={handleConfirmBooking}
             disabled={!selectedSlot}
-            className="w-full py-4 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold text-sm sm:text-base rounded shadow-xs transition-colors flex items-center justify-center gap-2"
           >
-            <span>📅</span>
             <span>
               {selectedSlot
                 ? `Confirm Booking: ${selectedSlot.date} at ${selectedSlot.time}`
