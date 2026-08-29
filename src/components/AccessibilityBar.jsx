@@ -7,6 +7,7 @@ const SUPPORTED_LANGUAGES = [
   { code: 'kn', label: 'ಕನ್ನಡ' },
   { code: 'mr', label: 'मराठी' },
   { code: 'ta', label: 'தமிழ்' },
+  { code: 'te', label: 'తెలుగు' },
 ];
 
 /**
